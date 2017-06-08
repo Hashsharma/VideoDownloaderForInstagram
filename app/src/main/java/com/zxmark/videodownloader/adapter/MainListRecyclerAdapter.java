@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.R;
 import com.zxmark.videodownloader.util.DownloadUtil;
@@ -21,10 +22,10 @@ import java.util.List;
 
 public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
-    private List<File> mDataList;
-
+    private List<DownloaderBean> mDataList;
     private RequestManager imageLoader;
-    public MainListRecyclerAdapter(List<File> dataList) {
+
+    public MainListRecyclerAdapter(List<DownloaderBean> dataList) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
     }
@@ -41,14 +42,24 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        final File file = mDataList.get(position);
+        final DownloaderBean bean = mDataList.get(position);
         holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadUtil.openVideo(file);
+                DownloadUtil.openVideo(bean.file);
             }
         });
-        imageLoader.load(file).into(holder.thumbnailView);
+        holder.progressBar.setSecondaryProgress(bean.progress);
+        holder.operationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bean.file.delete();
+                mDataList.remove(bean);
+                notifyDataSetChanged();
+
+            }
+        });
+        imageLoader.load(bean.file).into(holder.thumbnailView);
     }
 
     @Override

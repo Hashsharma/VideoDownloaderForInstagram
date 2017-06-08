@@ -1,9 +1,13 @@
 package com.zxmark.videodownloader;
 
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -24,6 +28,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
+import com.zxmark.videodownloader.service.DownloadService;
+import com.zxmark.videodownloader.service.IDownloadBinder;
+import com.zxmark.videodownloader.service.IDownloadCallback;
 import com.zxmark.videodownloader.service.TLRequestParserService;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
@@ -32,9 +39,11 @@ import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.URLMatcher;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.RunnableFuture;
 
 
 public class MainActivity extends AppCompatActivity
@@ -45,10 +54,13 @@ public class MainActivity extends AppCompatActivity
     private Button mDownloadBtn;
     private RecyclerView mListView;
     private LinearLayoutManager mLayoutManager;
+    private List<DownloaderBean> mDataList;
+    private MainListRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        subscribeDownloadService();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,10 +96,16 @@ public class MainActivity extends AppCompatActivity
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
         if (fileArray != null && fileArray.length > 0) {
-            List<File> dataList = Arrays.asList(fileArray);
-            Collections.sort(dataList, new FileComparator());
-            MainListRecyclerAdapter adapter = new MainListRecyclerAdapter(dataList);
-            mListView.setAdapter(adapter);
+            mDataList = new ArrayList<DownloaderBean>();
+            for (File item : fileArray) {
+                DownloaderBean bean = new DownloaderBean();
+                bean.file = item;
+                bean.progress = 0;
+                mDataList.add(bean);
+            }
+            Collections.sort(mDataList, new FileComparator());
+            mAdapter = new MainListRecyclerAdapter(mDataList);
+            mListView.setAdapter(mAdapter);
         }
 
         handleSendIntent();
@@ -102,8 +120,7 @@ public class MainActivity extends AppCompatActivity
             String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
             if (sharedText != null) {
                 // Update UI to reflect text being shared
-                LogUtil.v("TL","sharedText:" + sharedText);
-
+                LogUtil.v("TL", "sharedText:" + sharedText);
                 String url = URLMatcher.getHttpURL(sharedText);
                 mUrlEditText.setText(url);
             }
@@ -192,8 +209,93 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startDownload(final String url) {
-        Intent intent = new Intent(this, TLRequestParserService.class);
+        Intent intent = new Intent(this, DownloadService.class);
+        intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
         intent.putExtra(Globals.EXTRAS, url);
         startService(intent);
+    }
+
+    private void subscribeDownloadService() {
+        Intent intent = new Intent(this, DownloadService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private IDownloadBinder mService;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = IDownloadBinder.Stub.asInterface(service);
+
+            try {
+                mService.registerCallback(mRemoteCallback);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            try {
+                mService.unregisterCallback(mRemoteCallback);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            mService = null;
+        }
+    };
+
+    private IDownloadCallback.Stub mRemoteCallback = new IDownloadCallback.Stub() {
+        @Override
+        public void onPublishProgress(final String key, final int progress) throws RemoteException {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    DownloaderBean bean = new DownloaderBean();
+                    bean.file = new File(key);
+                    int index = mDataList.indexOf(bean);
+                    LogUtil.v("TL","index:" + index);
+                    if (index > -1) {
+                        DownloaderBean cacheBean = mDataList.get(index);
+                        cacheBean.progress = progress;
+                        LogUtil.v("TL", "onPublishProgress:" + progress);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onStartDownload(final String path) throws RemoteException {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mAdapter == null) {
+                        mDataList = new ArrayList<>();
+                        mAdapter = new MainListRecyclerAdapter(mDataList);
+                        mListView.setAdapter(mAdapter);
+                    }
+
+                    DownloaderBean bean = new DownloaderBean();
+                    bean.file = new File(path);
+                    bean.progress = 0;
+                    mDataList.add(bean);
+                    Collections.sort(mDataList,new FileComparator());
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
+        }
+
+        @Override
+        public void onDownloadSuccess(String path) throws RemoteException {
+
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unbindService(mConnection);
+        super.onDestroy();
     }
 }

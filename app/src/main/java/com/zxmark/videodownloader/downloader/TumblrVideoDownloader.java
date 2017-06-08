@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class TumblrVideoDownloader extends BaseDownloader {
 
-    public static final String COOKIE = "tmgioct=58e973e1b0a6c10525214720; rxx=1lmvgrra48x.ohltstg&v=1; anon_id=GHLHRDONAIAMSOORBVJLJRTBUZMGSLSB; language=%2Czh_CN; pfp=XjQRFMRlG5DM5WTCG9pHFzc0DyQ7gnCYPshmMq2c; pfs=wG3OJtgdJFVUTCAXtXODFCZFg; pfe=1504665856; pfu=265348919; logged_in=1; nts=false; _ga=GA1.2.1711342421.1491694563; _gid=GA1.2.580200024.1496889785; __utma=189990958.1711342421.1491694563.1495239211.1496889785.12; __utmb=189990958.0.10.1496889785; __utmc=189990958; __utmz=189990958.1495239211.11.2.utmcsr=fanqianglu.tumblr.com|utmccn=(referral)|utmcmd=referral|utmcct=/; devicePixelRatio=2; documentWidth=1213; yx=qz2cu5yprvfi3%26o%3D4%26q%3DIStxrbEcLRWlmVpOZd83A2FHpgD-%26f%3Drg%26v%3DXeP52hzzxNSqlCz4bHgB; capture=b4zU9NL1ku36y3KjnVwRuG3Xs";
+    public static final String URL_FORMAT = "http://api.tumblr.com/v2/blog/%s.tumblr.com/posts?id=%s&api_key=pJQg227oDPuOaNQVHnYKeewBoSr4FjOyIPR1f5dbwCHJZBJZsz";
 
     @Override
     public String startRequest(String htmlUrl) {
@@ -39,11 +39,29 @@ public class TumblrVideoDownloader extends BaseDownloader {
 
     @Override
     public String getDownloadFileUrl(String htmlUrl) {
-
-        String content = startRequest(htmlUrl);
-
+        String targetUrl = String.format(URL_FORMAT, getTumblrBlogId(htmlUrl), getTumblrPostId(htmlUrl));
+        String content = startRequest(targetUrl);
         return getVideoUrl(content);
+    }
 
+    public String getTumblrPostId(String url) {
+        int startIndex = url.indexOf("post/") + 5;
+        int endIndex = url.lastIndexOf("/");
+        if (startIndex < endIndex) {
+            return url.substring(startIndex, endIndex);
+        } else {
+            return url.substring(startIndex);
+        }
 
+    }
+
+    public String getTumblrBlogId(String url) {
+        int startIndex = url.indexOf("//") + 2;
+        int endIndex = url.indexOf(".tumblr.com");
+        if (startIndex < endIndex) {
+            return url.substring(startIndex, endIndex);
+        } else {
+            return url.substring(startIndex);
+        }
     }
 }

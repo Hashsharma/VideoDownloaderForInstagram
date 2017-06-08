@@ -36,14 +36,13 @@ public class TLRequestParserService extends Service {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Toast.makeText(TLRequestParserService.this, "VideoDownloader start download for you", Toast.LENGTH_SHORT).show();
+            Toast.makeText(TLRequestParserService.this, "start download for you", Toast.LENGTH_SHORT).show();
         }
     };
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.v("fan3", "MarkService.onCreate");
         final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         cb.setPrimaryClip(ClipData.newPlainText("", ""));
         cb.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
@@ -51,8 +50,8 @@ public class TLRequestParserService extends Service {
             @Override
             public void onPrimaryClipChanged() {
                 LogUtil.v("fan3", "onPrimaryClipChanged:" + cb.getText());
-                startDownload(cb.getText().toString());
-
+                mHandler.sendEmptyMessage(0);
+                DownloadUtil.startRequest(cb.getText().toString());
             }
         });
 
@@ -60,87 +59,10 @@ public class TLRequestParserService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.hasExtra(Globals.EXTRAS)) {
-            String url = intent.getStringExtra(Globals.EXTRAS);
-            startDownload(url);
-        }
 
         return Service.START_STICKY;
     }
 
-    private void startDownload(final String url) {
-        LogUtil.v("fan", "startDownload:" + url);
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
-
-        if (url.contains("www.instagram.com")) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mHandler.sendEmptyMessage(0);
-                    InstagramDownloader downloader = new InstagramDownloader();
-                    String downloadUrl = downloader.getDownloadFileUrl(url);
-                    if (!TextUtils.isEmpty(downloadUrl)) {
-                        DownloadUtil.startDownload(downloadUrl);
-                    }
-                }
-            }).start();
-        } else if (url.contains("www.gifshow.com") || url.contains("www.kwai.com")) {
-            Log.v("fan", "startDownload kuaishou video");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mHandler.sendEmptyMessage(0);
-                    BaseDownloader downloader = new KuaiVideoDownloader();
-                    String downloadUrl = downloader.getDownloadFileUrl(url);
-                    Log.v("fan5", "kuaishou.videoUrl:" + downloadUrl);
-                    if (!TextUtils.isEmpty(downloadUrl)) {
-                        DownloadUtil.startDownload(downloadUrl);
-                    }
-                }
-            }).start();
-        } else {
-            Log.v("fan", "startDownload tumblr video");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mHandler.sendEmptyMessage(0);
-                    BaseDownloader downloader = new TumblrVideoDownloader();
-                    String targetUrl = String.format(URL_FORMAT, getTumblrBlogId(url), getTumblrPostId(url));
-                    Log.v("fan5", "tumblr.content:" + targetUrl);
-                    String downloadUrl = downloader.getDownloadFileUrl(targetUrl);
-                    Log.v("fan5", "tumblr.content:" + downloadUrl);
-                    if (!TextUtils.isEmpty(downloadUrl)) {
-                        DownloadUtil.startDownload(downloadUrl);
-                    }
-                }
-            }).start();
-        }
-
-    }
-
-    public String getTumblrPostId(String url) {
-
-        int startIndex = url.indexOf("post/") + 5;
-        int endIndex = url.lastIndexOf("/");
-        if (startIndex < endIndex) {
-            return url.substring(startIndex, endIndex);
-        } else {
-            return url.substring(startIndex);
-        }
-
-    }
-
-    public String getTumblrBlogId(String url) {
-        int startIndex = url.indexOf("//") + 2;
-        int endIndex = url.indexOf(".tumblr.com");
-        if (startIndex < endIndex) {
-            return url.substring(startIndex, endIndex);
-        } else {
-            return url.substring(startIndex);
-        }
-    }
 
     @Nullable
     @Override
