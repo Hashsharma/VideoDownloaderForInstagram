@@ -19,35 +19,38 @@ import com.zxmark.videodownloader.downloader.InstagramDownloader;
 import com.zxmark.videodownloader.downloader.KuaiVideoDownloader;
 import com.zxmark.videodownloader.downloader.TumblrVideoDownloader;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.Globals;
+import com.zxmark.videodownloader.util.LogUtil;
 
 /**
  * Created by fanlitao on 17/6/7.
  */
 
-public class MarkService extends Service {
+public class TLRequestParserService extends Service {
 
-    public static final String URL_FORMAT = "http://api.tumblr.com/v2/blog/beyoncescock.tumblr.com/posts?id=%s&api_key=pJQg227oDPuOaNQVHnYKeewBoSr4FjOyIPR1f5dbwCHJZBJZsz";
+    public static final String URL_FORMAT = "http://api.tumblr.com/v2/blog/%s.tumblr.com/posts?id=%s&api_key=pJQg227oDPuOaNQVHnYKeewBoSr4FjOyIPR1f5dbwCHJZBJZsz";
+
+
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Toast.makeText(MarkService.this,"VideoDownloader start download for you",Toast.LENGTH_SHORT).show();
+            Toast.makeText(TLRequestParserService.this, "VideoDownloader start download for you", Toast.LENGTH_SHORT).show();
         }
     };
+
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.v("fan3","MarkService.onCreate");
-       final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        Log.v("fan3", "MarkService.onCreate");
+        final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         cb.setPrimaryClip(ClipData.newPlainText("", ""));
         cb.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
 
             @Override
             public void onPrimaryClipChanged() {
-// 具体实现
-                Log.v("fan3","onPrimaryClipChanged:" + cb.getText());
-
+                LogUtil.v("fan3", "onPrimaryClipChanged:" + cb.getText());
                 startDownload(cb.getText().toString());
 
             }
@@ -55,13 +58,23 @@ public class MarkService extends Service {
 
     }
 
-    private void startDownload(final String url) {
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null && intent.hasExtra(Globals.EXTRAS)) {
+            String url = intent.getStringExtra(Globals.EXTRAS);
+            startDownload(url);
+        }
 
-        if(TextUtils.isEmpty(url)) {
+        return Service.START_STICKY;
+    }
+
+    private void startDownload(final String url) {
+        LogUtil.v("fan", "startDownload:" + url);
+        if (TextUtils.isEmpty(url)) {
             return;
         }
 
-        if(url.contains("www.instagram.com")) {
+        if (url.contains("www.instagram.com")) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -73,34 +86,34 @@ public class MarkService extends Service {
                     }
                 }
             }).start();
-        } else if(url.contains("www.gifshow.com")) {
-            Log.v("fan","startDownload kuaishou video");
+        } else if (url.contains("www.gifshow.com") || url.contains("www.kwai.com")) {
+            Log.v("fan", "startDownload kuaishou video");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mHandler.sendEmptyMessage(0);
                     BaseDownloader downloader = new KuaiVideoDownloader();
                     String downloadUrl = downloader.getDownloadFileUrl(url);
-                    Log.v("fan5","kuaishou.videoUrl:" + downloadUrl);
+                    Log.v("fan5", "kuaishou.videoUrl:" + downloadUrl);
                     if (!TextUtils.isEmpty(downloadUrl)) {
                         DownloadUtil.startDownload(downloadUrl);
                     }
                 }
             }).start();
         } else {
-            Log.v("fan","startDownload tumblr video");
+            Log.v("fan", "startDownload tumblr video");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mHandler.sendEmptyMessage(0);
                     BaseDownloader downloader = new TumblrVideoDownloader();
-                    getTumblrPostId(url);
-                    String targetUrl = String.format(URL_FORMAT,getTumblrPostId(url));
-                    Log.v("fan5","tumblr.content:" + targetUrl);
-                   // String downloadUrl = downloader.startRequest(url);
-//                    if (!TextUtils.isEmpty(downloadUrl)) {
-//                        DownloadUtil.startDownload(downloadUrl);
-//                    }
+                    String targetUrl = String.format(URL_FORMAT, getTumblrBlogId(url), getTumblrPostId(url));
+                    Log.v("fan5", "tumblr.content:" + targetUrl);
+                    String downloadUrl = downloader.getDownloadFileUrl(targetUrl);
+                    Log.v("fan5", "tumblr.content:" + downloadUrl);
+                    if (!TextUtils.isEmpty(downloadUrl)) {
+                        DownloadUtil.startDownload(downloadUrl);
+                    }
                 }
             }).start();
         }
@@ -108,7 +121,25 @@ public class MarkService extends Service {
     }
 
     public String getTumblrPostId(String url) {
-       return url.substring(url.lastIndexOf("/"));
+
+        int startIndex = url.indexOf("post/") + 5;
+        int endIndex = url.lastIndexOf("/");
+        if (startIndex < endIndex) {
+            return url.substring(startIndex, endIndex);
+        } else {
+            return url.substring(startIndex);
+        }
+
+    }
+
+    public String getTumblrBlogId(String url) {
+        int startIndex = url.indexOf("//") + 2;
+        int endIndex = url.indexOf(".tumblr.com");
+        if (startIndex < endIndex) {
+            return url.substring(startIndex, endIndex);
+        } else {
+            return url.substring(startIndex);
+        }
     }
 
     @Nullable

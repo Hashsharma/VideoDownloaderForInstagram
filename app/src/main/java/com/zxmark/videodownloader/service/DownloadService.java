@@ -58,7 +58,7 @@ public class DownloadService extends IntentService {
         if (DOWNLOAD_ACTION.equals(intent.getAction())) {
             String url = intent.getStringExtra(DOWNLOAD_URL);
             boolean result = startDownload(url);
-            Log.v("fan", "startDownload.Resut:" + result);
+
             mHandler.obtainMessage(result ? MSG_DOWNLOAD_SUCCESS : MSG_DOWNLOAD_ERROR).sendToTarget();
         }
     }

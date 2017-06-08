@@ -1,5 +1,8 @@
 package com.zxmark.videodownloader;
 
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +24,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
-import com.zxmark.videodownloader.downloader.InstagramDownloader;
+import com.zxmark.videodownloader.service.TLRequestParserService;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.FileComparator;
+import com.zxmark.videodownloader.util.Globals;
+import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.URLMatcher;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -66,6 +73,7 @@ public class MainActivity extends AppCompatActivity
         mUrlEditText = (EditText) findViewById(R.id.paste_url);
         mUrlEditText.setInputType(InputType.TYPE_NULL);
         findViewById(R.id.btn_download).setOnClickListener(this);
+        findViewById(R.id.btn_paste).setOnClickListener(this);
         mListView = (RecyclerView) findViewById(R.id.list);
         mListView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
@@ -75,9 +83,37 @@ public class MainActivity extends AppCompatActivity
 
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
-        List<File> dataList = Arrays.asList(fileArray);
-        MainListRecyclerAdapter adapter = new MainListRecyclerAdapter(dataList);
-        mListView.setAdapter(adapter);
+        if (fileArray != null && fileArray.length > 0) {
+            List<File> dataList = Arrays.asList(fileArray);
+            Collections.sort(dataList, new FileComparator());
+            MainListRecyclerAdapter adapter = new MainListRecyclerAdapter(dataList);
+            mListView.setAdapter(adapter);
+        }
+
+        handleSendIntent();
+    }
+
+    private void handleSendIntent() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            LogUtil.v("tl", "action:" + action + ":" + type);
+            String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (sharedText != null) {
+                // Update UI to reflect text being shared
+                LogUtil.v("TL","sharedText:" + sharedText);
+
+                String url = URLMatcher.getHttpURL(sharedText);
+                mUrlEditText.setText(url);
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleSendIntent();
     }
 
     @Override
@@ -145,20 +181,19 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
                 startDownload(downloadUrl);
             }
+        } else if (v.getId() == R.id.btn_paste) {
+            final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            String pastUrl = cb.getText().toString();
+            if (!TextUtils.isEmpty(pastUrl)) {
+                Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
+                startDownload(pastUrl);
+            }
         }
     }
 
     private void startDownload(final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                InstagramDownloader downloader = new InstagramDownloader();
-                String downloadUrl = downloader.getDownloadFileUrl(url);
-                Log.v("fan", "downloadUrl:" + downloadUrl);
-                if (!TextUtils.isEmpty(downloadUrl)) {
-                    DownloadUtil.startDownload(downloadUrl);
-                }
-            }
-        }).start();
+        Intent intent = new Intent(this, TLRequestParserService.class);
+        intent.putExtra(Globals.EXTRAS, url);
+        startService(intent);
     }
 }

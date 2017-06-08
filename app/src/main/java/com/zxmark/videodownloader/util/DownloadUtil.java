@@ -42,8 +42,6 @@ public class DownloadUtil {
         } else {
             intent.setDataAndType(Uri.fromFile(file), "image/*");
         }
-
-
         MainApplication.getInstance().startActivity(intent);
     }
 }

@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
-import com.zxmark.videodownloader.service.MarkService;
+import com.zxmark.videodownloader.service.TLRequestParserService;
 
 /**
  * Created by fanlitao on 17/6/7.
@@ -23,7 +23,7 @@ public class MainApplication extends Application {
     }
 
     private void init() {
-        Intent intent = new Intent(this, MarkService.class);
+        Intent intent = new Intent(this, TLRequestParserService.class);
         startService(intent);
     }
 
