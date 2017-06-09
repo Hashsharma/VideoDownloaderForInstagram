@@ -105,12 +105,10 @@ public class DownloadService extends IntentService {
             });
         } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
             String url = intent.getStringExtra(Globals.EXTRAS);
+            LogUtil.e("downloadSerivice","url:" + url);
             WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
-            // boolean result = startDownload(fileUrl);
-            // mHandler.obtainMessage(result ? MSG_DOWNLOAD_SUCCESS : MSG_DOWNLOAD_ERROR).sendToTarget();
             downloadVideo(webPageStructuredData);
             downloadImage(webPageStructuredData);
-
         }
     }
 

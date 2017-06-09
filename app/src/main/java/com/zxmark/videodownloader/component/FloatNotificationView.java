@@ -97,6 +97,9 @@ public class FloatNotificationView extends FrameLayout implements View.OnClickLi
 
     public void setProgress(int progress) {
         mProgressInfoTv.setText(String.valueOf(progress));
+        if(progress > 99) {
+            mProgressInfoTv.setText("waiting");
+        }
     }
 
     public void setWindowManager(WindowManager wm) {

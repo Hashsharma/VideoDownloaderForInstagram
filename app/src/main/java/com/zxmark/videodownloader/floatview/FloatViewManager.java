@@ -66,9 +66,15 @@ public class FloatViewManager {
         mWindowManager.addView(mFloatView, params);
     }
 
+    private int mProgress;
+
     public void setProgress(int progress) {
         if (mFloatView != null) {
-            mFloatView.setProgress(progress);
+            if (mProgress != progress) {
+                mFloatView.setProgress(progress);
+                mProgress = progress;
+            }
+
         }
     }
 
