@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class TumblrVideoDownloader extends BaseDownloader {
 
-    public static final String URL_FORMAT = "http://api.tumblr.com/v2/blog/%s.tumblr.com/posts?id=%s&api_key=pJQg227oDPuOaNQVHnYKeewBoSr4FjOyIPR1f5dbwCHJZBJZsz";
+    public static final String URL_FORMAT = "http://api.tumblr.com/v2/blog/%s.tumblr.com/posts?id=%s&api_key=fIujCUAeD0ZlUEPtwVeMSdLmX0MdCjGpSSNTN0qbc6f63EBsa5";
 
     @Override
     public String startRequest(String htmlUrl) {
