@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.MainThread;
+import android.text.TextUtils;
 
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.service.DownloadService;
@@ -45,11 +46,32 @@ public class DownloadUtil {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        if(file.getName().endsWith("mp4")) {
+        if (file.getName().endsWith("mp4")) {
             intent.setDataAndType(Uri.fromFile(file), "video/mp4");
         } else {
             intent.setDataAndType(Uri.fromFile(file), "image/*");
         }
         MainApplication.getInstance().startActivity(intent);
     }
+
+
+    public static String getDownloadTargetInfo(String url) {
+
+        File targetDir = DownloadUtil.getHomeDirectory();
+
+        if (targetDir.exists()) {
+            return targetDir.getAbsolutePath() + File.separator + getFileNameByUrl(url);
+        }
+        targetDir.mkdir();
+        return targetDir.getAbsolutePath() + File.separator + getFileNameByUrl(url);
+    }
+
+    public static String getFileNameByUrl(String url) {
+        if(TextUtils.isEmpty(url)) {
+            return "";
+        }
+        final int lastIndex = url.lastIndexOf("/");
+        return url.substring(lastIndex);
+    }
+
 }

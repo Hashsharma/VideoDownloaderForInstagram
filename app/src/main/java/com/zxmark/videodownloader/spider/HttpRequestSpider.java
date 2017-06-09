@@ -16,6 +16,7 @@ public class HttpRequestSpider {
     public static final String USER_AGENT = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1.2) "
             + " Gecko/20090803 Fedora/3.5.2-2.fc11 Firefox/3.5.2";
 
+    public static int CONNECTION_TIMEOUT = 5000;
     public static final String METHOD_GET = "GET";
 
     public static final String METHOD_POST = "POST";
@@ -87,7 +88,6 @@ public class HttpRequestSpider {
                 } else {
                     conn.setRequestMethod(METHOD_POST);
                 }
-
 
                 Scanner scanner = new Scanner(conn.getInputStream());
                 while (scanner.hasNextLine()) {

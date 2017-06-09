@@ -2,7 +2,6 @@ package com.zxmark.videodownloader.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -15,11 +14,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
+import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +40,8 @@ public class DownloadService extends IntentService {
 
     public static final int MSG_DOWNLOAD_SUCCESS = 0;
     public static final int MSG_DOWNLOAD_ERROR = 1;
+    public static final int MSG_DOWNLOAD_START = 2;
+    public static final int MSG_UPDATE_PROGRESS = 3;
 
 
     final RemoteCallbackList<IDownloadCallback> mCallbacks = new RemoteCallbackList<IDownloadCallback>();
@@ -51,8 +52,14 @@ public class DownloadService extends IntentService {
             super.handleMessage(msg);
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
                 Toast.makeText(DownloadService.this, "Download Success", Toast.LENGTH_SHORT).show();
+                FloatViewManager.getDefault().dismissFloatView();
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 Toast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
+            } else if (msg.what == MSG_DOWNLOAD_START) {
+                FloatViewManager manager = FloatViewManager.getDefault();
+                manager.showFloatView();
+            } else if (msg.what == MSG_UPDATE_PROGRESS) {
+                FloatViewManager.getDefault().setProgress(msg.arg1);
             }
         }
     };
@@ -66,22 +73,73 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        LogUtil.v("TL","onHandleIntent:" + intent.getAction());
+        LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
         if (DOWNLOAD_ACTION.equals(intent.getAction())) {
             String url = intent.getStringExtra(DOWNLOAD_URL);
-            boolean result = startDownload(url);
-            mHandler.obtainMessage(result ? MSG_DOWNLOAD_SUCCESS : MSG_DOWNLOAD_ERROR).sendToTarget();
+            if(TextUtils.isEmpty(url)) {
+                return;
+            }
+            PowerfulDownloader.getDefault().startDownload(url, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                @Override
+                public void onStart(String path) {
+
+                }
+
+                @Override
+                public void onFinish(String path) {
+                    mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
+                }
+
+                @Override
+                public void onError(int errorCode) {
+
+                }
+
+                @Override
+                public void onProgress(String path, int progress) {
+                    mHandler.obtainMessage(MSG_UPDATE_PROGRESS,progress,0).sendToTarget();
+                    DownloadService.this.notifyDownloadProgress(path, progress);
+                }
+            });
         } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
             String url = intent.getStringExtra(Globals.EXTRAS);
             String fileUrl = VideoDownloadFactory.getInstance().request(url);
-            boolean result = startDownload(fileUrl);
-            mHandler.obtainMessage(result ? MSG_DOWNLOAD_SUCCESS : MSG_DOWNLOAD_ERROR).sendToTarget();
+            // boolean result = startDownload(fileUrl);
+            // mHandler.obtainMessage(result ? MSG_DOWNLOAD_SUCCESS : MSG_DOWNLOAD_ERROR).sendToTarget();
+            LogUtil.v("download", "DownloadService.fileUrl:" + fileUrl);
+            if (TextUtils.isEmpty(fileUrl)) {
+                return;
+            }
+
+            mHandler.sendEmptyMessage(MSG_DOWNLOAD_START);
+            PowerfulDownloader.getDefault().startDownload(fileUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                @Override
+                public void onStart(String path) {
+
+                }
+
+                @Override
+                public void onFinish(String path) {
+                    mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
+                }
+
+                @Override
+                public void onError(int errorCode) {
+
+                }
+
+                @Override
+                public void onProgress(String path, int progress) {
+                    mHandler.obtainMessage(MSG_UPDATE_PROGRESS,progress,0).sendToTarget();
+                    DownloadService.this.notifyDownloadProgress(path, progress);
+                }
+            });
         }
     }
 
 
     private boolean startDownload(String fileUrl) {
-        if(TextUtils.isEmpty(fileUrl)) {
+        if (TextUtils.isEmpty(fileUrl)) {
             return false;
         }
         Log.v("download", "startDownload:" + fileUrl);
@@ -107,7 +165,7 @@ public class DownloadService extends IntentService {
             LogUtil.e("TL", "fileLength=" + fileLength);
             // download the file
             input = connection.getInputStream();
-            targetPath = getDownloadTargetInfo(fileUrl);
+            targetPath = DownloadUtil.getDownloadTargetInfo(fileUrl);
             output = new FileOutputStream(targetPath);
             notifyStartDownload(targetPath);
             byte data[] = new byte[4096];
@@ -149,49 +207,42 @@ public class DownloadService extends IntentService {
         notifyDownloadProgress(filePath, progress);
     }
 
+    private Object sCallbackLock = new Object();
+
     private void notifyDownloadProgress(String filePath, int progress) {
-        final int N = mCallbacks.beginBroadcast();
-        for (int i = 0; i < N; i++) {
-            try {
-                mCallbacks.getBroadcastItem(i).onPublishProgress(filePath, progress);
-            } catch (RemoteException e) {
-                // The RemoteCallbackList will take care of removing
-                // the dead object for us.
+        synchronized (sCallbackLock) {
+            if (mCallbacks.getRegisteredCallbackCount() > 0) {
+                final int N = mCallbacks.beginBroadcast();
+                for (int i = 0; i < N; i++) {
+                    try {
+                        mCallbacks.getBroadcastItem(i).onPublishProgress(filePath, progress);
+                    } catch (RemoteException e) {
+                        // The RemoteCallbackList will take care of removing
+                        // the dead object for us.
+                    }
+                }
+                mCallbacks.finishBroadcast();
             }
+
         }
-        mCallbacks.finishBroadcast();
     }
 
     private void notifyStartDownload(String filePath) {
-        final int N = mCallbacks.beginBroadcast();
-        for (int i = 0; i < N; i++) {
-            try {
-                mCallbacks.getBroadcastItem(i).onStartDownload(filePath);
-            } catch (RemoteException e) {
-                // The RemoteCallbackList will take care of removing
-                // the dead object for us.
+        if (mCallbacks.getRegisteredCallbackCount() > 0) {
+            final int N = mCallbacks.beginBroadcast();
+            for (int i = 0; i < N; i++) {
+                try {
+                    mCallbacks.getBroadcastItem(i).onStartDownload(filePath);
+                } catch (RemoteException e) {
+                    // The RemoteCallbackList will take care of removing
+                    // the dead object for us.
+                }
             }
+            mCallbacks.finishBroadcast();
         }
-        mCallbacks.finishBroadcast();
+
     }
 
-
-
-    private String getFileNameByUrl(String url) {
-        final int lastIndex = url.lastIndexOf("/");
-        return url.substring(lastIndex);
-    }
-
-    private String getDownloadTargetInfo(String url) {
-
-        File targetDir = DownloadUtil.getHomeDirectory();
-
-        if (targetDir.exists()) {
-            return targetDir.getAbsolutePath() + File.separator + getFileNameByUrl(url);
-        }
-        targetDir.mkdir();
-        return targetDir.getAbsolutePath() + File.separator + getFileNameByUrl(url);
-    }
 
     @Nullable
     @Override

@@ -253,11 +253,12 @@ public class MainActivity extends AppCompatActivity
                     DownloaderBean bean = new DownloaderBean();
                     bean.file = new File(key);
                     int index = mDataList.indexOf(bean);
-                    LogUtil.v("TL","index:" + index);
                     if (index > -1) {
                         DownloaderBean cacheBean = mDataList.get(index);
                         cacheBean.progress = progress;
-                        LogUtil.v("TL", "onPublishProgress:" + progress);
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        mDataList.add(0,bean);
                         mAdapter.notifyDataSetChanged();
                     }
                 }

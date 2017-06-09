@@ -3,6 +3,7 @@ package com.zxmark.videodownloader.downloader;
 import android.util.Log;
 
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
+import com.zxmark.videodownloader.util.LogUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,19 +28,18 @@ public class TumblrVideoDownloader extends BaseDownloader {
         regex = "\"video_url\":\"(.*?)\",";
         Pattern pa = Pattern.compile(regex, Pattern.DOTALL);
         Matcher ma = pa.matcher(content);
-        Log.v("fan2", "ma=" + ma);
 
         if (ma.find()) {
-            Log.v("fan2", "" + ma.group());
             videoUrl = ma.group(1);
         }
-        Log.v("fan2", "" + videoUrl);
+        LogUtil.e("fan2", "tumblr.video=" + videoUrl);
         return videoUrl;
     }
 
     @Override
     public String getDownloadFileUrl(String htmlUrl) {
         String targetUrl = String.format(URL_FORMAT, getTumblrBlogId(htmlUrl), getTumblrPostId(htmlUrl));
+        LogUtil.v("fan2","tumblr.blog.api:" + targetUrl);
         String content = startRequest(targetUrl);
         return getVideoUrl(content);
     }
