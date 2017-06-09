@@ -279,8 +279,7 @@ public class MainActivity extends AppCompatActivity
                     DownloaderBean bean = new DownloaderBean();
                     bean.file = new File(path);
                     bean.progress = 0;
-                    mDataList.add(bean);
-                    Collections.sort(mDataList,new FileComparator());
+                    mDataList.add(0,bean);
                     mAdapter.notifyDataSetChanged();
                 }
             });

@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="220dip"
-    android:padding="10dip"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="220dip"
+    app:cardElevation="@dimen/activity_horizontal_margin"
+    app:cardCornerRadius="5dip"
+    android:layout_marginBottom="20dip"
+    android:layout_marginLeft="15dip"
+    android:layout_marginRight="15dip"
+   >
 
-
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:background="@color/colorAccent"
-        android:id="@+id/thumbnail"
-        />
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_gravity="bottom"
-        android:max="100"
-        android:secondaryProgress="45"
-        />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_operation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:scaleType="centerCrop" />
 
-</FrameLayout>
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_gravity="bottom"
+            style="@style/NumberProgressBar_Warning_Red"
+            app:progress_text_size="10sp"
+            app:progress_text_color="#3498DB"
+            app:progress_text_offset="1dp"
+            app:progress_text_visibility="visible"
+            app:progress_max="100"
+            app:progress_current="0"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_operation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@android:drawable/ic_dialog_email" />
+
+    </FrameLayout>
+</android.support.v7.widget.CardView>

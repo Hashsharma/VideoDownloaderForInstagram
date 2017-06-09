@@ -49,7 +49,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
                 DownloadUtil.openVideo(bean.file);
             }
         });
-        holder.progressBar.setSecondaryProgress(bean.progress);
+        holder.progressBar.setProgress(bean.progress);
         holder.operationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
