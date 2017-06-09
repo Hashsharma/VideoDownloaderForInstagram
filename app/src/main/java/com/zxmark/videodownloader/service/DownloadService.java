@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.util.DownloadUtil;
@@ -56,6 +57,7 @@ public class DownloadService extends IntentService {
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 Toast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
+                Toast.makeText(DownloadService.this,"start download",Toast.LENGTH_SHORT).show();
                 FloatViewManager manager = FloatViewManager.getDefault();
                 manager.showFloatView();
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
@@ -103,37 +105,53 @@ public class DownloadService extends IntentService {
             });
         } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
             String url = intent.getStringExtra(Globals.EXTRAS);
-            String fileUrl = VideoDownloadFactory.getInstance().request(url);
+            WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
             // boolean result = startDownload(fileUrl);
             // mHandler.obtainMessage(result ? MSG_DOWNLOAD_SUCCESS : MSG_DOWNLOAD_ERROR).sendToTarget();
-            LogUtil.v("download", "DownloadService.fileUrl:" + fileUrl);
-            if (TextUtils.isEmpty(fileUrl)) {
-                return;
+            downloadVideo(webPageStructuredData);
+            downloadImage(webPageStructuredData);
+
+        }
+    }
+
+
+    private void downloadVideo(WebPageStructuredData data) {
+        if(data.futureVideoList != null && data.futureVideoList.size() > 0) {
+            for(String videoUrl: data.futureVideoList) {
+                LogUtil.e("download",videoUrl);
+                mHandler.sendEmptyMessage(MSG_DOWNLOAD_START);
+                PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                    @Override
+                    public void onStart(String path) {
+
+                    }
+
+                    @Override
+                    public void onFinish(String path) {
+                        mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+
+                    }
+
+                    @Override
+                    public void onProgress(String path, int progress) {
+                        mHandler.obtainMessage(MSG_UPDATE_PROGRESS,progress,0).sendToTarget();
+                        DownloadService.this.notifyDownloadProgress(path, progress);
+                    }
+                });
             }
+        }
+    }
 
-            mHandler.sendEmptyMessage(MSG_DOWNLOAD_START);
-            PowerfulDownloader.getDefault().startDownload(fileUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
-                @Override
-                public void onStart(String path) {
-
-                }
-
-                @Override
-                public void onFinish(String path) {
-                    mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
-                }
-
-                @Override
-                public void onError(int errorCode) {
-
-                }
-
-                @Override
-                public void onProgress(String path, int progress) {
-                    mHandler.obtainMessage(MSG_UPDATE_PROGRESS,progress,0).sendToTarget();
-                    DownloadService.this.notifyDownloadProgress(path, progress);
-                }
-            });
+    private void downloadImage(WebPageStructuredData data) {
+        if(data.futureImageList != null && data.futureImageList.size() > 0) {
+            for(String imageUrl: data.futureImageList) {
+                LogUtil.e("download",imageUrl);
+                PowerfulDownloader.getDefault().startDownload(imageUrl, null);
+            }
         }
     }
 

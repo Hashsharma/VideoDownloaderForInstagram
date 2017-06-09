@@ -3,6 +3,7 @@ package com.zxmark.videodownloader.downloader;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
  * Created by fanlitao on 17/6/7.
  */
 
-public class InstagramDownloader extends BaseDownloader{
+public class InstagramDownloader extends BaseDownloader {
 
 
     public static final String IMAGE_SUFFIX = "https://scontent-arn2-1.cdninstagram.com";
@@ -42,16 +43,16 @@ public class InstagramDownloader extends BaseDownloader{
         }
 
         String thumbnail = getImageUrl(content);
-        Log.v("fan3","thumbnail:" + thumbnail);
+        Log.v("fan3", "thumbnail:" + thumbnail);
         return videoUrl;
     }
+
     public String getImageUrl(String content) {
         String regex;
         String imageUrl = "";
         regex = "<meta property=\"og:image\" content=\"(.*?)\"";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
-        Log.v("fan2", "ma=" + ma);
 
         if (ma.find()) {
             Log.v("fan2", "" + ma.group());
@@ -59,20 +60,24 @@ public class InstagramDownloader extends BaseDownloader{
         }
 
 
-        if(!TextUtils.isEmpty(imageUrl)) {
-            if(imageUrl.startsWith(IMAGE_SUFFIX)) {
-               imageUrl =  REPLACE_SUFFIX + imageUrl.substring(IMAGE_SUFFIX.length());
+        if (!TextUtils.isEmpty(imageUrl)) {
+            if (imageUrl.startsWith(IMAGE_SUFFIX)) {
+                imageUrl = REPLACE_SUFFIX + imageUrl.substring(IMAGE_SUFFIX.length());
             }
         }
         return imageUrl;
     }
 
-    public String getDownloadFileUrl(String htmlUrl) {
+    public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
         String videoUrl = getVideoUrl(content);
+        WebPageStructuredData data = new WebPageStructuredData();
         if (TextUtils.isEmpty(videoUrl)) {
-            videoUrl = getImageUrl(content);
+            String imageUrl = getImageUrl(content);
+            data.addVideo(imageUrl);
+        } else {
+            data.addVideo(videoUrl);
         }
-        return videoUrl;
+        return data;
     }
 }

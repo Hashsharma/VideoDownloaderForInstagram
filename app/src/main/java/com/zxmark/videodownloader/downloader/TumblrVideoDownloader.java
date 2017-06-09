@@ -2,8 +2,13 @@ package com.zxmark.videodownloader.downloader;
 
 import android.util.Log;
 
+import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 import com.zxmark.videodownloader.util.LogUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,25 +28,93 @@ public class TumblrVideoDownloader extends BaseDownloader {
 
     @Override
     public String getVideoUrl(String content) {
-        String regex;
-        String videoUrl = null;
-        regex = "\"video_url\":\"(.*?)\",";
-        Pattern pa = Pattern.compile(regex, Pattern.DOTALL);
-        Matcher ma = pa.matcher(content);
+//        String regex;
+//        String videoUrl = null;
+//        regex = "\"video_url\":\"(.*?)\",";
+//        Pattern pa = Pattern.compile(regex, Pattern.DOTALL);
+//        Matcher ma = pa.matcher(content);
+//
+//        if (ma.find()) {
+//            videoUrl = ma.group(1);
+//        }
 
-        if (ma.find()) {
-            videoUrl = ma.group(1);
+//        LogUtil.v("json","pageTitle:" + pageTitle);
+//        if(rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).has("video_url")) {
+//            String videoUrl = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("video_url");
+//            LogUtil.v("json","videoUrl:" + videoUrl);
+//        }
+//        LogUtil.e("fan2", "tumblr.video=" + videoUrl);
+//        return videoUrl;
+
+        return null;
+    }
+
+
+    public String gePageTitle() {
+        return null;
+    }
+
+    public String getImageUrl(String content) {
+        try {
+            JSONObject rootJsonObj = new JSONObject(content);
+            String pageTitle = rootJsonObj.getJSONObject("response").getJSONObject("blog").getString("title");
+            LogUtil.v("json","pageTitle:" + pageTitle);
+            if(rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).has("video_url")) {
+                String videoUrl = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("video_url");
+                LogUtil.v("json","videoUrl:" + videoUrl);
+            }
+
+
+            if(rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).has("photos")) {
+                JSONArray photoJsonArray = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getJSONArray("photos");
+                int length = photoJsonArray.length();
+                for(int index = 0;index < length;index++) {
+                    String url =   photoJsonArray.getJSONObject(index).getJSONObject("original_size").getString("url");
+                    LogUtil.v("json","imageUrl:" + url);
+                }
+            }
+
+        } catch (JSONException ex) {
+            ex.printStackTrace();
         }
-        LogUtil.e("fan2", "tumblr.video=" + videoUrl);
-        return videoUrl;
+
+        return null;
     }
 
     @Override
-    public String getDownloadFileUrl(String htmlUrl) {
+    public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String targetUrl = String.format(URL_FORMAT, getTumblrBlogId(htmlUrl), getTumblrPostId(htmlUrl));
-        LogUtil.v("fan2","tumblr.blog.api:" + targetUrl);
+        LogUtil.v("fan2", "tumblr.blog.api:" + targetUrl);
         String content = startRequest(targetUrl);
-        return getVideoUrl(content);
+        String videoUrl = null;
+        WebPageStructuredData data = new WebPageStructuredData();
+        try {
+
+            JSONObject rootJsonObj = new JSONObject(content);
+            String pageTitle = rootJsonObj.getJSONObject("response").getJSONObject("blog").getString("title");
+            LogUtil.v("json","pageTitle:" + pageTitle);
+            if(rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).has("video_url")) {
+                videoUrl = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("video_url");
+                LogUtil.e("tumblr","videoUrl:" + videoUrl);
+                data.addVideo(videoUrl);
+            }
+
+
+            if(rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).has("photos")) {
+                JSONArray photoJsonArray = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getJSONArray("photos");
+                int length = photoJsonArray.length();
+                for(int index = 0;index < length;index++) {
+                    String url =   photoJsonArray.getJSONObject(index).getJSONObject("original_size").getString("url");
+                    LogUtil.v("json","imageUrl:" + url);
+                    data.addImage(url);
+                }
+            }
+
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        return data;
     }
 
     public String getTumblrPostId(String url) {

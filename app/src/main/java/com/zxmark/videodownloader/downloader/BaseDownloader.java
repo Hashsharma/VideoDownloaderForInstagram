@@ -1,5 +1,7 @@
 package com.zxmark.videodownloader.downloader;
 
+import com.zxmark.videodownloader.bean.WebPageStructuredData;
+
 /**
  * Created by fanlitao on 17/6/8.
  */
@@ -7,7 +9,7 @@ package com.zxmark.videodownloader.downloader;
 public abstract class BaseDownloader {
 
 
-    public abstract String startRequest(String htmlUrl);
+    protected abstract String startRequest(String htmlUrl);
     public abstract String getVideoUrl(String content) ;
-    public abstract String getDownloadFileUrl(String htmlUrl);
+    public abstract WebPageStructuredData startSpideThePage(String htmlUrl);
 }

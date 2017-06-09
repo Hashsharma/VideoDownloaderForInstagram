@@ -1,7 +1,9 @@
 package com.zxmark.videodownloader.downloader;
 
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 
 import java.util.regex.Matcher;
@@ -36,10 +38,16 @@ public class KuaiVideoDownloader extends BaseDownloader {
 
 
     @Override
-    public String getDownloadFileUrl(String htmlUrl) {
+    public WebPageStructuredData startSpideThePage(String htmlUrl) {
 
         String videoUrl = getVideoUrl(startRequest(htmlUrl));
+        WebPageStructuredData data = new WebPageStructuredData();
 
-        return videoUrl;
+        if (!TextUtils.isEmpty(videoUrl)) {
+            data.addVideo(videoUrl);
+        }
+
+        return data;
+
     }
 }
