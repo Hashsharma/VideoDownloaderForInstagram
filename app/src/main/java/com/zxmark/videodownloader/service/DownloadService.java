@@ -1,6 +1,7 @@
 package com.zxmark.videodownloader.service;
 
 import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -8,12 +9,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
+import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.util.DownloadUtil;
@@ -31,7 +34,7 @@ import java.net.URL;
  * Created by fanlitao on 17/6/7.
  */
 
-public class DownloadService extends IntentService {
+public class DownloadService extends Service {
 
 
     public static final String DIR = "ins_downloader";
@@ -57,75 +60,33 @@ public class DownloadService extends IntentService {
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 Toast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
-                Toast.makeText(DownloadService.this,"start download",Toast.LENGTH_SHORT).show();
+                Toast.makeText(DownloadService.this, "start download", Toast.LENGTH_SHORT).show();
                 FloatViewManager manager = FloatViewManager.getDefault();
                 manager.showFloatView();
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 FloatViewManager.getDefault().setProgress(msg.arg1);
+                DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg1);
             }
         }
     };
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     */
-    public DownloadService() {
-        super("download video...");
-    }
-
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
-        if (DOWNLOAD_ACTION.equals(intent.getAction())) {
-            String url = intent.getStringExtra(DOWNLOAD_URL);
-            if(TextUtils.isEmpty(url)) {
-                return;
-            }
-            PowerfulDownloader.getDefault().startDownload(url, new PowerfulDownloader.IPowerfulDownloadCallback() {
-                @Override
-                public void onStart(String path) {
-
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent != null && intent.getAction() != null) {
+            LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
+            if (DOWNLOAD_ACTION.equals(intent.getAction())) {
+                String url = intent.getStringExtra(DOWNLOAD_URL);
+                if (TextUtils.isEmpty(url)) {
+                    return super.onStartCommand(intent, flags, startId);
                 }
-
-                @Override
-                public void onFinish(String path) {
-                    mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
-                }
-
-                @Override
-                public void onError(int errorCode) {
-
-                }
-
-                @Override
-                public void onProgress(String path, int progress) {
-                    mHandler.obtainMessage(MSG_UPDATE_PROGRESS,progress,0).sendToTarget();
-                    DownloadService.this.notifyDownloadProgress(path, progress);
-                }
-            });
-        } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
-            String url = intent.getStringExtra(Globals.EXTRAS);
-            LogUtil.e("downloadSerivice","url:" + url);
-            WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
-            downloadVideo(webPageStructuredData);
-            downloadImage(webPageStructuredData);
-        }
-    }
-
-
-    private void downloadVideo(WebPageStructuredData data) {
-        if(data.futureVideoList != null && data.futureVideoList.size() > 0) {
-            for(String videoUrl: data.futureVideoList) {
-                LogUtil.e("download",videoUrl);
-                mHandler.sendEmptyMessage(MSG_DOWNLOAD_START);
-                PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                PowerfulDownloader.getDefault().startDownload(url, new PowerfulDownloader.IPowerfulDownloadCallback() {
                     @Override
                     public void onStart(String path) {
 
                     }
 
                     @Override
-                    public void onFinish(String path) {
+                    public void onFinish(int statusCode,String path) {
                         mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
                     }
 
@@ -136,22 +97,66 @@ public class DownloadService extends IntentService {
 
                     @Override
                     public void onProgress(String path, int progress) {
-                        mHandler.obtainMessage(MSG_UPDATE_PROGRESS,progress,0).sendToTarget();
+                        mHandler.obtainMessage(MSG_UPDATE_PROGRESS, progress, 0).sendToTarget();
                         DownloadService.this.notifyDownloadProgress(path, progress);
                     }
                 });
+            } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
+                String url = intent.getStringExtra(Globals.EXTRAS);
+                LogUtil.e("downloadSerivice", "url:" + url);
+                DownloadingTaskList.SINGLETON.setHandler(mHandler);
+                DownloadingTaskList.SINGLETON.addNewDownloadTask(url);
             }
         }
+
+        return super.onStartCommand(intent, flags, startId);
     }
 
-    private void downloadImage(WebPageStructuredData data) {
-        if(data.futureImageList != null && data.futureImageList.size() > 0) {
-            for(String imageUrl: data.futureImageList) {
-                LogUtil.e("download",imageUrl);
-                PowerfulDownloader.getDefault().startDownload(imageUrl, null);
-            }
-        }
-    }
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     */
+
+
+//    @Override
+//    protected void onHandleIntent(@Nullable Intent intent) {
+//        LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
+//        if (DOWNLOAD_ACTION.equals(intent.getAction())) {
+//            String url = intent.getStringExtra(DOWNLOAD_URL);
+//            if(TextUtils.isEmpty(url)) {
+//                return;
+//            }
+//            PowerfulDownloader.getDefault().startDownload(url, new PowerfulDownloader.IPowerfulDownloadCallback() {
+//                @Override
+//                public void onStart(String path) {
+//
+//                }
+//
+//                @Override
+//                public void onFinish(String path) {
+//                    mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
+//                }
+//
+//                @Override
+//                public void onError(int errorCode) {
+//
+//                }
+//
+//                @Override
+//                public void onProgress(String path, int progress) {
+//                    mHandler.obtainMessage(MSG_UPDATE_PROGRESS,progress,0).sendToTarget();
+//                    DownloadService.this.notifyDownloadProgress(path, progress);
+//                }
+//            });
+//        } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
+//            String url = intent.getStringExtra(Globals.EXTRAS);
+//            LogUtil.e("downloadSerivice","url:" + url);
+//
+//            DownloadingTaskList.SINGLETON.addNewDownloadTask(url);
+//            WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
+//            downloadVideo(webPageStructuredData);
+//            downloadImage(webPageStructuredData);
+//        }
+//    }
 
 
     private boolean startDownload(String fileUrl) {

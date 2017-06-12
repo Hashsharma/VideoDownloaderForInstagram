@@ -84,9 +84,10 @@ public class TumblrVideoDownloader extends BaseDownloader {
     @Override
     public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String targetUrl = String.format(URL_FORMAT, getTumblrBlogId(htmlUrl), getTumblrPostId(htmlUrl));
-        LogUtil.v("fan2", "tumblr.blog.api:" + targetUrl);
+        LogUtil.e("fan2", "tumblr.blog.api:" + targetUrl);
         String content = startRequest(targetUrl);
         String videoUrl = null;
+        LogUtil.e("tumblr","content:" + content);
         WebPageStructuredData data = new WebPageStructuredData();
         try {
 
