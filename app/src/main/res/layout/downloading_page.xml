@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_bg"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/paste_url"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:hint="paste url..."
+        android:windowSoftInputMode="stateHidden" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dip">
+
+        <Button
+            android:id="@+id/btn_paste"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:layout_weight="1"
+            android:background="@color/colorCyan"
+            android:text="Paste"
+            android:textColor="@android:color/white"
+            android:textSize="12dip" />
+
+        <Button
+            android:id="@+id/btn_download"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:layout_weight="1"
+            android:background="@color/colorCyan"
+            android:text="Download"
+            android:textColor="@android:color/white"
+            android:textSize="12dip" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/downloading_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+       ></android.support.v7.widget.RecyclerView>
+</LinearLayout>

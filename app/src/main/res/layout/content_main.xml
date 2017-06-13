@@ -16,52 +16,15 @@
     <!--app:layout_constraintLeft_toLeftOf="parent"-->
     <!--app:layout_constraintRight_toRightOf="parent"-->
     <!--app:layout_constraintTop_toTopOf="parent" />-->
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/paste_url"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="40dip"
-            android:windowSoftInputMode="stateHidden"
-            android:hint="paste url..." />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/btn_paste"
-                android:layout_width="0dip"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Paste"
-                android:textColor="@android:color/white"
-                android:background="@color/colorPrimaryDark"
-                android:layout_margin="10dip"
-                android:textSize="15dip" />
-            <Button
-                android:id="@+id/btn_download"
-                android:layout_width="0dip"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:background="@color/colorPrimaryDark"
-                android:layout_margin="10dip"
-                android:text="Download"
-                android:textSize="15dip" />
-
-        </LinearLayout>
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

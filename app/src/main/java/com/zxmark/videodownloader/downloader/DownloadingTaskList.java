@@ -2,7 +2,9 @@ package com.zxmark.videodownloader.downloader;
 
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
+import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.PowerfulDownloader;
@@ -113,6 +115,13 @@ public class DownloadingTaskList {
                     if(webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
                         downloadVideo(taskId, webPageStructuredData);
                         downloadImage(taskId, webPageStructuredData);
+                    } else {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainApplication.getInstance().getApplicationContext(),"parse failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                     finishTask(taskId);

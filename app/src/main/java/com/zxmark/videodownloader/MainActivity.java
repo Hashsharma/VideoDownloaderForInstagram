@@ -11,14 +11,17 @@ import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,22 +31,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
+import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
-import com.zxmark.videodownloader.service.TLRequestParserService;
-import com.zxmark.videodownloader.util.DownloadUtil;
-import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.URLMatcher;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
 
 
 public class MainActivity extends AppCompatActivity
@@ -56,6 +54,11 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mLayoutManager;
     private List<DownloaderBean> mDataList;
     private MainListRecyclerAdapter mAdapter;
+
+    private ViewPager mMainViewPager;
+    private MainViewPagerAdapter mViewPagerAdapter;
+
+    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,33 +83,19 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+        mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mMainViewPager.setOffscreenPageLimit(2);
+        FragmentManager fm = getSupportFragmentManager();
+        LogUtil.e("main","fm:" + fm);
+        mViewPagerAdapter = new MainViewPagerAdapter(fm);
+        mMainViewPager.setAdapter(mViewPagerAdapter);
+
+        mTabLayout = (TabLayout) findViewById(R.id.slidindg_tabs);
+        mTabLayout.setupWithViewPager(mMainViewPager);
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mUrlEditText = (EditText) findViewById(R.id.paste_url);
-        mUrlEditText.setInputType(InputType.TYPE_NULL);
-        findViewById(R.id.btn_download).setOnClickListener(this);
-        findViewById(R.id.btn_paste).setOnClickListener(this);
-        mListView = (RecyclerView) findViewById(R.id.list);
-        mListView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
-                false);
-
-        mListView.setLayoutManager(mLayoutManager);
-
-        File file = DownloadUtil.getHomeDirectory();
-        File[] fileArray = file.listFiles();
-        if (fileArray != null && fileArray.length > 0) {
-            mDataList = new ArrayList<DownloaderBean>();
-            for (File item : fileArray) {
-                DownloaderBean bean = new DownloaderBean();
-                bean.file = item;
-                bean.progress = 0;
-                mDataList.add(bean);
-            }
-            Collections.sort(mDataList, new FileComparator());
-            mAdapter = new MainListRecyclerAdapter(mDataList);
-            mListView.setAdapter(mAdapter);
-        }
 
         handleSendIntent();
     }
