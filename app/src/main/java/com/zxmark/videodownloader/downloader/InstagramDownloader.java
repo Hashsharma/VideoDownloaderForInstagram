@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
+import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -68,6 +69,30 @@ public class InstagramDownloader extends BaseDownloader {
         return imageUrl;
     }
 
+    public String getPageTitle(String content) {
+        String regex;
+        String pageDesc = "";
+        regex = "<meta property=\"og:description\" content=\"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+
+        if (ma.find()) {
+            Log.v("fan2", "" + ma.group());
+            pageDesc = ma.group(1);
+        }
+
+        if (!TextUtils.isEmpty(pageDesc)) {
+            String array[] = pageDesc.split("Instagram:");
+            if (array != null) {
+                String originTitle = array[array.length-1];
+                originTitle = originTitle.replace("“","");
+                originTitle = originTitle.replace("”","");
+                return originTitle;
+            }
+        }
+        return null;
+    }
+
     public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
         String videoUrl = getVideoUrl(content);
@@ -77,7 +102,28 @@ public class InstagramDownloader extends BaseDownloader {
             data.addVideo(imageUrl);
         } else {
             data.addVideo(videoUrl);
+            String imageUrl = getImageUrl(content);
+            data.addImage(imageUrl);
         }
+
+        String title = getPageTitle(content);
+        data.pageTitle = title;
+        data.appPageUrl = getLaunchInstagramUrl(content);
+        LogUtil.e("fan", "title:" + title);
         return data;
+    }
+
+    public String getLaunchInstagramUrl(String content) {
+        String regex;
+        String instagramUrl = "";
+        regex = "<meta property=\"al:android:url\" content=\"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+
+        if (ma.find()) {
+            Log.v("fan2", "" + ma.group());
+            instagramUrl = ma.group(1);
+        }
+        return instagramUrl;
     }
 }

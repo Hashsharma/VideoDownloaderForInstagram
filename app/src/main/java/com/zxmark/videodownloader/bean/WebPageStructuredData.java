@@ -10,6 +10,7 @@ import java.util.List;
 public class WebPageStructuredData {
 
     public String pageTitle;
+    public String appPageUrl;
     public List<String> futureVideoList;
     public List<String> futureImageList;
 

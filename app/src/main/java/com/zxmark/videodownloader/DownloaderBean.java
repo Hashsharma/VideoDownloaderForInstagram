@@ -15,6 +15,7 @@ public class DownloaderBean {
     public boolean equals(Object obj) {
         if (obj instanceof DownloaderBean) {
             DownloaderBean right = (DownloaderBean) obj;
+
             return file.getAbsolutePath().equals(right.file.getAbsolutePath());
         }
         return false;

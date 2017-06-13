@@ -7,27 +7,26 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.R;
+import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.util.DownloadUtil;
-import com.zxmark.videodownloader.util.Utils;
+import com.zxmark.videodownloader.util.LogUtil;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Created by fanlitao on 17/6/7.
  */
 
-public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
-    private List<DownloaderBean> mDataList;
+    private List<VideoBean> mDataList;
     private RequestManager imageLoader;
     private boolean mFullImageState = false;
 
-    public MainListRecyclerAdapter(List<DownloaderBean> dataList, boolean isFullImage) {
+    public MainDownloadingRecyclerAdapter(List<VideoBean> dataList, boolean isFullImage) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
         mFullImageState = isFullImage;
@@ -36,33 +35,35 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(mFullImageState ? R.layout.item_layout2 : R.layout.item_layout,
-                        parent, false);
+                .inflate(R.layout.item_layout2, parent, false);
         ItemViewHolder holder = new ItemViewHolder(itemView);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        final DownloaderBean bean = mDataList.get(position);
-        holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DownloadUtil.openVideo(bean.file);
-                //Utils.openInstagramByUrl("https://www.instagram.com/p/BVPXdk7gB_0");
-            }
-        });
-        holder.progressBar.setProgress(bean.progress);
+        final VideoBean bean = mDataList.get(position);
+//        holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DownloadUtil.openVideo(bean.file);
+//                //Utils.openInstagramByUrl("https://www.instagram.com/p/BVPXdk7gB_0");
+//            }
+//        });
+        // holder.progressBar.setProgress(bean.progress);
         holder.operationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bean.file.delete();
-                mDataList.remove(bean);
-                notifyDataSetChanged();
+//              //  bean.file.delete();
+//                mDataList.remove(bean);
+//                notifyDataSetChanged();
 
             }
         });
-        imageLoader.load(bean.file).into(holder.thumbnailView);
+
+        LogUtil.v("db", "bean.thumburiL" + bean.thumbnailUrl);
+        imageLoader.load(bean.thumbnailUrl).into(holder.thumbnailView);
+        holder.titleTv.setText(bean.pageTitle);
     }
 
     @Override

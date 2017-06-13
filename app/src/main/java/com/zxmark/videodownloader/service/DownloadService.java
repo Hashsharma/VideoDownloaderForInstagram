@@ -103,7 +103,6 @@ public class DownloadService extends Service {
                 });
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 String url = intent.getStringExtra(Globals.EXTRAS);
-                LogUtil.e("downloadSerivice", "url:" + url);
                 DownloadingTaskList.SINGLETON.setHandler(mHandler);
                 DownloadingTaskList.SINGLETON.addNewDownloadTask(url);
             }

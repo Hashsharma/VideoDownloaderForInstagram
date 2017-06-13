@@ -12,7 +12,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -241,14 +240,16 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     DownloaderBean bean = new DownloaderBean();
                     bean.file = new File(key);
-                    int index = mDataList.indexOf(bean);
-                    if (index > -1) {
-                        DownloaderBean cacheBean = mDataList.get(index);
-                        cacheBean.progress = progress;
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        mDataList.add(0,bean);
-                        mAdapter.notifyDataSetChanged();
+                    if(mDataList != null) {
+                        int index = mDataList.indexOf(bean);
+                        if (index > -1) {
+                            DownloaderBean cacheBean = mDataList.get(index);
+                            cacheBean.progress = progress;
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            mDataList.add(0,bean);
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
             });
@@ -262,7 +263,7 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     if (mAdapter == null) {
                         mDataList = new ArrayList<>();
-                        mAdapter = new MainListRecyclerAdapter(mDataList);
+                        mAdapter = new MainListRecyclerAdapter(mDataList,true);
                         mListView.setAdapter(mAdapter);
                     }
 

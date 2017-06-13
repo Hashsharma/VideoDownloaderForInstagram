@@ -80,7 +80,7 @@ public class VideoHistoryFragment extends Fragment {
                 mDataList.add(bean);
             }
             Collections.sort(mDataList, new FileComparator());
-            mAdapter = new MainListRecyclerAdapter(mDataList);
+            mAdapter = new MainListRecyclerAdapter(mDataList,false);
             mListView.setAdapter(mAdapter);
         }
     }

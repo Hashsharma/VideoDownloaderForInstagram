@@ -16,7 +16,10 @@ import android.widget.EditText;
 
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.R;
+import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
+import com.zxmark.videodownloader.bean.VideoBean;
+import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.LogUtil;
@@ -38,7 +41,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private RecyclerView mListView;
     private LinearLayoutManager mLayoutManager;
     private List<DownloaderBean> mDataList;
-    private MainListRecyclerAdapter mAdapter;
+    private MainDownloadingRecyclerAdapter mAdapter;
 
     public static DownloadingFragment newInstance() {
         DownloadingFragment fragment = new DownloadingFragment();
@@ -71,16 +74,17 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mUrlEditText = (EditText) findViewById(R.id.paste_url);
-//        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(mUrlEditText.getWindowToken(), 0);
         findViewById(R.id.btn_download).setOnClickListener(this);
         findViewById(R.id.btn_paste).setOnClickListener(this);
         mListView = (RecyclerView) findViewById(R.id.downloading_list);
         mListView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
                 false);
-
         mListView.setLayoutManager(mLayoutManager);
+
+        List<VideoBean> dataList = DBHelper.getDefault().getDownloadingList();
+        mAdapter = new MainDownloadingRecyclerAdapter(dataList, true);
+        mListView.setAdapter(mAdapter);
     }
 
     @Override

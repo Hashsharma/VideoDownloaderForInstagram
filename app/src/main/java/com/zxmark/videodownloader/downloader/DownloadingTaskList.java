@@ -6,8 +6,10 @@ import android.widget.Toast;
 
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
+import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.PowerfulDownloader;
+import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class DownloadingTaskList {
         if (mFuturedTaskList.size() > 0) {
             LogUtil.e("task", "addNewDownloadTask:" + taskId);
 
-            if(mFuturedTaskList.contains(taskId)) {
+            if (mFuturedTaskList.contains(taskId)) {
                 return;
             }
             mFuturedTaskList.add(taskId);
@@ -68,7 +70,7 @@ public class DownloadingTaskList {
                     }
 
                     @Override
-                    public void onFinish(int code,String path) {
+                    public void onFinish(int code, String path) {
                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS).sendToTarget();
                     }
 
@@ -112,18 +114,21 @@ public class DownloadingTaskList {
                 @Override
                 public void run() {
                     WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(taskId);
-                    if(webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
+                    if (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
+                        if(webPageStructuredData.futureVideoList != null) {
+                            DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
+                        }
+
                         downloadVideo(taskId, webPageStructuredData);
                         downloadImage(taskId, webPageStructuredData);
                     } else {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(MainApplication.getInstance().getApplicationContext(),"parse failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainApplication.getInstance().getApplicationContext(), "load the download content  failed!!!!!", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
-
                     finishTask(taskId);
                     executeNextTask();
                 }
