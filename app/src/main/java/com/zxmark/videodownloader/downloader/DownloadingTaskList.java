@@ -38,7 +38,6 @@ public class DownloadingTaskList {
     public void addNewDownloadTask(String taskId) {
         if (mFuturedTaskList.size() > 0) {
             LogUtil.e("task", "addNewDownloadTask:" + taskId);
-
             if (mFuturedTaskList.contains(taskId)) {
                 return;
             }
@@ -62,7 +61,7 @@ public class DownloadingTaskList {
         if (data.futureVideoList != null && data.futureVideoList.size() > 0) {
             for (String videoUrl : data.futureVideoList) {
                 LogUtil.e("download", videoUrl);
-                mHandler.sendEmptyMessage(DownloadService.MSG_DOWNLOAD_START);
+                mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START,0,0,DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
                 PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
                     @Override
                     public void onStart(String path) {

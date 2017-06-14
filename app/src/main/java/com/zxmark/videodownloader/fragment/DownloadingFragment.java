@@ -131,6 +131,12 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    public void onStartDownload() {
+        mDataList = DBHelper.getDefault().getDownloadingList();
+        mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
+        mListView.setAdapter(mAdapter);
+    }
+
     public void deleteVideoByPath(String path) {
         VideoBean bean = new VideoBean();
         bean.videoPath = path;

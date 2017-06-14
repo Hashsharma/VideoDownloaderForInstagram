@@ -64,8 +64,9 @@ public class DownloadService extends Service {
                 Toast.makeText(DownloadService.this, "start download", Toast.LENGTH_SHORT).show();
                 FloatViewManager manager = FloatViewManager.getDefault();
                 manager.showFloatView();
+                DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
-                FloatViewManager.getDefault().setProgress(msg.arg1);
+               // FloatViewManager.getDefault().setProgress(msg.arg1);
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg1);
             }
         }
@@ -73,7 +74,7 @@ public class DownloadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null && intent.getAction() != null) {
+        if (intent != null && intent.getAction() != null) {
             LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
             if (DOWNLOAD_ACTION.equals(intent.getAction())) {
                 String url = intent.getStringExtra(DOWNLOAD_URL);
@@ -87,7 +88,7 @@ public class DownloadService extends Service {
                     }
 
                     @Override
-                    public void onFinish(int statusCode,String path) {
+                    public void onFinish(int statusCode, String path) {
                         mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
                     }
 
@@ -157,8 +158,6 @@ public class DownloadService extends Service {
 //            downloadImage(webPageStructuredData);
 //        }
 //    }
-
-
     private boolean startDownload(String fileUrl) {
         if (TextUtils.isEmpty(fileUrl)) {
             return false;
@@ -263,6 +262,7 @@ public class DownloadService extends Service {
         }
 
     }
+
     private void notifyDownloadFinished(String filePath) {
         if (mCallbacks.getRegisteredCallbackCount() > 0) {
             final int N = mCallbacks.beginBroadcast();

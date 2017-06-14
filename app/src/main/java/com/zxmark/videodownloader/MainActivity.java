@@ -89,11 +89,11 @@ public class MainActivity extends AppCompatActivity
         LogUtil.e("main", "fm:" + fm);
 
         String params = null;
-        if(Intent.ACTION_SEND.equals(getIntent().getAction())) {
+        if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
             String sharedText = getIntent().getStringExtra(Intent.EXTRA_TEXT);
             params = URLMatcher.getHttpURL(sharedText);
         }
-        mViewPagerAdapter = new MainViewPagerAdapter(fm,params);
+        mViewPagerAdapter = new MainViewPagerAdapter(fm, params);
         mMainViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout = (TabLayout) findViewById(R.id.slidindg_tabs);
@@ -248,21 +248,13 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onStartDownload(final String path) throws RemoteException {
-
+            LogUtil.v("start","onStartDownload:" + path);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mAdapter == null) {
-                        mDataList = new ArrayList<>();
-                        mAdapter = new MainListRecyclerAdapter(mDataList, true);
-                        mListView.setAdapter(mAdapter);
+                    if (mViewPagerAdapter.getDownloadingFragment() != null) {
+                        mViewPagerAdapter.getDownloadingFragment().onStartDownload();
                     }
-
-                    DownloaderBean bean = new DownloaderBean();
-                    bean.file = new File(path);
-                    bean.progress = 0;
-                    mDataList.add(0, bean);
-                    mAdapter.notifyDataSetChanged();
                 }
             });
 

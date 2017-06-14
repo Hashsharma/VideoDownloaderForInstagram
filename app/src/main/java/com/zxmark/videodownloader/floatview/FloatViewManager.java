@@ -68,15 +68,15 @@ public class FloatViewManager {
 
     private int mProgress;
 
-    public void setProgress(int progress) {
-        if (mFloatView != null) {
-            if (mProgress != progress) {
-                mFloatView.setProgress(progress);
-                mProgress = progress;
-            }
-
-        }
-    }
+//    public void setProgress(int progress) {
+//        if (mFloatView != null) {
+//            if (mProgress != progress) {
+//                mFloatView.setProgress(progress);
+//                mProgress = progress;
+//            }
+//
+//        }
+//    }
 
     public void dismissFloatView() {
         if (mFloatView != null && mFloatView.getParent() != null) {

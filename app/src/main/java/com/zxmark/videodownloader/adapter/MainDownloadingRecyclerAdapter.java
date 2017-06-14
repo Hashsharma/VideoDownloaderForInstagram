@@ -45,13 +45,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemVie
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         final VideoBean bean = mDataList.get(position);
-//        holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DownloadUtil.openVideo(bean.file);
-//            }
-//        });
-        // holder.progressBar.setProgress(bean.progress);
         holder.operationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +55,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemVie
 
             }
         });
-        if(bean.progress >= 99) {
+        if (bean.progress >= 99) {
             holder.progressBar.setVisibility(View.GONE);
 
         } else {

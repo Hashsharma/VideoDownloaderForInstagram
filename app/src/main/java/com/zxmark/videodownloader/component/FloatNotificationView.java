@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewHelper;
@@ -52,7 +53,7 @@ public class FloatNotificationView extends FrameLayout implements View.OnClickLi
 
     private VelocityTracker mVelocityTracker;
     private Context mContext;
-    private TextView mProgressInfoTv;
+    private View mProgressInfoTv;
 
     @Override
     public void onClick(View v) {
@@ -85,10 +86,11 @@ public class FloatNotificationView extends FrameLayout implements View.OnClickLi
     }
 
     private void init(Context context) {
-        mProgressInfoTv = (TextView) findViewById(R.id.progress_info);
+        mProgressInfoTv = (ImageView) findViewById(R.id.progress_info);
         mProgressInfoTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                endDismissAnimation(false);
                 Utils.launchMySelf();
             }
         });
@@ -103,10 +105,6 @@ public class FloatNotificationView extends FrameLayout implements View.OnClickLi
     }
 
     public void setProgress(int progress) {
-        mProgressInfoTv.setText(String.valueOf(progress));
-        if(progress > 99) {
-            mProgressInfoTv.setText("waiting");
-        }
     }
 
     public void setWindowManager(WindowManager wm) {
@@ -195,6 +193,8 @@ public class FloatNotificationView extends FrameLayout implements View.OnClickLi
     }
 
     private void endDismissAnimation(boolean dismiss) {
+
+        mWm.removeViewImmediate(this);
     }
 
     private int determineTargetPosition(int velocity, int deltaX) {
