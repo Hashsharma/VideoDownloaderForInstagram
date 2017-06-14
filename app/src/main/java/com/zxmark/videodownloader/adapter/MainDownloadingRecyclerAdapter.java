@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -13,6 +14,8 @@ import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.R;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.downloader.DownloadingTaskList;
+import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.Utils;
 
@@ -43,26 +46,33 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemVie
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, int position) {
         final VideoBean bean = mDataList.get(position);
         holder.operationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //  bean.file.delete();
-                mDataList.remove(bean);
-                DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
-                notifyDataSetChanged();
-
+                LogUtil.e("click", "fanMenuButtons.toggleShow");
+                holder.fanMenuButtons.toggleShow();
             }
         });
-        if (bean.progress >= 99) {
-            holder.progressBar.setVisibility(View.GONE);
+        holder.fanMenuButtons.setOnFanButtonClickListener(new FanMenuButtons.OnFanClickListener() {
+            @Override
+            public void onFanButtonClicked(int index) {
+                holder.fanMenuButtons.toggleShow();
+                if (index == 0) {
+                    holder.progressBar.setProgress(0);
+                    holder.progressBar.setVisibility(View.VISIBLE);
 
-        } else {
-            holder.progressBar.setVisibility(View.VISIBLE);
-        }
-        holder.progressBar.setProgress(bean.progress);
-        LogUtil.e("main", "bean.thumbnailUrl=" + bean.thumbnailUrl);
+                    DownloadUtil.startDownload(bean.sharedUrl);
+                } else if (index == 1) {
+
+                } else if (index == 2) {
+                    mDataList.remove(bean);
+                    notifyDataSetChanged();
+                    DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
+                }
+            }
+        });
         imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
         holder.titleTv.setText(bean.pageTitle);
     }

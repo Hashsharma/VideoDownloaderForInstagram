@@ -16,9 +16,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.R;
+import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
@@ -95,6 +98,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
             receiveSendAction(mReceiveUrlParams);
         }
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+// repeat many times:
+        ImageView itemIcon = new ImageView(getActivity());
+        itemIcon.setImageResource(R.mipmap.float_download);
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon).build();
+
     }
 
     public void receiveSendAction(String url) {
@@ -121,20 +131,36 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                     if (mDataList != null) {
                         int index = mDataList.indexOf(bean);
                         if (index > -1) {
-                            VideoBean videoBean2 = mDataList.get(index);
-                            videoBean2.progress = progress;
+                            RecyclerView.ViewHolder viewHolder = mListView.findViewHolderForAdapterPosition(index);
+                            if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
+                                ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
+                                itemHolder.progressBar.setVisibility(View.VISIBLE);
+                                itemHolder.progressBar.setProgress(progress);
+                                if (progress >= 99) {
+                                    itemHolder.progressBar.setVisibility(View.GONE);
+                                }
+                            }
                         }
-                        mAdapter.notifyDataSetChanged();
                     }
                 }
             });
         }
     }
 
-    public void onStartDownload() {
-        mDataList = DBHelper.getDefault().getDownloadingList();
-        mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
-        mListView.setAdapter(mAdapter);
+    public void onStartDownload(String path) {
+        if(mDataList == null || mDataList.size() == 0) {
+            mDataList = DBHelper.getDefault().getDownloadingList();
+            mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
+            mListView.setAdapter(mAdapter);
+        } else {
+            VideoBean bean = new VideoBean();
+            bean.videoPath = path;
+            if(!mDataList.contains(bean)) {
+                mDataList = DBHelper.getDefault().getDownloadingList();
+                mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
+                mListView.setAdapter(mAdapter);
+            }
+        }
     }
 
     public void deleteVideoByPath(String path) {

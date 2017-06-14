@@ -10,4 +10,13 @@
     <string name="option_delete">Delete</string>
     <string name="option_share">POST</string>
     <string name="option_copy">COPY</string>
+
+    <string name="menu_download_video">下载视频</string>
+    <string name="menu_download_image">下载图片</string>
+    <string name="menu_delete">删除</string>
+    <string-array name="fan_labels">
+        <item>@string/menu_download_video</item>
+        <item>@string/menu_download_image</item>
+        <item>@string/menu_delete</item>
+    </string-array>
 </resources>

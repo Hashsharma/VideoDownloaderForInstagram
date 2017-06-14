@@ -15,10 +15,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
+import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
+import com.zxmark.videodownloader.util.ActivityManagerUtils;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
@@ -40,6 +43,7 @@ public class DownloadService extends Service {
     public static final String DIR = "ins_downloader";
     public static final String DOWNLOAD_ACTION = "download_action";
     public static final String REQUEST_VIDEO_URL_ACTION = "request_video_url_action";
+    public static final String REQUEST_DOWNLOAD_VIDEO_ACTION = "request_download_video_action";
     public static final String DOWNLOAD_URL = "download_url";
 
     public static final int MSG_DOWNLOAD_SUCCESS = 0;
@@ -62,15 +66,19 @@ public class DownloadService extends Service {
                 Toast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
                 Toast.makeText(DownloadService.this, "start download", Toast.LENGTH_SHORT).show();
-                FloatViewManager manager = FloatViewManager.getDefault();
-                manager.showFloatView();
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
-               // FloatViewManager.getDefault().setProgress(msg.arg1);
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg1);
             }
         }
     };
+
+    private void showFloatView() {
+        if(!ActivityManagerUtils.isTopActivity(this)) {
+            FloatViewManager manager = FloatViewManager.getDefault();
+            manager.showFloatView();
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -104,6 +112,26 @@ public class DownloadService extends Service {
                     }
                 });
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
+                final String url = intent.getStringExtra(Globals.EXTRAS);
+                showFloatView();
+                DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
+                        if (webPageStructuredData != null) {
+                            if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
+                                DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
+                            }
+
+                            if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
+                                DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureImageList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureImageList.get(0)));
+                            }
+                        }
+                    }
+                });
+
+
+            } else if (REQUEST_DOWNLOAD_VIDEO_ACTION.equals(intent.getAction())) {
                 String url = intent.getStringExtra(Globals.EXTRAS);
                 DownloadingTaskList.SINGLETON.setHandler(mHandler);
                 DownloadingTaskList.SINGLETON.addNewDownloadTask(url);

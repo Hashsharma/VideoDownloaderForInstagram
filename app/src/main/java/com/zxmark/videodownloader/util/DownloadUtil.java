@@ -22,8 +22,8 @@ public class DownloadUtil {
     public static void startDownload(String url) {
         final Context context = MainApplication.getInstance().getApplicationContext();
         Intent intent = new Intent(context, DownloadService.class);
-        intent.setAction(DownloadService.DOWNLOAD_ACTION);
-        intent.putExtra(DownloadService.DOWNLOAD_URL, url);
+        intent.setAction(DownloadService.REQUEST_DOWNLOAD_VIDEO_ACTION);
+        intent.putExtra(Globals.EXTRAS, url);
         context.startService(intent);
     }
 
@@ -34,6 +34,7 @@ public class DownloadUtil {
         intent.putExtra(Globals.EXTRAS, pageUrl);
         context.startService(intent);
     }
+
 
 
     public static File getHomeDirectory() {

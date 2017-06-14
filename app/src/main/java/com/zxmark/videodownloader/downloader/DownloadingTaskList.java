@@ -37,7 +37,6 @@ public class DownloadingTaskList {
 
     public void addNewDownloadTask(String taskId) {
         if (mFuturedTaskList.size() > 0) {
-            LogUtil.e("task", "addNewDownloadTask:" + taskId);
             if (mFuturedTaskList.contains(taskId)) {
                 return;
             }
@@ -61,7 +60,7 @@ public class DownloadingTaskList {
         if (data.futureVideoList != null && data.futureVideoList.size() > 0) {
             for (String videoUrl : data.futureVideoList) {
                 LogUtil.e("download", videoUrl);
-                mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START,0,0,DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
+                mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
                 PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
                     @Override
                     public void onStart(String path) {
@@ -71,7 +70,7 @@ public class DownloadingTaskList {
                     @Override
                     public void onFinish(int code, String path) {
                         DBHelper.getDefault().finishDownload(path);
-                        mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS,0,0,path).sendToTarget();
+                        mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, path).sendToTarget();
                     }
 
                     @Override
@@ -115,9 +114,6 @@ public class DownloadingTaskList {
                 public void run() {
                     WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(taskId);
                     if (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
-                        if (webPageStructuredData.futureVideoList != null) {
-                            DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
-                        }
                         downloadVideo(taskId, webPageStructuredData);
                         downloadImage(taskId, webPageStructuredData);
                     } else {

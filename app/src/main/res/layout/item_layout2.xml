@@ -40,16 +40,46 @@
                 app:progress_text_color="#3498DB"
                 app:progress_text_offset="1dp"
                 app:progress_text_size="10sp"
+                android:visibility="gone"
                 app:progress_text_visibility="visible" />
 
-            <ImageView
+
+            <com.bcgdv.asia.lib.fanmenu.FanMenuButtons
+                android:id="@+id/myFABSubmenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CCFFFFFF"
+                android:padding="@dimen/fab_margin"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:fanButtonColors="@array/button_colors"
+                app:fanMaxBounceBackAngle="50"
+                app:fanMenuLabels="@array/fan_labels"
+                app:fanMinBounceBackAngle="-30"
+                android:visibility="gone"
+                app:fanRememberMovedPosition="true" />
+
+
+
+            <!--<ImageView-->
+                <!--android:id="@+id/btn_operation"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom|end"-->
+                <!--android:layout_margin="@dimen/fab_margin"-->
+                <!--android:scaleType="centerInside"-->
+                <!--android:src="@mipmap/float_download" />-->
+
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/btn_operation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
+                android:layout_gravity="right|bottom"
                 android:layout_margin="@dimen/fab_margin"
-                android:scaleType="centerInside"
-                android:src="@mipmap/float_download" />
+                android:src="@drawable/menu_icon"
+
+                />
+
         </FrameLayout>
 
         <TextView
@@ -60,6 +90,8 @@
             android:gravity="left|center_vertical"
             android:paddingLeft="15dip"
             android:textColor="@android:color/black" />
+
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

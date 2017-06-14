@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     if (mViewPagerAdapter.getDownloadingFragment() != null) {
-                        mViewPagerAdapter.getDownloadingFragment().onStartDownload();
+                        mViewPagerAdapter.getDownloadingFragment().onStartDownload(path);
                     }
                 }
             });
