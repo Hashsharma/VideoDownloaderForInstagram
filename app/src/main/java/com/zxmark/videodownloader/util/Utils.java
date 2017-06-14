@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.MainApplication;
 
 /**
@@ -38,6 +39,17 @@ public class Utils {
 
         intent.setPackage("com.smile.gifmaker");
 
+        try {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApplication.getInstance().getApplicationContext().startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+//            startActivity(new Intent(Intent.ACTION_VIEW,
+//                    Uri.parse("http://instagram.com/xxx")));
+        }
+    }
+
+    public static void launchMySelf() {
+        Intent intent = new Intent(MainApplication.getInstance().getApplicationContext(), MainActivity.class);
         try {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MainApplication.getInstance().getApplicationContext().startActivity(intent);

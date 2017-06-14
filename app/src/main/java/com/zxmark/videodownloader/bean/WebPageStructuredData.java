@@ -11,6 +11,7 @@ public class WebPageStructuredData {
 
     public String pageTitle;
     public String appPageUrl;
+    public String videoThumbnailUrl;
     public List<String> futureVideoList;
     public List<String> futureImageList;
 

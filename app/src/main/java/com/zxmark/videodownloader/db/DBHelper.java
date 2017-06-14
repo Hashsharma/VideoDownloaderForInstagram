@@ -92,7 +92,7 @@ public class DBHelper {
                 bean.downloadVideoUrl = cursor.getString(4);
                 bean.appPageUrl = cursor.getString(5);
                 bean.videoPath = cursor.getString(6);
-                LogUtil.v("sd","bean.videoPath=" + bean.videoPath);
+                LogUtil.v("sd", "bean.videoPath=" + bean.videoPath);
                 dataList.add(bean);
             }
         } finally {
@@ -101,6 +101,10 @@ public class DBHelper {
             }
         }
         return dataList;
+    }
+
+    public void deleteDownloadingVideo(String videoPath) {
+        db.delete(TABLE_NAME, "video_path = ? ", new String[]{videoPath});
     }
 
     /**
@@ -112,18 +116,17 @@ public class DBHelper {
         ContentValues cv = new ContentValues();
         cv.put("video_status", STATE_VIDEO_DOWNLOAD_SUCESSFUL);
         db.update(TABLE_NAME, cv, "video_path = ?", new String[]{path});
-
-
     }
 
     /**
      * 通过路径获取当前视频的相关信息
+     *
      * @param path
      * @return
      */
     public VideoBean getVideoInfoByPath(String path) {
-        LogUtil.v("sd","bean.getVideoInfoByPath=" + path);
-        Cursor cursor = db.query("downloading_table", null, "video_status=? and video_path = ?", new String[]{String.valueOf(0), path}, null, null, "_ID desc");
+        LogUtil.v("sd", "bean.getVideoInfoByPath=" + path);
+        Cursor cursor = db.query("downloading_table", null, "video_status=? and video_path = ?", new String[]{String.valueOf(STATE_VIDEO_DOWNLOAD_SUCESSFUL), path}, null, null, "_ID desc");
         try {
             if (cursor.moveToNext()) {
                 VideoBean bean = new VideoBean();
@@ -141,6 +144,22 @@ public class DBHelper {
             }
         }
         return null;
+    }
+
+    public boolean isDownloadingByPath(String path) {
+        LogUtil.v("sd", "bean.getVideoInfoByPath=" + path);
+        Cursor cursor = db.query("downloading_table", null, "video_path = ?", new String[]{path}, null, null, "_ID desc");
+        try {
+            if (cursor.moveToNext()) {
+                VideoBean bean = new VideoBean();
+                return cursor.getInt(7) == STATE_VIDEO_DOWNLOADING;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
     }
 
 }

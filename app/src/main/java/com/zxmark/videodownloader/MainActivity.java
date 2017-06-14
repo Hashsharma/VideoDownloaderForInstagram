@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
         mMainViewPager.setOffscreenPageLimit(2);
         FragmentManager fm = getSupportFragmentManager();
-        LogUtil.e("main","fm:" + fm);
+        LogUtil.e("main", "fm:" + fm);
         mViewPagerAdapter = new MainViewPagerAdapter(fm);
         mMainViewPager.setAdapter(mViewPagerAdapter);
 
@@ -235,24 +235,9 @@ public class MainActivity extends AppCompatActivity
     private IDownloadCallback.Stub mRemoteCallback = new IDownloadCallback.Stub() {
         @Override
         public void onPublishProgress(final String key, final int progress) throws RemoteException {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    DownloaderBean bean = new DownloaderBean();
-                    bean.file = new File(key);
-                    if(mDataList != null) {
-                        int index = mDataList.indexOf(bean);
-                        if (index > -1) {
-                            DownloaderBean cacheBean = mDataList.get(index);
-                            cacheBean.progress = progress;
-                            mAdapter.notifyDataSetChanged();
-                        } else {
-                            mDataList.add(0,bean);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            });
+            if (mViewPagerAdapter != null && mViewPagerAdapter.getDownloadingFragment() != null) {
+                mViewPagerAdapter.getDownloadingFragment().publishProgress(key, progress);
+            }
         }
 
         @Override
@@ -263,14 +248,14 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     if (mAdapter == null) {
                         mDataList = new ArrayList<>();
-                        mAdapter = new MainListRecyclerAdapter(mDataList,true);
+                        mAdapter = new MainListRecyclerAdapter(mDataList, true);
                         mListView.setAdapter(mAdapter);
                     }
 
                     DownloaderBean bean = new DownloaderBean();
                     bean.file = new File(path);
                     bean.progress = 0;
-                    mDataList.add(0,bean);
+                    mDataList.add(0, bean);
                     mAdapter.notifyDataSetChanged();
                 }
             });

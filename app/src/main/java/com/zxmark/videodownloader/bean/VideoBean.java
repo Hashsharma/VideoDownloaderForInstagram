@@ -13,6 +13,8 @@ public class VideoBean {
     public String downloadVideoUrl;
     public String videoPath;
 
+    public int progress;
+
 
     @Override
     public boolean equals(Object obj) {
@@ -20,7 +22,7 @@ public class VideoBean {
 
         if (obj instanceof VideoBean) {
             VideoBean bean = (VideoBean) obj;
-            return sharedUrl.equals(bean.sharedUrl);
+            return videoPath.equals(bean.videoPath);
         }
         return super.equals(obj);
 

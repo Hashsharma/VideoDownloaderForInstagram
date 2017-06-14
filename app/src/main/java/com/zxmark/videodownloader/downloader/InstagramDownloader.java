@@ -102,14 +102,12 @@ public class InstagramDownloader extends BaseDownloader {
             data.addVideo(imageUrl);
         } else {
             data.addVideo(videoUrl);
-            String imageUrl = getImageUrl(content);
-            data.addImage(imageUrl);
+            data.videoThumbnailUrl = getImageUrl(content);
         }
 
         String title = getPageTitle(content);
         data.pageTitle = title;
         data.appPageUrl = getLaunchInstagramUrl(content);
-        LogUtil.e("fan", "title:" + title);
         return data;
     }
 
@@ -121,7 +119,6 @@ public class InstagramDownloader extends BaseDownloader {
         Matcher ma = pa.matcher(content);
 
         if (ma.find()) {
-            Log.v("fan2", "" + ma.group());
             instagramUrl = ma.group(1);
         }
         return instagramUrl;

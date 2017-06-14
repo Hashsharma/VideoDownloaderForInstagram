@@ -25,6 +25,8 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
 
     public static final CharSequence[] TITLE_ARRAY = new CharSequence[]{"", ""};
 
+    private DownloadingFragment mDownloadingFragment;
+
     private Resources mRes;
 
     public MainViewPagerAdapter(FragmentManager fm) {
@@ -43,7 +45,7 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
         LogUtil.v("adapter", "getItem.position:" + position);
         switch (position) {
             case 0:
-                return DownloadingFragment.newInstance();
+                return mDownloadingFragment = DownloadingFragment.newInstance();
             case 1:
                 return VideoHistoryFragment.newInstance();
             default:
@@ -62,5 +64,9 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
 
                 return null;
         }
+    }
+
+    public DownloadingFragment getDownloadingFragment() {
+        return mDownloadingFragment;
     }
 }

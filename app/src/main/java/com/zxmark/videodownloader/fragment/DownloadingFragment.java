@@ -2,6 +2,7 @@ package com.zxmark.videodownloader.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,8 +41,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private Button mDownloadBtn;
     private RecyclerView mListView;
     private LinearLayoutManager mLayoutManager;
-    private List<DownloaderBean> mDataList;
     private MainDownloadingRecyclerAdapter mAdapter;
+    private List<VideoBean> mDataList;
 
     public static DownloadingFragment newInstance() {
         DownloadingFragment fragment = new DownloadingFragment();
@@ -82,9 +83,31 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 false);
         mListView.setLayoutManager(mLayoutManager);
 
-        List<VideoBean> dataList = DBHelper.getDefault().getDownloadingList();
-        mAdapter = new MainDownloadingRecyclerAdapter(dataList, true);
+        mDataList = DBHelper.getDefault().getDownloadingList();
+        mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
         mListView.setAdapter(mAdapter);
+    }
+
+
+    public void publishProgress(final String path, final int progress) {
+        if(getActivity() != null && isAdded()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    VideoBean bean = new VideoBean();
+                    bean.videoPath = path;
+                    if (mDataList != null) {
+                        int index = mDataList.indexOf(bean);
+                        if (index > -1) {
+                            VideoBean videoBean2 = mDataList.get(index);
+                            videoBean2.progress = progress;
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+
     }
 
     @Override

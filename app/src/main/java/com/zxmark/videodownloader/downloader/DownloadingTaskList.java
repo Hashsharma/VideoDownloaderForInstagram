@@ -71,6 +71,7 @@ public class DownloadingTaskList {
 
                     @Override
                     public void onFinish(int code, String path) {
+                        DBHelper.getDefault().finishDownload(path);
                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS).sendToTarget();
                     }
 
@@ -115,12 +116,9 @@ public class DownloadingTaskList {
                 public void run() {
                     WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(taskId);
                     if (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
-                        if(webPageStructuredData.futureVideoList != null) {
-
-                            LogUtil.e("fan","sd:" + DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
-                            DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
+                        if (webPageStructuredData.futureVideoList != null) {
+                            DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
                         }
-
                         downloadVideo(taskId, webPageStructuredData);
                         downloadImage(taskId, webPageStructuredData);
                     } else {

@@ -22,6 +22,7 @@ import com.zxmark.videodownloader.R;
 import com.zxmark.videodownloader.util.DeviceUtil;
 import com.zxmark.videodownloader.util.DimensUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.Utils;
 
 /**
  * Created by fanlitao on 17/6/9.
@@ -85,6 +86,12 @@ public class FloatNotificationView extends FrameLayout implements View.OnClickLi
 
     private void init(Context context) {
         mProgressInfoTv = (TextView) findViewById(R.id.progress_info);
+        mProgressInfoTv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.launchMySelf();
+            }
+        });
         ViewConfiguration configuration = ViewConfiguration
                 .get(context);
         touchSlop = ViewConfigurationCompat

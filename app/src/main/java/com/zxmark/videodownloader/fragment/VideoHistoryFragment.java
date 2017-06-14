@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.R;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
+import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
 
@@ -71,16 +72,21 @@ public class VideoHistoryFragment extends Fragment {
         mListView.setLayoutManager(mLayoutManager);
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
+        DBHelper dbHelper = DBHelper.getDefault();
         if (fileArray != null && fileArray.length > 0) {
             mDataList = new ArrayList<DownloaderBean>();
             for (File item : fileArray) {
+                if (dbHelper.isDownloadingByPath(item.getAbsolutePath())) {
+                    continue;
+                }
                 DownloaderBean bean = new DownloaderBean();
+
                 bean.file = item;
                 bean.progress = 0;
                 mDataList.add(bean);
             }
             Collections.sort(mDataList, new FileComparator());
-            mAdapter = new MainListRecyclerAdapter(mDataList,false);
+            mAdapter = new MainListRecyclerAdapter(mDataList, false);
             mListView.setAdapter(mAdapter);
         }
     }

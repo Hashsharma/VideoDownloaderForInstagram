@@ -57,7 +57,7 @@
             android:layout_height="60dip"
             android:layout_gravity="bottom"
             android:gravity="left|center_vertical"
-            android:paddingLeft="5dip"
+            android:paddingLeft="15dip"
             android:textColor="@android:color/black" />
     </LinearLayout>
 

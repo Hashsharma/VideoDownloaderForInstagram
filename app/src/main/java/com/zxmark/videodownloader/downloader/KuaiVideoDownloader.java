@@ -84,12 +84,12 @@ public class KuaiVideoDownloader extends BaseDownloader {
 
         if (!TextUtils.isEmpty(videoUrl)) {
             data.addVideo(videoUrl);
-            data.addImage(imageUrl);
+            data.videoThumbnailUrl = imageUrl;
             data.pageTitle = pageTitle;
             data.appPageUrl = htmlUrl;
         }
 
-        LogUtil.v("kuaw","" + data.pageTitle);
+        LogUtil.v("kuaw", "" + data.pageTitle);
 
         return data;
 
