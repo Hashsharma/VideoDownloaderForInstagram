@@ -56,7 +56,6 @@ public class DownloadUtil {
 
 
     public static String getDownloadTargetInfo(String url) {
-
         File targetDir = DownloadUtil.getHomeDirectory();
 
         if (targetDir.exists()) {
@@ -71,7 +70,7 @@ public class DownloadUtil {
             return "";
         }
         final int lastIndex = url.lastIndexOf("/");
-        return url.substring(lastIndex);
+        return url.substring(lastIndex + 1);
     }
 
 }

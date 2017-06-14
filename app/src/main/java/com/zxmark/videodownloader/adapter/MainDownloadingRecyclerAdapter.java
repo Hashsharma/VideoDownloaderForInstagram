@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.zxmark.videodownloader.DownloaderBean;
+import com.bumptech.glide.util.Util;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.R;
 import com.zxmark.videodownloader.bean.VideoBean;
-import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.Utils;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemVie
 //            @Override
 //            public void onClick(View v) {
 //                DownloadUtil.openVideo(bean.file);
-//                //Utils.openInstagramByUrl("https://www.instagram.com/p/BVPXdk7gB_0");
+                Utils.openKuaiShouApp("https://www.kuaishou.com/photo/513379859/2375662159?userId=513379859&photoId=2375662159&timestamp=1497351245304&cc=share_copylink&language=zh-cn&fid=536729859&et=1_i%252F1570086573710716933_h73");
 //            }
 //        });
         // holder.progressBar.setProgress(bean.progress);

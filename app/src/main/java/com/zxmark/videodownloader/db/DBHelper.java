@@ -1,11 +1,13 @@
 package com.zxmark.videodownloader.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.VideoBean;
+import com.zxmark.videodownloader.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,8 @@ public class DBHelper {
     public static final int STATE_VIDEO_DOWNLOADING = 0;
     public static final int STATE_VIDEO_DOWNLOAD_SUCESSFUL = 1;
     public static final int STATE_VIDEO_DOWNLOAD_FAILED = 2;
+
+    public static final String TABLE_NAME = "downloading_table";
 
     private static volatile DBHelper sDefault;
 
@@ -77,7 +81,7 @@ public class DBHelper {
 
 
     public List<VideoBean> getDownloadingList() {
-        Cursor cursor = db.query("downloading_table", null, "video_status=?", new String[]{String.valueOf(0)}, null, null, null);
+        Cursor cursor = db.query("downloading_table", null, "video_status=?", new String[]{String.valueOf(0)}, null, null, "_ID desc");
         List<VideoBean> dataList = new ArrayList<VideoBean>();
         try {
             while (cursor.moveToNext()) {
@@ -88,6 +92,7 @@ public class DBHelper {
                 bean.downloadVideoUrl = cursor.getString(4);
                 bean.appPageUrl = cursor.getString(5);
                 bean.videoPath = cursor.getString(6);
+                LogUtil.v("sd","bean.videoPath=" + bean.videoPath);
                 dataList.add(bean);
             }
         } finally {
@@ -95,11 +100,47 @@ public class DBHelper {
                 cursor.close();
             }
         }
-
-
         return dataList;
+    }
+
+    /**
+     * 下载完成，修改标志位
+     *
+     * @param path
+     */
+    public void finishDownload(String path) {
+        ContentValues cv = new ContentValues();
+        cv.put("video_status", STATE_VIDEO_DOWNLOAD_SUCESSFUL);
+        db.update(TABLE_NAME, cv, "video_path = ?", new String[]{path});
+
 
     }
 
+    /**
+     * 通过路径获取当前视频的相关信息
+     * @param path
+     * @return
+     */
+    public VideoBean getVideoInfoByPath(String path) {
+        LogUtil.v("sd","bean.getVideoInfoByPath=" + path);
+        Cursor cursor = db.query("downloading_table", null, "video_status=? and video_path = ?", new String[]{String.valueOf(0), path}, null, null, "_ID desc");
+        try {
+            if (cursor.moveToNext()) {
+                VideoBean bean = new VideoBean();
+                bean.pageTitle = cursor.getString(1);
+                bean.sharedUrl = cursor.getString(2);
+                bean.thumbnailUrl = cursor.getString(3);
+                bean.downloadVideoUrl = cursor.getString(4);
+                bean.appPageUrl = cursor.getString(5);
+                bean.videoPath = cursor.getString(6);
+                return bean;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
 
 }

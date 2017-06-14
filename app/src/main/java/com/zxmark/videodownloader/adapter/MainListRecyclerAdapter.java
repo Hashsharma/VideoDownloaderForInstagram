@@ -1,5 +1,6 @@
 package com.zxmark.videodownloader.adapter;
 
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.R;
+import com.zxmark.videodownloader.bean.VideoBean;
+import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.Utils;
 
 import java.io.File;
@@ -27,10 +31,13 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
     private RequestManager imageLoader;
     private boolean mFullImageState = false;
 
+    private DBHelper mDBHelper;
+
     public MainListRecyclerAdapter(List<DownloaderBean> dataList, boolean isFullImage) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
         mFullImageState = isFullImage;
+        mDBHelper = DBHelper.getDefault();
     }
 
     @Override
@@ -49,10 +56,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
             @Override
             public void onClick(View v) {
                 DownloadUtil.openVideo(bean.file);
-                //Utils.openInstagramByUrl("https://www.instagram.com/p/BVPXdk7gB_0");
             }
         });
-        holder.progressBar.setProgress(bean.progress);
         holder.operationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +68,13 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
             }
         });
         imageLoader.load(bean.file).into(holder.thumbnailView);
+
+       VideoBean videoBean  =  mDBHelper.getVideoInfoByPath(bean.file.getAbsolutePath());
+        LogUtil.v("sd","videoBean:" + videoBean);
+        if(videoBean != null) {
+            holder.titleTv.setText(videoBean.pageTitle);
+        }
+
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
+import com.zxmark.videodownloader.util.LogUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,15 +38,58 @@ public class KuaiVideoDownloader extends BaseDownloader {
     }
 
 
+    public String getImageUrl(String content) {
+        String regex;
+        String imageUrl = null;
+        regex = "<meta property=\"og:image\" content=\"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+        Log.v("fan2", "ma=" + ma);
+
+        if (ma.find()) {
+            Log.v("fan2", "" + ma.group());
+            imageUrl = ma.group(1);
+        }
+
+        return imageUrl;
+    }
+
+
+    public String getPageTitle(String content) {
+        String regex;
+        String originTitle = null;
+        regex = "<meta property=\"og:description\" content=\"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+        Log.v("fan2", "ma=" + ma);
+
+        if (ma.find()) {
+            Log.v("fan2", "" + ma.group());
+            originTitle = ma.group(1);
+            originTitle = originTitle.replace("“", "");
+            originTitle = originTitle.replace("”", "");
+            return originTitle;
+        }
+
+        return null;
+    }
+
     @Override
     public WebPageStructuredData startSpideThePage(String htmlUrl) {
-
-        String videoUrl = getVideoUrl(startRequest(htmlUrl));
+        String content = startRequest(htmlUrl);
+        String videoUrl = getVideoUrl(content);
+        String imageUrl = getImageUrl(content);
+        String pageTitle = getPageTitle(content);
         WebPageStructuredData data = new WebPageStructuredData();
 
         if (!TextUtils.isEmpty(videoUrl)) {
             data.addVideo(videoUrl);
+            data.addImage(imageUrl);
+            data.pageTitle = pageTitle;
+            data.appPageUrl = htmlUrl;
         }
+
+        LogUtil.v("kuaw","" + data.pageTitle);
 
         return data;
 

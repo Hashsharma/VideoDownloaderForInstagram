@@ -28,4 +28,22 @@ public class Utils {
 //                    Uri.parse("http://instagram.com/xxx")));
         }
     }
+
+
+
+    public static void openKuaiShouApp(String url) {
+
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+        intent.setPackage("com.smile.gifmaker");
+
+        try {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApplication.getInstance().getApplicationContext().startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+//            startActivity(new Intent(Intent.ACTION_VIEW,
+//                    Uri.parse("http://instagram.com/xxx")));
+        }
+    }
 }
