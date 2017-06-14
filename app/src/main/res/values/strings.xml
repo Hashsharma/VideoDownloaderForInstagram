@@ -6,4 +6,8 @@
 
     <string name="tab_title_downloading">下载</string>
     <string name="tab_title_history">历史</string>
+
+    <string name="option_delete">Delete</string>
+    <string name="option_share">POST</string>
+    <string name="option_copy">COPY</string>
 </resources>

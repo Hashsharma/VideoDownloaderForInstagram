@@ -87,7 +87,13 @@ public class MainActivity extends AppCompatActivity
         mMainViewPager.setOffscreenPageLimit(2);
         FragmentManager fm = getSupportFragmentManager();
         LogUtil.e("main", "fm:" + fm);
-        mViewPagerAdapter = new MainViewPagerAdapter(fm);
+
+        String params = null;
+        if(Intent.ACTION_SEND.equals(getIntent().getAction())) {
+            String sharedText = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            params = URLMatcher.getHttpURL(sharedText);
+        }
+        mViewPagerAdapter = new MainViewPagerAdapter(fm,params);
         mMainViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout = (TabLayout) findViewById(R.id.slidindg_tabs);
@@ -95,8 +101,6 @@ public class MainActivity extends AppCompatActivity
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        handleSendIntent();
     }
 
     private void handleSendIntent() {
@@ -110,7 +114,9 @@ public class MainActivity extends AppCompatActivity
                 // Update UI to reflect text being shared
                 LogUtil.v("TL", "sharedText:" + sharedText);
                 String url = URLMatcher.getHttpURL(sharedText);
-                mUrlEditText.setText(url);
+                if (mViewPagerAdapter.getDownloadingFragment() != null) {
+                    mViewPagerAdapter.getDownloadingFragment().receiveSendAction(url);
+                }
             }
         }
     }
@@ -263,7 +269,27 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public void onDownloadSuccess(String path) throws RemoteException {
+        public void onDownloadSuccess(final String path) throws RemoteException {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mViewPagerAdapter != null) {
+                        if (mViewPagerAdapter.getDownloadingFragment() != null) {
+                            mViewPagerAdapter.getDownloadingFragment().deleteVideoByPath(path);
+                        }
+
+                        if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
+                            mViewPagerAdapter.getVideoHistoryFragment().refreshUI();
+                        }
+                    }
+
+
+                }
+            });
+        }
+
+        @Override
+        public void onDownloadFailed(String path) throws RemoteException {
 
         }
     };

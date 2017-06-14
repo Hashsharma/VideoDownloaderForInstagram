@@ -1,6 +1,7 @@
 package com.zxmark.videodownloader.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,10 @@ import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
+import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.File;
@@ -44,8 +48,11 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private MainDownloadingRecyclerAdapter mAdapter;
     private List<VideoBean> mDataList;
 
-    public static DownloadingFragment newInstance() {
+    public String mReceiveUrlParams;
+
+    public static DownloadingFragment newInstance(String params) {
         DownloadingFragment fragment = new DownloadingFragment();
+        fragment.mReceiveUrlParams = params;
         return fragment;
     }
 
@@ -60,9 +67,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        LogUtil.v("fragment", "onCreateView.downloadingFragment");
         View view = inflater.inflate(R.layout.downloading_page, container, false);
-
 
         return view;
     }
@@ -86,11 +91,28 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mDataList = DBHelper.getDefault().getDownloadingList();
         mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
         mListView.setAdapter(mAdapter);
+
+        if (!TextUtils.isEmpty(mReceiveUrlParams)) {
+            receiveSendAction(mReceiveUrlParams);
+        }
     }
 
+    public void receiveSendAction(String url) {
+        mUrlEditText.setText(url);
+        startDownload(url);
+    }
+
+    private void startDownload(final String url) {
+        if (isAdded()) {
+            Intent intent = new Intent(getActivity(), DownloadService.class);
+            intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
+            intent.putExtra(Globals.EXTRAS, url);
+            getActivity().startService(intent);
+        }
+    }
 
     public void publishProgress(final String path, final int progress) {
-        if(getActivity() != null && isAdded()) {
+        if (getActivity() != null && isAdded()) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -107,7 +129,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 }
             });
         }
+    }
 
+    public void deleteVideoByPath(String path) {
+        VideoBean bean = new VideoBean();
+        bean.videoPath = path;
+        mDataList.remove(bean);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

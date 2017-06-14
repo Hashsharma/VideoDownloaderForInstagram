@@ -11,7 +11,6 @@ interface IDownloadCallback {
      * and return values in AIDL.
      */
     void onPublishProgress(String key,int progress);
-
-
     void onDownloadSuccess(String path);
+    void onDownloadFailed(String path);
 }

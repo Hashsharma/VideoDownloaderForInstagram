@@ -72,7 +72,7 @@ public class DownloadingTaskList {
                     @Override
                     public void onFinish(int code, String path) {
                         DBHelper.getDefault().finishDownload(path);
-                        mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS).sendToTarget();
+                        mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS,0,0,path).sendToTarget();
                     }
 
                     @Override

@@ -62,7 +62,12 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemVie
 
             }
         });
+        if(bean.progress >= 99) {
+            holder.progressBar.setVisibility(View.GONE);
 
+        } else {
+            holder.progressBar.setVisibility(View.VISIBLE);
+        }
         holder.progressBar.setProgress(bean.progress);
         LogUtil.e("main", "bean.thumbnailUrl=" + bean.thumbnailUrl);
         imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);

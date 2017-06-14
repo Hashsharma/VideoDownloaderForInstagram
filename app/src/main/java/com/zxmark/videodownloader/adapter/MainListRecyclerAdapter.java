@@ -16,6 +16,7 @@ import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.PopWindowUtils;
 import com.zxmark.videodownloader.util.Utils;
 
 import java.io.File;
@@ -52,29 +53,45 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         final DownloaderBean bean = mDataList.get(position);
-        holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DownloadUtil.openVideo(bean.file);
             }
         });
-        holder.operationBtn.setOnClickListener(new View.OnClickListener() {
+//        holder.operationBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                bean.file.delete();
+//                mDataList.remove(bean);
+//                notifyDataSetChanged();
+//
+//            }
+//        });
+
+        holder.moreIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bean.file.delete();
-                mDataList.remove(bean);
-                notifyDataSetChanged();
-
+                PopWindowUtils.showVideoMoreOptionWindow(v, new IPopWindowClickCallback() {
+                    @Override
+                    public void onDelete() {
+                        bean.file.delete();
+                        mDataList.remove(bean);
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
         imageLoader.load(bean.file).into(holder.thumbnailView);
 
        VideoBean videoBean  =  mDBHelper.getVideoInfoByPath(bean.file.getAbsolutePath());
-        LogUtil.v("sd","videoBean:" + videoBean);
         if(videoBean != null) {
             holder.titleTv.setText(videoBean.pageTitle);
         }
+    }
 
+    public interface IPopWindowClickCallback {
+        void onDelete();
     }
 
     @Override

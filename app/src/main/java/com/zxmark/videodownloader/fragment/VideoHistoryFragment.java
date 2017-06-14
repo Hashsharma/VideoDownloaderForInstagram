@@ -70,6 +70,10 @@ public class VideoHistoryFragment extends Fragment {
                 false);
 
         mListView.setLayoutManager(mLayoutManager);
+        initData();
+    }
+
+    private void initData() {
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
         DBHelper dbHelper = DBHelper.getDefault();
@@ -89,5 +93,9 @@ public class VideoHistoryFragment extends Fragment {
             mAdapter = new MainListRecyclerAdapter(mDataList, false);
             mListView.setAdapter(mAdapter);
         }
+    }
+
+    public void refreshUI() {
+        initData();
     }
 }

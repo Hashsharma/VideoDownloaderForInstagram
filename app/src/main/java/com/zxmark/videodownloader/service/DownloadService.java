@@ -57,6 +57,7 @@ public class DownloadService extends Service {
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
                 Toast.makeText(DownloadService.this, "Download Success", Toast.LENGTH_SHORT).show();
                 FloatViewManager.getDefault().dismissFloatView();
+                DownloadService.this.notifyDownloadFinished((String) msg.obj);
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 Toast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
@@ -253,6 +254,21 @@ public class DownloadService extends Service {
             for (int i = 0; i < N; i++) {
                 try {
                     mCallbacks.getBroadcastItem(i).onStartDownload(filePath);
+                } catch (RemoteException e) {
+                    // The RemoteCallbackList will take care of removing
+                    // the dead object for us.
+                }
+            }
+            mCallbacks.finishBroadcast();
+        }
+
+    }
+    private void notifyDownloadFinished(String filePath) {
+        if (mCallbacks.getRegisteredCallbackCount() > 0) {
+            final int N = mCallbacks.beginBroadcast();
+            for (int i = 0; i < N; i++) {
+                try {
+                    mCallbacks.getBroadcastItem(i).onDownloadSuccess(filePath);
                 } catch (RemoteException e) {
                     // The RemoteCallbackList will take care of removing
                     // the dead object for us.
