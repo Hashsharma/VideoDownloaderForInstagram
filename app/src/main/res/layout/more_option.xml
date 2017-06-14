@@ -16,9 +16,9 @@
         android:background="@android:color/black" />
 
     <TextView
-        android:id="@+id/share"
+        android:id="@+id/launch"
         style="@style/PopWindowTextStyle"
-        android:text="@string/option_share" />
+        android:text="@string/option_launch" />
 
     <View
         android:layout_width="match_parent"

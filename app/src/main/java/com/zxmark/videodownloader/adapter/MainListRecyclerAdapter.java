@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.util.Util;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.R;
@@ -59,15 +60,13 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
                 DownloadUtil.openVideo(bean.file);
             }
         });
-//        holder.operationBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                bean.file.delete();
-//                mDataList.remove(bean);
-//                notifyDataSetChanged();
-//
-//            }
-//        });
+
+        final VideoBean videoBean = mDBHelper.getVideoInfoByPath(bean.file.getAbsolutePath());
+        if (videoBean != null) {
+            holder.titleTv.setText(videoBean.pageTitle);
+        } else {
+            holder.titleTv.setText("");
+        }
 
         holder.moreIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,19 +78,33 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
                         mDataList.remove(bean);
                         notifyDataSetChanged();
                     }
+
+                    @Override
+                    public void launchAppByUrl() {
+                        if(videoBean != null) {
+                            Utils.openInstagramByUrl(videoBean.appPageUrl);
+                        }
+                    }
+
+                    @Override
+                    public void onPasteSharedUrl() {
+                        if(videoBean != null) {
+                            Utils.copyText2Clipboard(videoBean.sharedUrl);
+                        }
+                    }
                 });
             }
         });
         imageLoader.load(bean.file).into(holder.thumbnailView);
 
-       VideoBean videoBean  =  mDBHelper.getVideoInfoByPath(bean.file.getAbsolutePath());
-        if(videoBean != null) {
-            holder.titleTv.setText(videoBean.pageTitle);
-        }
+
     }
 
     public interface IPopWindowClickCallback {
         void onDelete();
+        void launchAppByUrl();
+        void onPasteSharedUrl();
+
     }
 
     @Override

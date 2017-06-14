@@ -8,7 +8,7 @@
     <string name="tab_title_history">历史</string>
 
     <string name="option_delete">Delete</string>
-    <string name="option_share">POST</string>
+    <string name="option_launch">OPEN APP</string>
     <string name="option_copy">COPY</string>
 
     <string name="menu_download_video">下载视频</string>

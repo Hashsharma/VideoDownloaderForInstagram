@@ -95,7 +95,28 @@ public class DownloadingTaskList {
         if (data.futureImageList != null && data.futureImageList.size() > 0) {
             for (String imageUrl : data.futureImageList) {
                 LogUtil.e("download", imageUrl);
-                PowerfulDownloader.getDefault().startDownload(imageUrl, null);
+                PowerfulDownloader.getDefault().startDownload(imageUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                    @Override
+                    public void onStart(String path) {
+
+                    }
+
+                    @Override
+                    public void onFinish(int statusCode, String path) {
+                        DBHelper.getDefault().finishDownload(path);
+                        mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, path).sendToTarget();
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+
+                    }
+
+                    @Override
+                    public void onProgress(String path, int progress) {
+
+                    }
+                });
             }
         }
         //TODO:

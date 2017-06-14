@@ -44,6 +44,28 @@ public class PopWindowUtils {
 
             }
         });
+
+        contentView.findViewById(R.id.launch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.launchAppByUrl();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+
+        contentView.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onPasteSharedUrl();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
         popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(120) + trigerView.getWidth() / 2, 0);
     }
 }

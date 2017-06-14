@@ -125,7 +125,6 @@ public class DBHelper {
      * @return
      */
     public VideoBean getVideoInfoByPath(String path) {
-        LogUtil.v("sd", "bean.getVideoInfoByPath=" + path);
         Cursor cursor = db.query("downloading_table", null, "video_status=? and video_path = ?", new String[]{String.valueOf(STATE_VIDEO_DOWNLOAD_SUCESSFUL), path}, null, null, "_ID desc");
         try {
             if (cursor.moveToNext()) {

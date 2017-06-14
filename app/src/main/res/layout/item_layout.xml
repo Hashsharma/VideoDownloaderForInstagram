@@ -22,15 +22,7 @@
             android:scaleType="centerCrop" />
 
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|bottom"
-            android:layout_marginLeft="110dip"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="8dip"
-            android:textSize="14dip" />
+
 
         <ImageView
             android:id="@+id/more"
@@ -39,9 +31,20 @@
             android:src="@drawable/ic_action_more_vert"
             android:padding="10dip"
             android:layout_gravity="right|top"
-            android:layout_marginRight="10dip"
-            android:layout_marginTop="10dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="5dip"
             />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="110dip"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="10dip"
+            android:layout_marginBottom="8dip"
+            android:textSize="14dip" />
 
     </FrameLayout>
 </android.support.v7.widget.CardView>
