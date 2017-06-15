@@ -74,10 +74,17 @@ public class DownloadService extends Service {
     };
 
     private void showFloatView() {
-        if(!ActivityManagerUtils.isTopActivity(this)) {
-            FloatViewManager manager = FloatViewManager.getDefault();
-            manager.showFloatView();
-        }
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
+                    FloatViewManager manager = FloatViewManager.getDefault();
+                    manager.showFloatView();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -120,17 +127,18 @@ public class DownloadService extends Service {
 
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
-                showFloatView();
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
                         WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
                         if (webPageStructuredData != null) {
                             if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
+                                showFloatView();
                                 DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
                             }
 
                             if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
+                                showFloatView();
                                 DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureImageList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureImageList.get(0)));
                             }
                         }

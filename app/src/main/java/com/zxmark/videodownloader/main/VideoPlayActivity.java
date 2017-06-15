@@ -2,6 +2,7 @@ package com.zxmark.videodownloader.main;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,7 +38,7 @@ public class VideoPlayActivity extends Activity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);  //去掉 title
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //设置全屏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.video_play);
 
@@ -60,5 +61,22 @@ public class VideoPlayActivity extends Activity {
         mVideoView.start();
         //  4.5  获取焦点
         mVideoView.requestFocus();
+
+        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                finish();
+                return false;
+            }
+        });
+
+
+        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mVideoView.setVideoURI(mVideoPath);
+                mVideoView.start();
+            }
+        });
     }
 }
