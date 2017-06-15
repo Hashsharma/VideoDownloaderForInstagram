@@ -1,40 +1,30 @@
 package com.zxmark.videodownloader.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.R;
 import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
-import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.DownloadUtil;
-import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
-import com.zxmark.videodownloader.util.LogUtil;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -83,6 +73,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mUrlEditText = (EditText) findViewById(R.id.paste_url);
+        TextView homeTv = (TextView) findViewById(R.id.home_directory);
+        homeTv.setText(DownloadUtil.getHomeDirectory().getAbsolutePath());
         findViewById(R.id.btn_download).setOnClickListener(this);
         findViewById(R.id.btn_paste).setOnClickListener(this);
         mListView = (RecyclerView) findViewById(R.id.downloading_list);
@@ -164,6 +156,9 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     public void deleteVideoByPath(String path) {
+        if(TextUtils.isEmpty(path)) {
+            return;
+        }
         VideoBean bean = new VideoBean();
         bean.videoPath = path;
         mDataList.remove(bean);

@@ -19,6 +19,7 @@ import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.Utils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -51,7 +52,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemVie
         holder.operationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.e("click", "fanMenuButtons.toggleShow");
                 holder.fanMenuButtons.toggleShow();
             }
         });
@@ -65,16 +65,23 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<ItemVie
 
                     DownloadUtil.startDownload(bean.sharedUrl);
                 } else if (index == 1) {
-
+                    DownloadUtil.downloadThumbnail(bean.thumbnailUrl);
                 } else if (index == 2) {
-                    mDataList.remove(bean);
-                    notifyDataSetChanged();
-                    DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
+                    deleteDownloadingVideo(bean);
                 }
             }
         });
         imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
         holder.titleTv.setText(bean.pageTitle);
+    }
+
+    private void deleteDownloadingVideo(VideoBean bean) {
+        mDataList.remove(bean);
+        notifyDataSetChanged();
+        DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
+        DownloadingTaskList.SINGLETON.intrupted(bean.sharedUrl);
+        new File(bean.videoPath).delete();
+
     }
 
     @Override

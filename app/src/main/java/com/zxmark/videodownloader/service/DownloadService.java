@@ -85,32 +85,39 @@ public class DownloadService extends Service {
         if (intent != null && intent.getAction() != null) {
             LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
             if (DOWNLOAD_ACTION.equals(intent.getAction())) {
-                String url = intent.getStringExtra(DOWNLOAD_URL);
+               final String url = intent.getStringExtra(Globals.EXTRAS);
                 if (TextUtils.isEmpty(url)) {
                     return super.onStartCommand(intent, flags, startId);
                 }
-                PowerfulDownloader.getDefault().startDownload(url, new PowerfulDownloader.IPowerfulDownloadCallback() {
+
+                DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
-                    public void onStart(String path) {
+                    public void run() {
+                        PowerfulDownloader.getDefault().startDownload(url, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                            @Override
+                            public void onStart(String path) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onFinish(int statusCode, String path) {
-                        mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
-                    }
+                            @Override
+                            public void onFinish(int statusCode, String path) {
+                                mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
+                            }
 
-                    @Override
-                    public void onError(int errorCode) {
+                            @Override
+                            public void onError(int errorCode) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onProgress(String path, int progress) {
-                        mHandler.obtainMessage(MSG_UPDATE_PROGRESS, progress, 0).sendToTarget();
-                        DownloadService.this.notifyDownloadProgress(path, progress);
+                            @Override
+                            public void onProgress(String path, int progress) {
+//                        mHandler.obtainMessage(MSG_UPDATE_PROGRESS, progress, 0).sendToTarget();
+//                        DownloadService.this.notifyDownloadProgress(path, progress);
+                            }
+                        });
                     }
                 });
+
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 showFloatView();

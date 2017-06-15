@@ -2,6 +2,7 @@ package com.zxmark.videodownloader.downloader;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.zxmark.videodownloader.MainApplication;
@@ -55,6 +56,13 @@ public class DownloadingTaskList {
         mHandler = handler;
     }
 
+
+    public void intrupted(String taskId) {
+        PowerfulDownloader.getDefault().interupted();
+        if (!TextUtils.isEmpty(taskId)) {
+            mFuturedTaskList.remove(taskId);
+        }
+    }
 
     private void downloadVideo(final String taskId, WebPageStructuredData data) {
         if (data.futureVideoList != null && data.futureVideoList.size() > 0) {

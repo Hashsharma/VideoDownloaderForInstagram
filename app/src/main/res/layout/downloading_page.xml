@@ -23,8 +23,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:layout_weight="1"
-            android:background="@color/colorCyan"
-            android:text="Paste"
+            android:background="@color/colorPrimary"
+            android:text="HOW TO"
             android:textColor="@android:color/white"
             android:textSize="12dip" />
 
@@ -35,12 +35,21 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:layout_weight="1"
-            android:background="@color/colorCyan"
-            android:text="Download"
+            android:background="@color/colorPrimaryDark"
+            android:text="PASTE"
             android:textColor="@android:color/white"
             android:textSize="12dip" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/home_directory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#B9B9B9"
+        android:layout_marginTop="10dip"
+        android:layout_gravity="center_horizontal"
+        android:textSize="15dip"
+        />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/downloading_list"
         android:layout_width="match_parent"

@@ -9,7 +9,8 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -45,10 +46,28 @@
             </intent-filter>
         </activity>
 
+
+        <activity android:name=".main.VideoPlayActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".main.ImageGalleryActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
         <service
             android:name="com.zxmark.videodownloader.service.DownloadService"
             android:exported="true" />
         <service android:name=".service.TLRequestParserService" />
+
+        <meta-data android:value="5941ea6f310c9331ee0004a1 " android:name="UMENG_APPKEY"></meta-data>
     </application>
 
 </manifest>

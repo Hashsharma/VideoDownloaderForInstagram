@@ -29,6 +29,8 @@ public class PowerfulDownloader {
     public static final int CODE_DOWNLOAD_FAILED = 1;
     public volatile static PowerfulDownloader sInstance;
 
+    private static volatile boolean sIntrupted = false;
+
     private Object mSyncedLocked = new Object();
 
     private volatile boolean mMutilThreadDownloading = false;
@@ -56,8 +58,13 @@ public class PowerfulDownloader {
     }
 
 
+    public void interupted() {
+        sIntrupted = true;
+    }
+
     public void startDownload(String fileUrl, IPowerfulDownloadCallback callback) {
         mCallback = callback;
+        sIntrupted = false;
         download(fileUrl, DownloadUtil.getDownloadTargetInfo(fileUrl), THREAD_COUNT);
     }
 
@@ -115,10 +122,10 @@ public class PowerfulDownloader {
         }
 
         if (mCallback != null) {
-            if(new File(targetPath).length() < targetFileSize) {
+            if (new File(targetPath).length() < targetFileSize) {
                 codeStatus = CODE_DOWNLOAD_FAILED;
             }
-            mCallback.onFinish(codeStatus,targetPath);
+            mCallback.onFinish(codeStatus, targetPath);
         }
 
 
@@ -144,6 +151,7 @@ public class PowerfulDownloader {
             filePath = file.getAbsolutePath();
             this.fileSize = fileSize;
         }
+
         @Override
         public void run() {
             HttpURLConnection conn = null;
@@ -165,9 +173,12 @@ public class PowerfulDownloader {
                     byte[] b = new byte[1024];
                     int len = 0;
                     while ((len = inputStream.read(b)) != -1) {
+                        if (sIntrupted) {
+                            break;
+                        }
                         mReadBytesCount += len;
                         if (mCallback != null) {
-                            mCallback.onProgress(filePath, (int) (1 + 100* (mReadBytesCount * 1.0f/ fileSize)));
+                            mCallback.onProgress(filePath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                         }
                         raf.write(b, 0, len);
                     }
@@ -220,7 +231,7 @@ public class PowerfulDownloader {
     public interface IPowerfulDownloadCallback {
         void onStart(String path);
 
-        void onFinish(int statusCode,String path);
+        void onFinish(int statusCode, String path);
 
         void onError(int errorCode);
 

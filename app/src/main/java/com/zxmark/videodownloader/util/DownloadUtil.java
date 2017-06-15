@@ -8,6 +8,8 @@ import android.support.annotation.MainThread;
 import android.text.TextUtils;
 
 import com.zxmark.videodownloader.MainApplication;
+import com.zxmark.videodownloader.main.ImageGalleryActivity;
+import com.zxmark.videodownloader.main.VideoPlayActivity;
 import com.zxmark.videodownloader.service.DownloadService;
 
 import java.io.File;
@@ -35,6 +37,14 @@ public class DownloadUtil {
         context.startService(intent);
     }
 
+    public static void downloadThumbnail(String downloadUrl) {
+        final Context context = MainApplication.getInstance().getApplicationContext();
+        Intent intent = new Intent(context, DownloadService.class);
+        intent.setAction(DownloadService.DOWNLOAD_ACTION);
+        intent.putExtra(Globals.EXTRAS, downloadUrl);
+        context.startService(intent);
+    }
+
 
 
     public static File getHomeDirectory() {
@@ -43,15 +53,16 @@ public class DownloadUtil {
     }
 
     public static void openVideo(File file) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+        Intent intent = new Intent();
         if (file.getName().endsWith("mp4")) {
+            intent.setClass(MainApplication.getInstance().getApplicationContext(),VideoPlayActivity.class);
             intent.setDataAndType(Uri.fromFile(file), "video/mp4");
         } else {
+            intent.setClass(MainApplication.getInstance().getApplicationContext(),ImageGalleryActivity.class);
             intent.setDataAndType(Uri.fromFile(file), "image/*");
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MainApplication.getInstance().startActivity(intent);
     }
 
