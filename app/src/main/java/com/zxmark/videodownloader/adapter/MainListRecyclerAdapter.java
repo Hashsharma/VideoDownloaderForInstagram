@@ -1,5 +1,6 @@
 package com.zxmark.videodownloader.adapter;
 
+import android.content.SharedPreferences;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
+import com.zxmark.videodownloader.util.ShareActionUtil;
 import com.zxmark.videodownloader.util.Utils;
 
 import java.io.File;
@@ -68,7 +70,13 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
             holder.titleTv.setText(bean.file.getName());
         }
 
-        LogUtil.e("file","bean.file:" + bean.file.getAbsolutePath());
+        holder.repostView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), bean.file.getAbsolutePath());
+            }
+        });
+        LogUtil.e("file", "bean.file:" + bean.file.getAbsolutePath());
         imageLoader.load(bean.file).into(holder.thumbnailView);
         holder.moreIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +105,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
                 });
             }
         });
-
 
 
     }

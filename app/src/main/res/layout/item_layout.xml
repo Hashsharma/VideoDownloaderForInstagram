@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/image_bg_color"
                 android:scaleType="centerCrop" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,14 +49,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:layout_marginBottom="8dip"
+            android:layout_marginBottom="15dip"
             android:layout_marginLeft="110dip"
             android:layout_marginRight="15dip"
             android:layout_marginTop="15dip"
+            android:fontFamily=""
             android:maxLines="4"
             android:textColor="@android:color/black"
-            android:fontFamily=""
             android:textSize="14dip" />
+
+        <TextView
+            android:id="@+id/repost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:fontFamily="sans-serif-medium"
+            android:padding="15dip"
+            android:text="@string/repost"
+            android:textColor="@color/repost_background"
+            android:textSize="15dip" />
 
     </FrameLayout>
 </android.support.v7.widget.CardView>

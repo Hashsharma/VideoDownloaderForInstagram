@@ -35,6 +35,16 @@ public class Utils {
     }
 
 
+    public static void openAppByPackageName(String packageName) {
+        Intent intent = MainApplication.getInstance().getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MainApplication.getInstance().getApplicationContext().startActivity(intent);
+    }
+    public static void openInstagram() {
+        openAppByPackageName("com.instagram.android");
+    }
+
+
     public static void openKuaiShouApp(String url) {
 
         Uri uri = Uri.parse(url);

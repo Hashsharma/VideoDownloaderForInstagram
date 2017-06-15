@@ -74,7 +74,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="15dip"
-                android:text="1.打开Instagram"
+                android:text="1.open Instagram"
                 android:textSize="20dip"
                 android:layout_gravity="left"
                 android:layout_marginBottom="10dip"
@@ -88,7 +88,47 @@
                 android:layout_gravity="center"
                 android:src="@drawable/user_how_to"
                 />
+            <TextView
+                android:textColor="@color/cardview_dark_background"
+                android:fontFamily="sans-serif-medium"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="15dip"
+                android:text="2.open app"
+                android:textSize="20dip"
+                android:layout_gravity="left"
+                android:layout_marginBottom="10dip"
+                android:layout_height="wrap_content" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:layout_gravity="center"
+                android:src="@drawable/how_to_2"
+                />
+
+            <TextView
+                android:textColor="@color/cardview_dark_background"
+                android:fontFamily="sans-serif-medium"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="15dip"
+                android:text="3.Click the button"
+                android:textSize="20dip"
+                android:layout_gravity="left"
+                android:layout_marginBottom="10dip"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:layout_gravity="center"
+                android:src="@drawable/how_to_3"
+                />
         </LinearLayout>
 
     </ScrollView>

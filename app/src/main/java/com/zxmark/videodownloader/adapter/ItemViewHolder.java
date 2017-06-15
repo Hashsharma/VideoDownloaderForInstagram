@@ -24,6 +24,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public TextView titleTv;
     public ImageView moreIv;
     public FanMenuButtons fanMenuButtons;
+    public View repostView;
 
     public ItemViewHolder(View itemView) {
         super(itemView);
@@ -33,5 +34,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         titleTv = (TextView) itemView.findViewById(R.id.title);
         moreIv = (ImageView) itemView.findViewById(R.id.more);
         fanMenuButtons = (FanMenuButtons) itemView.findViewById(R.id.myFABSubmenu);
+
+        repostView = itemView.findViewById(R.id.repost);
     }
 }

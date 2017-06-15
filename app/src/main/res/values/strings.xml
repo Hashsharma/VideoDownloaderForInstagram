@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Downloader For Insta</string>
+    <string name="app_name">Insta Downloader</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
@@ -20,5 +20,6 @@
         <item>@string/menu_delete</item>
     </string-array>
 
-    <string name="download_home_lable">Download Dir:%s</string>
+    <string name="download_home_lable">Dir:%s</string>
+    <string name="repost">REPOST</string>
 </resources>
