@@ -18,6 +18,7 @@ import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
 import com.zxmark.videodownloader.util.ShareActionUtil;
 import com.zxmark.videodownloader.util.Utils;
@@ -70,13 +71,13 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
             holder.titleTv.setText(bean.file.getName());
         }
 
+        holder.playView.setVisibility(MimeTypeUtil.isVideoType(bean.file.getName()) ? View.VISIBLE : View.GONE);
         holder.repostView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), bean.file.getAbsolutePath());
             }
         });
-        LogUtil.e("file", "bean.file:" + bean.file.getAbsolutePath());
         imageLoader.load(bean.file).into(holder.thumbnailView);
         holder.moreIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,8 +106,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
                 });
             }
         });
-
-
     }
 
     public interface IPopWindowClickCallback {

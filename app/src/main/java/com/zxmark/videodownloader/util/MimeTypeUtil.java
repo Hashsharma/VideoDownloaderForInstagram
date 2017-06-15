@@ -33,4 +33,10 @@ public class MimeTypeUtil {
     public static String getMimeTypeByFileName(String fileName) {
         return getMimeTypeBySuffixName(getSuffixByName(fileName));
     }
+
+    public static boolean isVideoType(String fileName) {
+        String array[] = fileName.split("\\.");
+        String suffixName = array[array.length - 1];
+        return suffixName.equals("mp4");
+    }
 }

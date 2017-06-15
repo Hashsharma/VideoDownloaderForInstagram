@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-     // getMenuInflater().inflate(R.menu.main, menu);
+        // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -169,16 +169,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            Utils.openInstagram();
         } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+            if (mViewPagerAdapter.getDownloadingFragment() != null) {
+                mViewPagerAdapter.getDownloadingFragment().showHotToInfo();
+            }
         } else if (id == R.id.nav_send) {
-
+            Utils.sendMyApp();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -201,7 +198,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
                 startDownload(pastUrl);
             }
-        } else if(v.getId() == R.id.ins_icon) {
+        } else if (v.getId() == R.id.ins_icon) {
             Utils.openInstagram();
         }
     }

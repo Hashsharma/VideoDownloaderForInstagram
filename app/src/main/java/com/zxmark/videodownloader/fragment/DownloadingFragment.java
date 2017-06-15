@@ -176,14 +176,18 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.btn_howto:
-                if (mHowToView.getVisibility() == View.VISIBLE) {
-                    mHowToView.setVisibility(View.GONE);
-                    mListView.setVisibility(View.VISIBLE);
-                } else {
-                    mHowToView.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.GONE);
-                }
+                showHotToInfo();
                 break;
+        }
+    }
+
+    public void showHotToInfo() {
+        if (mHowToView.getVisibility() == View.VISIBLE) {
+            mHowToView.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
+        } else {
+            mHowToView.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
         }
     }
 }
