@@ -14,36 +14,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/thumbnail"
+        <FrameLayout
             android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:background="@color/cardview_shadow_end_color"
-            android:scaleType="centerCrop" />
+            android:layout_height="match_parent">
 
-
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="100dip"
+                android:layout_height="match_parent"
+                android:background="@color/image_bg_color"
+                android:scaleType="centerCrop" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleType="center"
+                android:src="@drawable/icon_video" />
+        </FrameLayout>
 
 
         <ImageView
             android:id="@+id/more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_more_vert"
-            android:padding="10dip"
             android:layout_gravity="right|top"
             android:layout_marginRight="5dip"
             android:layout_marginTop="5dip"
-            />
+            android:padding="10dip"
+            android:src="@drawable/ic_action_more_vert" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:layout_marginLeft="110dip"
-            android:textColor="@android:color/black"
-            android:layout_marginRight="10dip"
             android:layout_marginBottom="8dip"
+            android:layout_marginLeft="110dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginTop="15dip"
+            android:maxLines="4"
+            android:textColor="@android:color/black"
+            android:fontFamily=""
             android:textSize="14dip" />
 
     </FrameLayout>

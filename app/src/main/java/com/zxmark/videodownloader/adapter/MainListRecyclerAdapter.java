@@ -65,9 +65,11 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
         if (videoBean != null) {
             holder.titleTv.setText(videoBean.pageTitle);
         } else {
-            holder.titleTv.setText("");
+            holder.titleTv.setText(bean.file.getName());
         }
 
+        LogUtil.e("file","bean.file:" + bean.file.getAbsolutePath());
+        imageLoader.load(bean.file).into(holder.thumbnailView);
         holder.moreIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,28 +83,30 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder
 
                     @Override
                     public void launchAppByUrl() {
-                        if(videoBean != null) {
+                        if (videoBean != null) {
                             Utils.openInstagramByUrl(videoBean.appPageUrl);
                         }
                     }
 
                     @Override
                     public void onPasteSharedUrl() {
-                        if(videoBean != null) {
+                        if (videoBean != null) {
                             Utils.copyText2Clipboard(videoBean.sharedUrl);
                         }
                     }
                 });
             }
         });
-        imageLoader.load(bean.file).into(holder.thumbnailView);
+
 
 
     }
 
     public interface IPopWindowClickCallback {
         void onDelete();
+
         void launchAppByUrl();
+
         void onPasteSharedUrl();
 
     }

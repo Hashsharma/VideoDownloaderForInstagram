@@ -67,7 +67,8 @@
             android:exported="true" />
         <service android:name=".service.TLRequestParserService" />
 
-        <meta-data android:value="5941ea6f310c9331ee0004a1 " android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="5941ea6f310c9331ee0004a1" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="GP" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

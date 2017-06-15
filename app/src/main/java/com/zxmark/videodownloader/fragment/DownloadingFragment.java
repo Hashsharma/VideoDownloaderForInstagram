@@ -79,7 +79,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         super.onActivityCreated(savedInstanceState);
         mUrlEditText = (EditText) findViewById(R.id.paste_url);
         TextView homeTv = (TextView) findViewById(R.id.home_directory);
-        homeTv.setText(DownloadUtil.getHomeDirectory().getAbsolutePath());
+        homeTv.setText(getResources().getString(R.string.download_home_lable, DownloadUtil.getHomeDirectory().getAbsolutePath()));
         findViewById(R.id.btn_howto).setOnClickListener(this);
         findViewById(R.id.btn_paste).setOnClickListener(this);
         mListView = (RecyclerView) findViewById(R.id.downloading_list);
@@ -95,13 +95,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
             receiveSendAction(mReceiveUrlParams);
         }
-
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-// repeat many times:
-        ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.mipmap.float_download);
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).build();
-
     }
 
     public void receiveSendAction(String url) {

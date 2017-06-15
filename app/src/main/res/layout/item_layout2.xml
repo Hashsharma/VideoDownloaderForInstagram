@@ -24,8 +24,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="190dip"
                 android:layout_gravity="top"
-                android:background="@color/cardview_shadow_end_color"
+                android:background="@color/image_bg_color"
                 android:scaleType="centerCrop" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleType="center"
+                android:src="@drawable/icon_video" />
 
             <com.daimajia.numberprogressbar.NumberProgressBar
                 android:id="@+id/progressbar"
@@ -35,12 +43,12 @@
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
+                android:visibility="gone"
                 app:progress_current="0"
                 app:progress_max="100"
                 app:progress_text_color="#3498DB"
                 app:progress_text_offset="1dp"
                 app:progress_text_size="10sp"
-                android:visibility="gone"
                 app:progress_text_visibility="visible" />
 
 
@@ -52,23 +60,22 @@
                 android:padding="@dimen/fab_margin"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
+                android:visibility="gone"
                 app:fanButtonColors="@array/button_colors"
                 app:fanMaxBounceBackAngle="50"
                 app:fanMenuLabels="@array/fan_labels"
                 app:fanMinBounceBackAngle="-30"
-                android:visibility="gone"
                 app:fanRememberMovedPosition="true" />
 
 
-
             <!--<ImageView-->
-                <!--android:id="@+id/btn_operation"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="bottom|end"-->
-                <!--android:layout_margin="@dimen/fab_margin"-->
-                <!--android:scaleType="centerInside"-->
-                <!--android:src="@mipmap/float_download" />-->
+            <!--android:id="@+id/btn_operation"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|end"-->
+            <!--android:layout_margin="@dimen/fab_margin"-->
+            <!--android:scaleType="centerInside"-->
+            <!--android:src="@mipmap/float_download" />-->
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/btn_operation"
@@ -87,7 +94,10 @@
             android:layout_width="match_parent"
             android:layout_height="60dip"
             android:layout_gravity="bottom"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
             android:gravity="left|center_vertical"
+            android:maxLines="3"
             android:paddingLeft="15dip"
             android:textColor="@android:color/black" />
 

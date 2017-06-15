@@ -19,4 +19,6 @@
         <item>@string/menu_download_image</item>
         <item>@string/menu_delete</item>
     </string-array>
+
+    <string name="download_home_lable">Download Dir:%s</string>
 </resources>
