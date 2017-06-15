@@ -42,9 +42,11 @@ public final class VideoDownloadFactory {
             LogUtil.v("fan", "The tools dont support downloading this video");
         }
 
+        if (downloader != null) {
+            return downloader.startSpideThePage(url);
+        }
 
-        return downloader.startSpideThePage(url);
-
+        return null;
     }
 
 

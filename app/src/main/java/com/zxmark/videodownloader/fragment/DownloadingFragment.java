@@ -1,5 +1,7 @@
 package com.zxmark.videodownloader.fragment;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.zxmark.videodownloader.R;
@@ -40,6 +43,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private LinearLayoutManager mLayoutManager;
     private MainDownloadingRecyclerAdapter mAdapter;
     private List<VideoBean> mDataList;
+
+    private View mHowToView;
 
     public String mReceiveUrlParams;
 
@@ -75,7 +80,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mUrlEditText = (EditText) findViewById(R.id.paste_url);
         TextView homeTv = (TextView) findViewById(R.id.home_directory);
         homeTv.setText(DownloadUtil.getHomeDirectory().getAbsolutePath());
-        findViewById(R.id.btn_download).setOnClickListener(this);
+        findViewById(R.id.btn_howto).setOnClickListener(this);
         findViewById(R.id.btn_paste).setOnClickListener(this);
         mListView = (RecyclerView) findViewById(R.id.downloading_list);
         mListView.setHasFixedSize(true);
@@ -83,10 +88,10 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 false);
         mListView.setLayoutManager(mLayoutManager);
 
+        mHowToView = findViewById(R.id.how_to_info);
         mDataList = DBHelper.getDefault().getDownloadingList();
         mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
         mListView.setAdapter(mAdapter);
-
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
             receiveSendAction(mReceiveUrlParams);
         }
@@ -140,14 +145,16 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     public void onStartDownload(String path) {
-        if(mDataList == null || mDataList.size() == 0) {
+        if (mDataList == null || mDataList.size() == 0) {
+            mHowToView.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
             mDataList = DBHelper.getDefault().getDownloadingList();
             mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
             mListView.setAdapter(mAdapter);
         } else {
             VideoBean bean = new VideoBean();
             bean.videoPath = path;
-            if(!mDataList.contains(bean)) {
+            if (!mDataList.contains(bean)) {
                 mDataList = DBHelper.getDefault().getDownloadingList();
                 mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
                 mListView.setAdapter(mAdapter);
@@ -156,7 +163,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     public void deleteVideoByPath(String path) {
-        if(TextUtils.isEmpty(path)) {
+        if (TextUtils.isEmpty(path)) {
             return;
         }
         VideoBean bean = new VideoBean();
@@ -167,6 +174,23 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.btn_paste:
+                final ClipboardManager cb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                String pastUrl = cb.getText().toString();
+                if (!TextUtils.isEmpty(pastUrl)) {
+                    startDownload(pastUrl);
+                }
+                break;
+            case R.id.btn_howto:
+                if (mHowToView.getVisibility() == View.VISIBLE) {
+                    mHowToView.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
+                } else {
+                    mHowToView.setVisibility(View.VISIBLE);
+                    mListView.setVisibility(View.GONE);
+                }
+                break;
+        }
     }
 }

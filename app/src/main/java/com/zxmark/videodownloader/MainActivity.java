@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_download) {
+        if (v.getId() == R.id.btn_paste) {
             String downloadUrl = mUrlEditText.getText().toString();
             if (!TextUtils.isEmpty(downloadUrl)) {
                 Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();

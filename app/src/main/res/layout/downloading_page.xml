@@ -17,7 +17,7 @@
         android:layout_height="40dip">
 
         <Button
-            android:id="@+id/btn_paste"
+            android:id="@+id/btn_howto"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dip"
@@ -29,7 +29,7 @@
             android:textSize="12dip" />
 
         <Button
-            android:id="@+id/btn_download"
+            android:id="@+id/btn_paste"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dip"
@@ -57,4 +57,14 @@
         android:layout_marginTop="5dip"
         android:background="@color/cardview_shadow_end_color"></android.support.v7.widget.RecyclerView>
 
+    <ImageView
+        android:id="@+id/how_to_info"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:src="@drawable/user_how_to"
+        />
 </LinearLayout>
