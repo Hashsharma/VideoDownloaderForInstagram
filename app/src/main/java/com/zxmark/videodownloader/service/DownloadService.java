@@ -130,7 +130,7 @@ public class DownloadService extends Service {
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 LogUtil.e("ds","NetworkUtil.isWifi:" + NetWorkUtil.isWifi(this));
-                if(NetWorkUtil.isWifi(this)) {
+                if(NetWorkUtil.isWifi(this) && false) {
                     //TODO:directly download video  with  wifi
                     DownloadingTaskList.SINGLETON.setHandler(mHandler);
                     DownloadingTaskList.SINGLETON.addNewDownloadTask(url, true);
@@ -153,7 +153,6 @@ public class DownloadService extends Service {
                         }
                     });
                 }
-
             } else if (REQUEST_DOWNLOAD_VIDEO_ACTION.equals(intent.getAction())) {
                 String url = intent.getStringExtra(Globals.EXTRAS);
                 DownloadingTaskList.SINGLETON.setHandler(mHandler);

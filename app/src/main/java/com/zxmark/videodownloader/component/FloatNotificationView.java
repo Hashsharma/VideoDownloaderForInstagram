@@ -134,15 +134,6 @@ public class FloatNotificationView extends FrameLayout implements View.OnClickLi
                 final float xdiff = Math.abs(x - mRawX);
                 final float ydiff = Math.abs(y - mRawY);
 
-                boolean performDragYdiff = ydiff > xdiff;
-//                if (performDragYdiff) {
-//
-//                } else {
-//                    if (xdiff > touchSlop) {
-//                        performDismiss(x - mRawX);
-//                    }
-//                }
-
                 if (ydiff > touchSlop || xdiff > touchSlop) {
                     mPerformDrag = true;
                     performDrag(y - mRawY, x - mRawX);

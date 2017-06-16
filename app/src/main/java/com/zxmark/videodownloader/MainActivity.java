@@ -103,10 +103,7 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-        if (VideoDownloadFactory.getInstance().isSupportWeb(Utils.getTextFromClipboard())) {
 
-
-        }
     }
 
     private void initBottomBar() {

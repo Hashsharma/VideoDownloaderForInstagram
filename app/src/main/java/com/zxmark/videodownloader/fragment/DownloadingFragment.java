@@ -92,10 +92,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mGlide = Glide.with(getActivity());
 
         mFacebookAdViewContainer = findViewById(R.id.main_ad_container);
-//        TextView homeTv = (TextView) findViewById(R.id.home_directory);
-//        homeTv.setText(getResources().getString(R.string.download_home_lable, DownloadUtil.getHomeDirectory().getAbsolutePath()));
-//        findViewById(R.id.btn_howto).setOnClickListener(this);
-//        findViewById(R.id.btn_paste).setOnClickListener(this);
         mListView = (RecyclerView) findViewById(R.id.downloading_list);
         mListView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,

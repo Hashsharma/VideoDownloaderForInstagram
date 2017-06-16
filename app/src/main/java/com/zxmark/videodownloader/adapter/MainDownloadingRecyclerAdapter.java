@@ -19,7 +19,9 @@ import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
+import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.Utils;
 
 import java.io.File;
 import java.util.List;
@@ -122,7 +124,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
             }
         } else if (baseHolder instanceof ItemHeaderHolder) {
-            ItemHeaderHolder holder = (ItemHeaderHolder) baseHolder;
+            final ItemHeaderHolder holder = (ItemHeaderHolder) baseHolder;
             holder.showHowToBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -135,11 +137,18 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             holder.downloadBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(callback != null) {
+                    holder.downloadBtn.setVisibility(View.GONE);
+                    if (callback != null) {
                         callback.onDownloadFromClipboard();
                     }
                 }
             });
+
+            if (VideoDownloadFactory.getInstance().isSupportWeb(Utils.getTextFromClipboard())) {
+                holder.downloadBtn.setVisibility(View.VISIBLE);
+            } else {
+                holder.downloadBtn.setVisibility(View.GONE);
+            }
         }
 
     }
@@ -167,6 +176,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     public interface IBtnCallback {
         public void showHowTo();
+
         void onDownloadFromClipboard();
 
     }

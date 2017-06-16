@@ -23,7 +23,7 @@
         <item>@string/menu_delete</item>
     </string-array>
 
-    <string name="download_home_lable">dir:%s</string>
+    <string name="download_home_lable">File saved to:%s</string>
     <string name="repost">REPOST</string>
     <string name="spider_request_error">Failed to get the download url!</string>
 </resources>
