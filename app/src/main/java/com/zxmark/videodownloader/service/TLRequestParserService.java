@@ -14,13 +14,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.BaseDownloader;
+import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.InstagramDownloader;
 import com.zxmark.videodownloader.downloader.KuaiVideoDownloader;
 import com.zxmark.videodownloader.downloader.TumblrVideoDownloader;
+import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.URLMatcher;
 
 /**
  * Created by fanlitao on 17/6/7.
@@ -38,7 +42,17 @@ public class TLRequestParserService extends Service {
             @Override
             public void onPrimaryClipChanged() {
                 LogUtil.v("fan3", "onPrimaryClipChanged:" + cb.getText());
-                DownloadUtil.startRequest(cb.getText().toString());
+                String pasteContent = cb.getText().toString();
+                if (TextUtils.isEmpty(pasteContent)) {
+                    return;
+                }
+                String handledUrl = URLMatcher.getHttpURL(pasteContent);
+                if (VideoDownloadFactory.getInstance().isSupportWeb(handledUrl)) {
+                    if (DBHelper.getDefault().isDownloadedPage(handledUrl)) {
+                        return;
+                    }
+                    DownloadUtil.startRequest(handledUrl);
+                }
             }
         });
 

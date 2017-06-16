@@ -4,16 +4,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/instagram"
             android:title="Instagram" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/icon_howto"
             android:title="HOW TO" />
     </group>
 
     <item android:title="Communicate">
         <menu>
+            <item
+                android:id="@+id/nav_rate"
+                android:icon="@drawable/icon_rate"
+                android:title="Rate US" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"

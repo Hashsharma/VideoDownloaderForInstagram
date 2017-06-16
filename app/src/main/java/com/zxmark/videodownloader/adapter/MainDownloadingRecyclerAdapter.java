@@ -131,6 +131,15 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
             });
+
+            holder.downloadBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(callback != null) {
+                        callback.onDownloadFromClipboard();
+                    }
+                }
+            });
         }
 
     }
@@ -158,6 +167,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     public interface IBtnCallback {
         public void showHowTo();
+        void onDownloadFromClipboard();
 
     }
 

@@ -36,6 +36,18 @@
                 android:textColor="@android:color/white"
                 android:textSize="12dip" />
 
+            <Button
+                android:id="@+id/btn_download"
+                android:layout_width="100dip"
+                android:layout_height="40dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="@string/btn_download_from_clipboard"
+                android:textColor="@android:color/white"
+                android:textSize="12dip" />
+
         </LinearLayout>
 
 

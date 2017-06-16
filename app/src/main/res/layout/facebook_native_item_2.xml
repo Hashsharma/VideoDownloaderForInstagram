@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/ad_cover"
-            android:layout_width="100dip"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#424242"
             android:scaleType="fitCenter" />
@@ -35,18 +35,21 @@
             android:layout_gravity="left|top"
             android:scaleType="center"
             android:src="@drawable/facebook_corner_ad" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ad_cover"
+            />
         <TextView
             android:id="@+id/ad_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginBottom="15dip"
-            android:layout_marginLeft="110dip"
-            android:layout_marginRight="15dip"
-            android:layout_marginTop="15dip"
-            android:fontFamily=""
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-medium"
+            android:layout_margin="15dip"
             android:maxLines="2"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="14dip" />
 
         <TextView
@@ -56,8 +59,8 @@
             android:layout_gravity="bottom|right"
             android:fontFamily="sans-serif-medium"
             android:padding="15dip"
-            android:textColor="@color/repost_background"
-            android:textSize="15dip" />
+            android:textColor="@android:color/white"
+            android:textSize="16dip" />
 
     </FrameLayout>
 

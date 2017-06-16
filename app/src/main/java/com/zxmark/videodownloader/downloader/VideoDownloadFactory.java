@@ -69,5 +69,21 @@ public final class VideoDownloadFactory {
         return null;
     }
 
+    public boolean isSupportWeb(String url) {
+        if (url.contains("www.instagram.com")) {
+            return true;
+        }
+        //返回tumblr视频下载器
+        if (url.contains(".tumblr.")) {
+            return true;
+        }
+        //快手视频下载器
+        if (url.contains("www.gifshow.com") || url.contains("www.kwai.com")) {
+            return true;
+        }
+
+        return false;
+    }
+
 
 }

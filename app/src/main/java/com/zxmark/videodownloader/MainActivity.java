@@ -44,6 +44,7 @@ import com.zxmark.videodownloader.util.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.imobapp.videodownloaderforinstagram.R;
 
 
@@ -177,6 +178,8 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_send) {
             Utils.sendMyApp();
+        } else if (id == R.id.nav_rate) {
+            Utils.rateUs5Star();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

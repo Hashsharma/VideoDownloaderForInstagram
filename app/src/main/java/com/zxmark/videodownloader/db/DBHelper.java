@@ -103,6 +103,42 @@ public class DBHelper {
         return dataList;
     }
 
+    public VideoBean getVideoBeanByPageURL(String sharedUrl) {
+        Cursor cursor = db.query("downloading_table", null, "page_url = ?", new String[]{sharedUrl}, null, null, "_ID desc");
+        try {
+            if (cursor.moveToNext()) {
+                VideoBean bean = new VideoBean();
+                bean.pageTitle = cursor.getString(1);
+                bean.sharedUrl = cursor.getString(2);
+                bean.thumbnailUrl = cursor.getString(3);
+                bean.downloadVideoUrl = cursor.getString(4);
+                bean.appPageUrl = cursor.getString(5);
+                bean.videoPath = cursor.getString(6);
+                return bean;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
+    public boolean isDownloadedPage(String pageURL) {
+        Cursor cursor = db.query("downloading_table", null, "page_url = ?", new String[]{pageURL}, null, null, "_ID desc");
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                return true;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
+    }
+
+
     public void deleteDownloadingVideo(String videoPath) {
         db.delete(TABLE_NAME, "video_path = ? ", new String[]{videoPath});
     }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
+import android.text.TextUtils;
 
 import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.MainApplication;
@@ -42,6 +43,7 @@ public class Utils {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MainApplication.getInstance().getApplicationContext().startActivity(intent);
     }
+
     public static void openInstagram() {
         openAppByPackageName("com.instagram.android");
     }
@@ -83,10 +85,35 @@ public class Utils {
     public static void sendMyApp() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/html");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,MainApplication.getInstance().getResources().getString(R.string.app_name) + " is very easy tool for downloading ins videos \n https://play.google.com/store/apps/details?id=com.zxmark.videodownloader");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getResources().getString(R.string.app_name) + " is very easy tool for downloading ins videos \n https://play.google.com/store/apps/details?id=com.zxmark.videodownloader");
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Intent sendIntent = Intent.createChooser(sharingIntent,"Share using");
+        Intent sendIntent = Intent.createChooser(sharingIntent, "Share using");
         sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MainApplication.getInstance().getApplicationContext().startActivity(sendIntent);
     }
+
+    public static void goToGpByPackageName(Context context, String packageName) {
+        final String appPackageName = packageName;
+
+        try {
+            Intent launchIntent = new Intent();
+            launchIntent.setPackage("com.android.vending");
+            launchIntent.setData(Uri.parse("market://details?id=" + appPackageName));
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(launchIntent);
+        } catch (android.content.ActivityNotFoundException anfe) {
+            try {
+                context.startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public static  void rateUs5Star() {
+        Context context = MainApplication.getInstance().getApplicationContext();
+        goToGpByPackageName(context, context.getPackageName());
+    }
+
 }

@@ -16,12 +16,14 @@ public class ItemHeaderHolder extends RecyclerView.ViewHolder {
 
 
     public Button showHowToBtn;
+    public Button downloadBtn;
     public TextView homeTv;
 
     public ItemHeaderHolder(View itemView) {
         super(itemView);
 
         showHowToBtn = (Button) itemView.findViewById(R.id.btn_howto);
+        downloadBtn = (Button) itemView.findViewById(R.id.btn_download);
         homeTv = (TextView) itemView.findViewById(R.id.home_directory);
         homeTv.setText(itemView.getResources().getString(R.string.download_home_lable,DownloadUtil.getHomeDirectory().getAbsolutePath()));
     }

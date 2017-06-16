@@ -14,14 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.facebook.ads.Ad;
-import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
@@ -31,7 +27,6 @@ import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.service.DownloadService;
-import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 
@@ -107,7 +102,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 false);
         mListView.setLayoutManager(mLayoutManager);
 
-        mHowToView = findViewById(R.id.how_to_info);
         mDataList = DBHelper.getDefault().getDownloadingList();
         VideoBean headerBean = new VideoBean();
         headerBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HEAD;
@@ -203,7 +197,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private boolean isShowHowToPage;
 
     public void showHotToInfo() {
-
         if (isShowHowToPage) {
             isShowHowToPage = false;
             mDataList.remove(1);
@@ -269,5 +262,14 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     @Override
     public void showHowTo() {
         showHotToInfo();
+    }
+
+    @Override
+    public void onDownloadFromClipboard() {
+        final ClipboardManager cb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        String pastUrl = cb.getText().toString();
+        if (!TextUtils.isEmpty(pastUrl)) {
+            startDownload(pastUrl);
+        }
     }
 }
