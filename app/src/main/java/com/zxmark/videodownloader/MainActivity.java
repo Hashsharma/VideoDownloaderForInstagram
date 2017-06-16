@@ -1,6 +1,5 @@
 package com.zxmark.videodownloader;
 
-import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -21,48 +18,44 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.imobapp.videodownloaderforinstagram.R;
+import com.nineoldandroids.view.ViewHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
+import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
+import com.zxmark.videodownloader.util.DeviceUtil;
+import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.util.Utils;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.imobapp.videodownloaderforinstagram.R;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
 
-    private EditText mUrlEditText;
-    private Button mDownloadBtn;
-    private RecyclerView mListView;
-    private LinearLayoutManager mLayoutManager;
-    private List<DownloaderBean> mDataList;
-    private MainListRecyclerAdapter mAdapter;
-
     private ViewPager mMainViewPager;
     private MainViewPagerAdapter mViewPagerAdapter;
 
     private TabLayout mTabLayout;
+
+    private DrawerLayout mRootViewContainer;
+    private View mBottomDialogView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,16 +65,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mRootViewContainer = drawer;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -105,6 +90,26 @@ public class MainActivity extends AppCompatActivity
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mBottomDialogView = findViewById(R.id.bottom);
+
+        drawer.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                LogUtil.e("fan","onPreDraw");
+                drawer.getViewTreeObserver().removeOnPreDrawListener(this);
+
+
+                return false;
+            }
+        });
+        if (VideoDownloadFactory.getInstance().isSupportWeb(Utils.getTextFromClipboard())) {
+
+
+        }
+    }
+
+    private void initBottomBar() {
     }
 
     private void handleSendIntent() {

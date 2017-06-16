@@ -108,30 +108,32 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void showNativeAd() {
-        mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
-        mNativeAd.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                LogUtil.v("facebook", "onError:" + adError);
-            }
+        if(isAdded()) {
+            mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
+            mNativeAd.setAdListener(new AdListener() {
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    LogUtil.v("facebook", "onError:" + adError);
+                }
 
-            @Override
-            public void onAdLoaded(Ad ad) {
-                onFacebookAdLoaded(ad);
-            }
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    onFacebookAdLoaded(ad);
+                }
 
-            @Override
-            public void onAdClicked(Ad ad) {
+                @Override
+                public void onAdClicked(Ad ad) {
 
-            }
+                }
 
-            @Override
-            public void onLoggingImpression(Ad ad) {
+                @Override
+                public void onLoggingImpression(Ad ad) {
 
-            }
-        });
+                }
+            });
 
-        mNativeAd.loadAd();
+            mNativeAd.loadAd();
+        }
     }
 
     // The next step is to extract the ad metadata and use its properties

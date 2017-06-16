@@ -212,30 +212,33 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
 
     private void showNativeAd() {
-        nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
-        nativeAd.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                LogUtil.v("facebook", "onError:" + adError);
-            }
+        if(isAdded()) {
 
-            @Override
-            public void onAdLoaded(Ad ad) {
-                onFacebookAdLoaded(ad);
-            }
+            nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
+            nativeAd.setAdListener(new AdListener() {
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    LogUtil.v("facebook", "onError:" + adError);
+                }
 
-            @Override
-            public void onAdClicked(Ad ad) {
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    onFacebookAdLoaded(ad);
+                }
 
-            }
+                @Override
+                public void onAdClicked(Ad ad) {
 
-            @Override
-            public void onLoggingImpression(Ad ad) {
+                }
 
-            }
-        });
+                @Override
+                public void onLoggingImpression(Ad ad) {
 
-        nativeAd.loadAd();
+                }
+            });
+
+            nativeAd.loadAd();
+        }
     }
 
     // The next step is to extract the ad metadata and use its properties

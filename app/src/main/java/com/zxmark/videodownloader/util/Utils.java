@@ -82,6 +82,21 @@ public class Utils {
         cmb.setText(content.trim());
     }
 
+    public static String getTextFromClipboard() {
+        final Context context = MainApplication.getInstance().getApplicationContext();
+        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        String pastContent = cmb.getText().toString();
+        if(!TextUtils.isEmpty(pastContent)) {
+            String handledUrl = URLMatcher.getHttpURL(pastContent);
+            return handledUrl;
+        }
+
+        return "";
+    }
+
+
+
+
     public static void sendMyApp() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/html");
