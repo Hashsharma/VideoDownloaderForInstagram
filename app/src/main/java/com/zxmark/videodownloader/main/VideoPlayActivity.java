@@ -12,7 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.VideoView;
 
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 

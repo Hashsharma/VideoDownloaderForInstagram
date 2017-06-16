@@ -1,5 +1,8 @@
 <resources>
+    <string name="facebook_app_id">2099565523604162</string>
     <string name="app_name">InstaDownloader</string>
+
+    <string name="btn_download_from_clipboard">Download</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

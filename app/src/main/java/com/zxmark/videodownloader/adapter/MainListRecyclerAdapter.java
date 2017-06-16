@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.util.Util;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.MainApplication;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;

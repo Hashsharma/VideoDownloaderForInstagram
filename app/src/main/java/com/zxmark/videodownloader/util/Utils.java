@@ -9,7 +9,7 @@ import android.text.Html;
 
 import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.MainApplication;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

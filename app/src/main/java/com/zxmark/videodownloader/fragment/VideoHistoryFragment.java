@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zxmark.videodownloader.DownloaderBean;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;

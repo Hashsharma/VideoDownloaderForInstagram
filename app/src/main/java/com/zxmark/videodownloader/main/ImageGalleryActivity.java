@@ -12,7 +12,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.util.LogUtil;
 
 /**

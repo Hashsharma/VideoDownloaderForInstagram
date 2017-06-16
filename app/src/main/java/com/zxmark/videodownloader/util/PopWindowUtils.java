@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import com.zxmark.videodownloader.MainApplication;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 
 /**

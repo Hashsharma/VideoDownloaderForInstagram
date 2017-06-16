@@ -2,7 +2,6 @@ package com.zxmark.videodownloader.component;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewConfigurationCompat;
@@ -16,12 +15,9 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.imobapp.videodownloaderforinstagram.R;
 import com.nineoldandroids.view.ViewHelper;
-import com.zxmark.videodownloader.R;
-import com.zxmark.videodownloader.util.DeviceUtil;
-import com.zxmark.videodownloader.util.DimensUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.Utils;
 

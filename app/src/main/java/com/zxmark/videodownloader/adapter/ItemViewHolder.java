@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.daimajia.numberprogressbar.NumberProgressBar;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 
 /**
  * Created by fanlitao on 17/6/7.

@@ -9,7 +9,7 @@ import android.view.View;
 import com.bumptech.glide.load.engine.Resource;
 import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.MainApplication;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.fragment.DownloadingFragment;
 import com.zxmark.videodownloader.fragment.VideoHistoryFragment;
 import com.zxmark.videodownloader.util.LogUtil;

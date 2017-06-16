@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.zxmark.videodownloader.service.TLRequestParserService;
-
 /**
  * Created by fanlitao on 17/6/7.
  */

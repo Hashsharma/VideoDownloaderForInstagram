@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5F7C8A</color>
-    <color name="colorPrimaryDark">#5F7C8A</color>
+    <color name="colorPrimary">#FF4081</color>
+    <color name="colorPrimaryDark">#F50057</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorCyan">#00BCD4</color>
     <color name="page_bg">#F4F4F4</color>
@@ -17,5 +17,9 @@
         <item>@color/red_3</item>
     </integer-array>
 
+    <color name="page_bg_color">#F4F4F4</color>
     <color name="image_bg_color">#D8D8D8</color>
+
+    <color name="button_normal_color">#673AB7</color>
+    <color name="button_press_color">#311B92</color>
 </resources>

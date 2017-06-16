@@ -44,6 +44,7 @@ import com.zxmark.videodownloader.util.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import com.imobapp.videodownloaderforinstagram.R;
 
 
 public class MainActivity extends AppCompatActivity
@@ -185,20 +186,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_paste) {
-            String downloadUrl = mUrlEditText.getText().toString();
-            if (!TextUtils.isEmpty(downloadUrl)) {
-                Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
-                startDownload(downloadUrl);
-            }
-        } else if (v.getId() == R.id.btn_paste) {
-            final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            String pastUrl = cb.getText().toString();
-            if (!TextUtils.isEmpty(pastUrl)) {
-                Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
-                startDownload(pastUrl);
-            }
-        } else if (v.getId() == R.id.ins_icon) {
+//        if (v.getId() == R.id.btn_paste) {
+//            String downloadUrl = mUrlEditText.getText().toString();
+//            if (!TextUtils.isEmpty(downloadUrl)) {
+//                Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
+//                startDownload(downloadUrl);
+//            }
+//        } else if (v.getId() == R.id.btn_paste) {
+//            final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+//            String pastUrl = cb.getText().toString();
+//            if (!TextUtils.isEmpty(pastUrl)) {
+//                Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
+//                startDownload(pastUrl);
+//            }
+        if (v.getId() == R.id.ins_icon) {
             Utils.openInstagram();
         }
     }

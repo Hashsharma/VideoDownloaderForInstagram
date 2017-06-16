@@ -15,11 +15,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-import com.zxmark.videodownloader.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdChoicesView;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
@@ -27,8 +33,12 @@ import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
+import com.zxmark.videodownloader.util.LogUtil;
 
 import java.util.List;
+
+// In the Activity that will launch the native ad,
+// implement the AdListener interface and add the following:
 
 /**
  * Created by fanlitao on 17/6/13.
@@ -47,6 +57,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private View mHowToView;
 
     public String mReceiveUrlParams;
+
+    private NativeAd nativeAd;
+
+    private View mFacebookAdViewContainer;
+    private RequestManager mGlide;
+
+
 
     public static DownloadingFragment newInstance(String params) {
         DownloadingFragment fragment = new DownloadingFragment();
@@ -77,11 +94,14 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mUrlEditText = (EditText) findViewById(R.id.paste_url);
-        TextView homeTv = (TextView) findViewById(R.id.home_directory);
-        homeTv.setText(getResources().getString(R.string.download_home_lable, DownloadUtil.getHomeDirectory().getAbsolutePath()));
-        findViewById(R.id.btn_howto).setOnClickListener(this);
-        findViewById(R.id.btn_paste).setOnClickListener(this);
+
+        mGlide = Glide.with(getActivity());
+
+        mFacebookAdViewContainer = findViewById(R.id.main_ad_container);
+//        TextView homeTv = (TextView) findViewById(R.id.home_directory);
+//        homeTv.setText(getResources().getString(R.string.download_home_lable, DownloadUtil.getHomeDirectory().getAbsolutePath()));
+//        findViewById(R.id.btn_howto).setOnClickListener(this);
+//        findViewById(R.id.btn_paste).setOnClickListener(this);
         mListView = (RecyclerView) findViewById(R.id.downloading_list);
         mListView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
@@ -90,11 +110,16 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
         mHowToView = findViewById(R.id.how_to_info);
         mDataList = DBHelper.getDefault().getDownloadingList();
+        VideoBean headerBean = new VideoBean();
+        headerBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HEAD;
+        mDataList.add(0,headerBean);
         mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
         mListView.setAdapter(mAdapter);
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
             receiveSendAction(mReceiveUrlParams);
         }
+
+        showNativeAd();
     }
 
     public void receiveSendAction(String url) {
@@ -168,13 +193,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_paste:
-                final ClipboardManager cb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                String pastUrl = cb.getText().toString();
-                if (!TextUtils.isEmpty(pastUrl)) {
-                    startDownload(pastUrl);
-                }
-                break;
+//            case R.id.btn_paste:
+//                final ClipboardManager cb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+//                String pastUrl = cb.getText().toString();
+//                if (!TextUtils.isEmpty(pastUrl)) {
+//                    startDownload(pastUrl);
+//                }
+//                break;
             case R.id.btn_howto:
                 showHotToInfo();
                 break;
@@ -185,9 +210,109 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (mHowToView.getVisibility() == View.VISIBLE) {
             mHowToView.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
+            if(mAdapter == null || mAdapter.getItemCount() == 0) {
+                mFacebookAdViewContainer.setVisibility(View.VISIBLE);
+            } else {
+                mFacebookAdViewContainer.setVisibility(View.GONE);
+            }
         } else {
             mHowToView.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
+            mFacebookAdViewContainer.setVisibility(View.GONE);
+
         }
+    }
+
+
+    private void showNativeAd() {
+        nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
+        nativeAd.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                LogUtil.v("facebook", "onError:" + adError);
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                onFacebookAdLoaded(ad);
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+
+        nativeAd.loadAd();
+    }
+
+    // The next step is to extract the ad metadata and use its properties
+// to build your customized native UI. Modify the onAdLoaded function
+// above to retrieve the ad properties. For example:
+    public void onFacebookAdLoaded(Ad ad) {
+        if (getActivity() == null || isDetached()) {
+            return;
+        }
+        if (ad != nativeAd) {
+            return;
+        }
+
+
+        VideoBean bean = new VideoBean();
+        bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
+        bean.facebookNativeAd = nativeAd;
+
+        mDataList.add(bean);
+        mAdapter.notifyDataSetChanged();
+
+
+
+
+//        mFacebookAdViewContainer.setVisibility(View.VISIBLE);
+//
+//        String titleForAd = nativeAd.getAdTitle();
+//        NativeAd.Image coverImage = nativeAd.getAdCoverImage();
+//        NativeAd.Image iconForAd = nativeAd.getAdIcon();
+//        String socialContextForAd = nativeAd.getAdSocialContext();
+//        String titleForAdButton = nativeAd.getAdCallToAction();
+//        String textForAdBody = nativeAd.getAdBody();
+//        NativeAd.Rating appRatingForAd = nativeAd.getAdStarRating();
+//
+//        // Add code here to create a custom view that uses the ad properties
+//        // For example:
+//        LinearLayout nativeAdContainer = new LinearLayout(getActivity());
+//        TextView titleLabel = new TextView(getActivity());
+//        titleLabel.setText(titleForAd);
+//        nativeAdContainer.addView(titleLabel);
+//
+//        // Add the ad to your layout
+//        LinearLayout mainContainer = (LinearLayout) findViewById(R.id.MainContainer);
+////        mainContainer.addView(nativeAdContainer);
+//
+//        LinearLayout adChoicesContainer = (LinearLayout) findViewById(R.id.ad_choices_container);
+//        AdChoicesView adChoicesView = new AdChoicesView(getActivity(), nativeAd, true);
+//        adChoicesContainer.addView(adChoicesView);
+//
+//        ImageView adCover = (ImageView) mainContainer.findViewById(R.id.ad_cover);
+//        mGlide.load(coverImage.getUrl()).into(adCover);
+//
+//        ImageView adIcon = (ImageView) mainContainer.findViewById(R.id.ad_icon);
+//        mGlide.load(iconForAd.getUrl()).into(adIcon);
+//
+//        TextView adBodyTv = (TextView) mainContainer.findViewById(R.id.ad_body);
+//        adBodyTv.setText(textForAdBody);
+//
+//        TextView adTitleTv = (TextView) mainContainer.findViewById(R.id.ad_title);
+//        adTitleTv.setText(titleForAd);
+//
+//        Button adButton = (Button) mainContainer.findViewById(R.id.facebook_ad_btn);
+//        adButton.setText(titleForAdButton);
+//        // Register the native ad view with the native ad instance
+//        nativeAd.registerViewForInteraction(mainContainer);
     }
 }

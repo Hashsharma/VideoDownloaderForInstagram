@@ -36,7 +36,7 @@ public class DownloadingTaskList {
 
     }
 
-    public void addNewDownloadTask(String taskId) {
+    public void addNewDownloadTask(String taskId, boolean needSaveDb) {
         if (mFuturedTaskList.size() > 0) {
             if (mFuturedTaskList.contains(taskId)) {
                 return;
@@ -47,7 +47,7 @@ public class DownloadingTaskList {
 
 
         mFuturedTaskList.add(taskId);
-        executeNextTask();
+        executeNextTask(needSaveDb);
     }
 
     private Handler mHandler;
@@ -67,7 +67,6 @@ public class DownloadingTaskList {
     private void downloadVideo(final String taskId, WebPageStructuredData data) {
         if (data.futureVideoList != null && data.futureVideoList.size() > 0) {
             for (String videoUrl : data.futureVideoList) {
-                LogUtil.e("download", videoUrl);
                 mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
                 PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
                     @Override
@@ -134,7 +133,7 @@ public class DownloadingTaskList {
         mFuturedTaskList.remove(taskId);
     }
 
-    public void executeNextTask() {
+    public void executeNextTask(final boolean needSaveDB) {
         if (mFuturedTaskList.size() > 0) {
             final String taskId = mFuturedTaskList.get(0);
             LogUtil.e("task", "startExecuteTaskId:" + taskId);
@@ -143,6 +142,17 @@ public class DownloadingTaskList {
                 public void run() {
                     WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(taskId);
                     if (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
+                        if (needSaveDB) {
+                            if (webPageStructuredData != null) {
+                                if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
+                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
+                                }
+
+                                if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
+                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureImageList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureImageList.get(0)));
+                                }
+                            }
+                        }
                         downloadVideo(taskId, webPageStructuredData);
                         downloadImage(taskId, webPageStructuredData);
                     } else {
@@ -154,7 +164,7 @@ public class DownloadingTaskList {
                         });
                     }
                     finishTask(taskId);
-                    executeNextTask();
+                    executeNextTask(needSaveDB);
                 }
             });
         }

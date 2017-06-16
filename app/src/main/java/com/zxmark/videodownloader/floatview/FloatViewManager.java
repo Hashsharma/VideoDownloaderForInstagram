@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.zxmark.videodownloader.MainApplication;
-import com.zxmark.videodownloader.R;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.component.FloatNotificationView;
 import com.zxmark.videodownloader.util.DeviceUtil;
 import com.zxmark.videodownloader.util.DimensUtil;
