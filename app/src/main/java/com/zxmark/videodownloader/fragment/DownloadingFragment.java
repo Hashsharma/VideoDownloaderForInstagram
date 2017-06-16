@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -26,9 +27,12 @@ import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.URLMatcher;
+import com.zxmark.videodownloader.widget.IToast;
 
 import java.util.List;
 
@@ -112,17 +116,22 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     public void receiveSendAction(String url) {
-        mUrlEditText.setText(url);
         startDownload(url);
     }
 
     private void startDownload(final String url) {
         if (isAdded()) {
-            Intent intent = new Intent(getActivity(), DownloadService.class);
-            intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
-            intent.putExtra(Globals.EXTRAS, url);
-            getActivity().startService(intent);
+            if (VideoDownloadFactory.getInstance().isSupportWeb(URLMatcher.getHttpURL(url))) {
+                IToast.makeText(getActivity(),R.string.download_from_send_action, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), DownloadService.class);
+                intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
+                intent.putExtra(Globals.EXTRAS, url);
+                getActivity().startService(intent);
+            } else {
+                IToast.makeText(getActivity(),R.string.not_support_url, Toast.LENGTH_SHORT).show();
+            }
         }
+
     }
 
     public void publishProgress(final String path, final int progress) {
@@ -208,7 +217,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
 
     private void showNativeAd() {
-        if(isAdded()) {
+        if (isAdded()) {
 
             nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
             nativeAd.setAdListener(new AdListener() {

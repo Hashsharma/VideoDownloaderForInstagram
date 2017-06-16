@@ -26,4 +26,7 @@
     <string name="download_home_lable">File saved to:%s</string>
     <string name="repost">REPOST</string>
     <string name="spider_request_error">Failed to get the download url!</string>
+
+    <string name="download_from_send_action">Start get the download url</string>
+    <string name="not_support_url">Please send the correct url</string>
 </resources>
