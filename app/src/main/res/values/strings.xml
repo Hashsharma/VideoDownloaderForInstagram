@@ -2,7 +2,7 @@
     <string name="facebook_app_id">2099565523604162</string>
     <string name="app_name">InstaDownloader</string>
 
-    <string name="btn_download_from_clipboard">Download</string>
+    <string name="btn_download_from_clipboard">PASTE</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
@@ -25,5 +25,5 @@
 
     <string name="download_home_lable">dir:%s</string>
     <string name="repost">REPOST</string>
-    <string name="spider_request_error">load the download content  failed!</string>
+    <string name="spider_request_error">Failed to get the download url!</string>
 </resources>
