@@ -23,6 +23,7 @@
         <item>@string/menu_delete</item>
     </string-array>
 
-    <string name="download_home_lable">Dir:%s</string>
+    <string name="download_home_lable">ir:%s</string>
     <string name="repost">REPOST</string>
+    <string name="spider_request_error">load the download content  failed!</string>
 </resources>

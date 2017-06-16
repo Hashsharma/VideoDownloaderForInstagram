@@ -86,8 +86,8 @@ public class VideoHistoryFragment extends Fragment {
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
         DBHelper dbHelper = DBHelper.getDefault();
+        mDataList = new ArrayList<DownloaderBean>();
         if (fileArray != null && fileArray.length > 0) {
-            mDataList = new ArrayList<DownloaderBean>();
             for (File item : fileArray) {
                 if (dbHelper.isDownloadingByPath(item.getAbsolutePath())) {
                     continue;
@@ -98,9 +98,9 @@ public class VideoHistoryFragment extends Fragment {
                 mDataList.add(bean);
             }
             Collections.sort(mDataList, new FileComparator());
-            mAdapter = new MainListRecyclerAdapter(mDataList, false);
-            mListView.setAdapter(mAdapter);
         }
+        mAdapter = new MainListRecyclerAdapter(mDataList, false);
+        mListView.setAdapter(mAdapter);
     }
 
     public void refreshUI() {

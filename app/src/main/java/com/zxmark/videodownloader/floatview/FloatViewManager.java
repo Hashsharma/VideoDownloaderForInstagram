@@ -56,8 +56,8 @@ public class FloatViewManager {
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         params.dimAmount = 0.5f;
-        params.width = DimensUtil.dip2px(50);
-        params.height = DimensUtil.dip2px(50);
+        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         params.gravity = Gravity.TOP | Gravity.LEFT;
         params.x = DeviceUtil.getScreenWidth() - DimensUtil.dip2px(100);
         params.y = DeviceUtil.getScreenHeight() - DimensUtil.dip2px(200);

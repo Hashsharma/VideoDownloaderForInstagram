@@ -31,7 +31,7 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="5dip"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/button_bg_pink"
                 android:text="HOW TO"
                 android:textColor="@android:color/white"
                 android:textSize="12dip" />
@@ -43,7 +43,7 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="5dip"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/button_bg_pink"
                 android:text="@string/btn_download_from_clipboard"
                 android:textColor="@android:color/white"
                 android:textSize="12dip" />

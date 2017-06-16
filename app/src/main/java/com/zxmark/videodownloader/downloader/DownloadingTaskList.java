@@ -5,6 +5,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
@@ -12,12 +13,14 @@ import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.PowerfulDownloader;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.widget.IToast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by fanlitao on 17/6/9.
@@ -145,10 +148,22 @@ public class DownloadingTaskList {
                         if (needSaveDB) {
                             if (webPageStructuredData != null) {
                                 if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            DownloadUtil.showFloatView();
+                                        }
+                                    });
                                     DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
                                 }
 
                                 if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            DownloadUtil.showFloatView();
+                                        }
+                                    });
                                     DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureImageList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureImageList.get(0)));
                                 }
                             }
@@ -159,7 +174,7 @@ public class DownloadingTaskList {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(MainApplication.getInstance().getApplicationContext(), "load the download content  failed!!!!!", Toast.LENGTH_SHORT).show();
+                                IToast.makeText(MainApplication.getInstance().getApplicationContext(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

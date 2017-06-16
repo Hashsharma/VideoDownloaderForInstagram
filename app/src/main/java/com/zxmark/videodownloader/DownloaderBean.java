@@ -24,6 +24,9 @@ public class DownloaderBean {
             if(type == MainDownloadingRecyclerAdapter.VIEW_TYPE_AD) {
                 return false;
             }
+            if(file == null || right.file == null) {
+                return false;
+            }
             return file.getAbsolutePath().equals(right.file.getAbsolutePath());
         }
         return false;

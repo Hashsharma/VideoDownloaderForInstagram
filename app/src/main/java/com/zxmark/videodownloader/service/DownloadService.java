@@ -26,6 +26,7 @@ import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.NetWorkUtil;
+import com.zxmark.videodownloader.widget.IToast;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,13 +61,13 @@ public class DownloadService extends Service {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
-                Toast.makeText(DownloadService.this, "Download Success", Toast.LENGTH_SHORT).show();
+                IToast.makeText(DownloadService.this, "Download Success", Toast.LENGTH_SHORT).show();
                 FloatViewManager.getDefault().dismissFloatView();
                 DownloadService.this.notifyDownloadFinished((String) msg.obj);
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
-                Toast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
+                IToast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
-                Toast.makeText(DownloadService.this, "start download", Toast.LENGTH_SHORT).show();
+                IToast.makeText(DownloadService.this, "start download", Toast.LENGTH_SHORT).show();
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg1);
@@ -128,7 +129,7 @@ public class DownloadService extends Service {
 
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
-
+                LogUtil.e("ds","NetworkUtil.isWifi:" + NetWorkUtil.isWifi(this));
                 if(NetWorkUtil.isWifi(this)) {
                     //TODO:directly download video  with  wifi
                     DownloadingTaskList.SINGLETON.setHandler(mHandler);

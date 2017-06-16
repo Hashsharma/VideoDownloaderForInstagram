@@ -8,6 +8,7 @@ import android.support.annotation.MainThread;
 import android.text.TextUtils;
 
 import com.zxmark.videodownloader.MainApplication;
+import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.main.ImageGalleryActivity;
 import com.zxmark.videodownloader.main.VideoPlayActivity;
 import com.zxmark.videodownloader.service.DownloadService;
@@ -46,7 +47,6 @@ public class DownloadUtil {
     }
 
 
-
     public static File getHomeDirectory() {
         File targetDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), DownloadService.DIR);
         return targetDir;
@@ -56,10 +56,10 @@ public class DownloadUtil {
 
         Intent intent = new Intent();
         if (file.getName().endsWith("mp4")) {
-            intent.setClass(MainApplication.getInstance().getApplicationContext(),VideoPlayActivity.class);
+            intent.setClass(MainApplication.getInstance().getApplicationContext(), VideoPlayActivity.class);
             intent.setDataAndType(Uri.fromFile(file), "video/mp4");
         } else {
-            intent.setClass(MainApplication.getInstance().getApplicationContext(),ImageGalleryActivity.class);
+            intent.setClass(MainApplication.getInstance().getApplicationContext(), ImageGalleryActivity.class);
             intent.setDataAndType(Uri.fromFile(file), "image/*");
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -78,11 +78,18 @@ public class DownloadUtil {
     }
 
     public static String getFileNameByUrl(String url) {
-        if(TextUtils.isEmpty(url)) {
+        if (TextUtils.isEmpty(url)) {
             return "";
         }
         final int lastIndex = url.lastIndexOf("/");
         return url.substring(lastIndex + 1);
+    }
+
+    public static void showFloatView() {
+        if (!ActivityManagerUtils.isTopActivity(MainApplication.getInstance().getApplicationContext())) {
+            FloatViewManager manager = FloatViewManager.getDefault();
+            manager.showFloatView();
+        }
     }
 
 }

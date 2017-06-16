@@ -22,4 +22,6 @@
 
     <color name="button_normal_color">#673AB7</color>
     <color name="button_press_color">#311B92</color>
+
+    <color name="toast_bg_color">#CFFF4081</color>
 </resources>
