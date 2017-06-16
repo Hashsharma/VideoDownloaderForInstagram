@@ -11,12 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.imobapp.videodownloaderforinstagram.R;
+import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
+import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
+import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +43,7 @@ public class VideoHistoryFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private List<DownloaderBean> mDataList;
     private MainListRecyclerAdapter mAdapter;
+    private NativeAd mNativeAd;
 
     public static VideoHistoryFragment newInstance() {
         VideoHistoryFragment fragment = new VideoHistoryFragment();
@@ -74,6 +82,7 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void initData() {
+        showNativeAd();
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
         DBHelper dbHelper = DBHelper.getDefault();
@@ -84,7 +93,6 @@ public class VideoHistoryFragment extends Fragment {
                     continue;
                 }
                 DownloaderBean bean = new DownloaderBean();
-
                 bean.file = item;
                 bean.progress = 0;
                 mDataList.add(bean);
@@ -97,5 +105,58 @@ public class VideoHistoryFragment extends Fragment {
 
     public void refreshUI() {
         initData();
+    }
+
+    private void showNativeAd() {
+        mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
+        mNativeAd.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                LogUtil.v("facebook", "onError:" + adError);
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                onFacebookAdLoaded(ad);
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+
+        mNativeAd.loadAd();
+    }
+
+    // The next step is to extract the ad metadata and use its properties
+// to build your customized native UI. Modify the onAdLoaded function
+// above to retrieve the ad properties. For example:
+    public void onFacebookAdLoaded(Ad ad) {
+        if (getActivity() == null || isDetached()) {
+            return;
+        }
+        if (ad != mNativeAd) {
+            return;
+        }
+
+
+        DownloaderBean bean = new DownloaderBean();
+        bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
+        bean.facebookNativeAd = mNativeAd;
+        if (mDataList.size() > 2) {
+            mDataList.add(2, bean);
+        } else {
+            mDataList.add(bean);
+        }
+
+        mAdapter.notifyDataSetChanged();
+
+
     }
 }

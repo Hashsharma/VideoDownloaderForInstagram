@@ -34,16 +34,19 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_HEAD = 1;
     public static final int VIEW_TYPE_AD = 2;
+    public static final int VIEW_TYPE_HOW_TO = 3;
     private List<VideoBean> mDataList;
     private RequestManager imageLoader;
     private boolean mFullImageState = false;
     private Context mContext;
+    private IBtnCallback callback;
 
-    public MainDownloadingRecyclerAdapter(List<VideoBean> dataList, boolean isFullImage) {
+    public MainDownloadingRecyclerAdapter(List<VideoBean> dataList, boolean isFullImage, IBtnCallback callback) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
         mFullImageState = isFullImage;
         mContext = MainApplication.getInstance().getApplicationContext();
+        this.callback = callback;
     }
 
     @Override
@@ -54,10 +57,14 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     .inflate(R.layout.facebook_native_item, parent, false);
 
             return new NativeAdItemHolder(itemView);
-        } else if(viewType == VIEW_TYPE_HEAD) {
+        } else if (viewType == VIEW_TYPE_HEAD) {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_header, parent, false);
             return new ItemHeaderHolder(itemView);
+        } else if (viewType == VIEW_TYPE_HOW_TO) {
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_how_to, parent, false);
+            return new ItemHowToHolder(itemView);
         } else {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_layout2, parent, false);
@@ -96,11 +103,13 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             });
             imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             holder.titleTv.setText(bean.pageTitle);
-        } else if(baseHolder instanceof NativeAdItemHolder){
+        } else if (baseHolder instanceof NativeAdItemHolder) {
             final NativeAdItemHolder holder = (NativeAdItemHolder) baseHolder;
             if (bean.facebookNativeAd != null) {
                 AdChoicesView adChoicesView = new AdChoicesView(mContext, bean.facebookNativeAd, true);
-                holder.adChoiceView.addView(adChoicesView);
+                if (holder.adChoiceView.getChildCount() == 0) {
+                    holder.adChoiceView.addView(adChoicesView);
+                }
 
                 imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).into(holder.adCoverView);
                 imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).into(holder.adIconView);
@@ -113,7 +122,15 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
             }
         } else if (baseHolder instanceof ItemHeaderHolder) {
-
+            ItemHeaderHolder holder = (ItemHeaderHolder) baseHolder;
+            holder.showHowToBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (callback != null) {
+                        callback.showHowTo();
+                    }
+                }
+            });
         }
 
     }
@@ -138,5 +155,10 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
         return mDataList.get(position).type;
     }
 
+
+    public interface IBtnCallback {
+        public void showHowTo();
+
+    }
 
 }

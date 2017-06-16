@@ -44,7 +44,7 @@ import java.util.List;
  * Created by fanlitao on 17/6/13.
  */
 
-public class DownloadingFragment extends Fragment implements View.OnClickListener {
+public class DownloadingFragment extends Fragment implements View.OnClickListener, MainDownloadingRecyclerAdapter.IBtnCallback {
 
 
     private EditText mUrlEditText;
@@ -62,7 +62,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     private View mFacebookAdViewContainer;
     private RequestManager mGlide;
-
 
 
     public static DownloadingFragment newInstance(String params) {
@@ -112,8 +111,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mDataList = DBHelper.getDefault().getDownloadingList();
         VideoBean headerBean = new VideoBean();
         headerBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HEAD;
-        mDataList.add(0,headerBean);
-        mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
+        mDataList.add(0, headerBean);
+        mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true, this);
         mListView.setAdapter(mAdapter);
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
             receiveSendAction(mReceiveUrlParams);
@@ -163,19 +162,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     public void onStartDownload(String path) {
-        if (mDataList == null || mDataList.size() == 0) {
-            mHowToView.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
-            mDataList = DBHelper.getDefault().getDownloadingList();
-            mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
-            mListView.setAdapter(mAdapter);
-        } else {
-            VideoBean bean = new VideoBean();
-            bean.videoPath = path;
-            if (!mDataList.contains(bean)) {
-                mDataList = DBHelper.getDefault().getDownloadingList();
-                mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true);
-                mListView.setAdapter(mAdapter);
+        VideoBean bean = new VideoBean();
+        bean.videoPath = path;
+        if (!mDataList.contains(bean)) {
+            VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(path);
+            if (videoBean != null) {
+                mDataList.add(1, videoBean);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -206,20 +199,21 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    public void showHotToInfo() {
-        if (mHowToView.getVisibility() == View.VISIBLE) {
-            mHowToView.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
-            if(mAdapter == null || mAdapter.getItemCount() == 0) {
-                mFacebookAdViewContainer.setVisibility(View.VISIBLE);
-            } else {
-                mFacebookAdViewContainer.setVisibility(View.GONE);
-            }
-        } else {
-            mHowToView.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
-            mFacebookAdViewContainer.setVisibility(View.GONE);
 
+    private boolean isShowHowToPage;
+
+    public void showHotToInfo() {
+
+        if (isShowHowToPage) {
+            isShowHowToPage = false;
+            mDataList.remove(1);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            isShowHowToPage = true;
+            VideoBean bean = new VideoBean();
+            bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HOW_TO;
+            mDataList.add(1, bean);
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -270,49 +264,10 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mDataList.add(bean);
         mAdapter.notifyDataSetChanged();
 
+    }
 
-
-
-//        mFacebookAdViewContainer.setVisibility(View.VISIBLE);
-//
-//        String titleForAd = nativeAd.getAdTitle();
-//        NativeAd.Image coverImage = nativeAd.getAdCoverImage();
-//        NativeAd.Image iconForAd = nativeAd.getAdIcon();
-//        String socialContextForAd = nativeAd.getAdSocialContext();
-//        String titleForAdButton = nativeAd.getAdCallToAction();
-//        String textForAdBody = nativeAd.getAdBody();
-//        NativeAd.Rating appRatingForAd = nativeAd.getAdStarRating();
-//
-//        // Add code here to create a custom view that uses the ad properties
-//        // For example:
-//        LinearLayout nativeAdContainer = new LinearLayout(getActivity());
-//        TextView titleLabel = new TextView(getActivity());
-//        titleLabel.setText(titleForAd);
-//        nativeAdContainer.addView(titleLabel);
-//
-//        // Add the ad to your layout
-//        LinearLayout mainContainer = (LinearLayout) findViewById(R.id.MainContainer);
-////        mainContainer.addView(nativeAdContainer);
-//
-//        LinearLayout adChoicesContainer = (LinearLayout) findViewById(R.id.ad_choices_container);
-//        AdChoicesView adChoicesView = new AdChoicesView(getActivity(), nativeAd, true);
-//        adChoicesContainer.addView(adChoicesView);
-//
-//        ImageView adCover = (ImageView) mainContainer.findViewById(R.id.ad_cover);
-//        mGlide.load(coverImage.getUrl()).into(adCover);
-//
-//        ImageView adIcon = (ImageView) mainContainer.findViewById(R.id.ad_icon);
-//        mGlide.load(iconForAd.getUrl()).into(adIcon);
-//
-//        TextView adBodyTv = (TextView) mainContainer.findViewById(R.id.ad_body);
-//        adBodyTv.setText(textForAdBody);
-//
-//        TextView adTitleTv = (TextView) mainContainer.findViewById(R.id.ad_title);
-//        adTitleTv.setText(titleForAd);
-//
-//        Button adButton = (Button) mainContainer.findViewById(R.id.facebook_ad_btn);
-//        adButton.setText(titleForAdButton);
-//        // Register the native ad view with the native ad instance
-//        nativeAd.registerViewForInteraction(mainContainer);
+    @Override
+    public void showHowTo() {
+        showHotToInfo();
     }
 }
