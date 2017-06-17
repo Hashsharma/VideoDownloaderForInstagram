@@ -18,6 +18,8 @@ import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 public class PopWindowUtils {
 
 
+
+
     public static void showVideoMoreOptionWindow(View trigerView, final MainListRecyclerAdapter.IPopWindowClickCallback callback) {
         Context context = MainApplication.getInstance().getApplicationContext();
         View contentView = LayoutInflater.from(context).inflate(R.layout.more_option, null);
@@ -66,6 +68,65 @@ public class PopWindowUtils {
                 popupWindow.dismiss();
             }
         });
-        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(120) + trigerView.getWidth() / 2, 0);
+        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(118) + trigerView.getWidth() / 2,-DimensUtil.dip2px(15));
+    }
+
+
+    public static void showPlayVideoMorePopWindow(View trigerView,final IPopWindowCallback callback) {
+        Context context = MainApplication.getInstance().getApplicationContext();
+        View contentView = LayoutInflater.from(context).inflate(R.layout.videoplay_more_option, null);
+        View deleteView = contentView.findViewById(R.id.share);
+
+        final PopupWindow popupWindow = new PopupWindow(contentView,
+                DimensUtil.dip2px(120), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        deleteView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onShare();
+                }
+
+                popupWindow.dismiss();
+
+            }
+        });
+
+        contentView.findViewById(R.id.launch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.launchInstagram();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+
+        contentView.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onPastePageUrl();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(118) + trigerView.getWidth() / 2,-DimensUtil.dip2px(15));
+    }
+
+
+    public interface IPopWindowCallback {
+        void onShare();
+        void launchInstagram();
+        void onPastePageUrl();
     }
 }

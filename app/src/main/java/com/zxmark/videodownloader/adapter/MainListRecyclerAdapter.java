@@ -115,6 +115,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void launchAppByUrl() {
                             if (videoBean != null) {
+                                LogUtil.e("history","videoBean.appPageURL:" + videoBean.appPageUrl);
                                 Utils.openInstagramByUrl(videoBean.appPageUrl);
                             }
                         }

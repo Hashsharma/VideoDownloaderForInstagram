@@ -5,13 +5,18 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Looper;
 import android.text.Html;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.MainApplication;
 import com.imobapp.videodownloaderforinstagram.R;
+import com.zxmark.videodownloader.bean.VideoBean;
+import com.zxmark.videodownloader.widget.IToast;
 
+import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -77,6 +82,9 @@ public class Utils {
     }
 
     public static void copyText2Clipboard(String content) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            IToast.makeText(MainApplication.getInstance().getApplicationContext(), R.string.clipboard_copy_text, Toast.LENGTH_SHORT).show();
+        }
         final Context context = MainApplication.getInstance().getApplicationContext();
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setText(content.trim());
@@ -86,15 +94,13 @@ public class Utils {
         final Context context = MainApplication.getInstance().getApplicationContext();
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         String pastContent = cmb.getText().toString();
-        if(!TextUtils.isEmpty(pastContent)) {
+        if (!TextUtils.isEmpty(pastContent)) {
             String handledUrl = URLMatcher.getHttpURL(pastContent);
             return handledUrl;
         }
 
         return "";
     }
-
-
 
 
     public static void sendMyApp() {
@@ -126,9 +132,30 @@ public class Utils {
         }
     }
 
-    public static  void rateUs5Star() {
+    public static void rateUs5Star() {
         Context context = MainApplication.getInstance().getApplicationContext();
         goToGpByPackageName(context, context.getPackageName());
     }
+
+    public static void startShareIntent(VideoBean videoBean) {
+        if (videoBean != null) {
+            Intent shareIntent = new Intent(
+                    android.content.Intent.ACTION_SEND);
+            shareIntent.setType(MimeTypeUtil.getMimeTypeByFileName(videoBean.videoPath));
+            shareIntent.putExtra(
+                    android.content.Intent.EXTRA_SUBJECT, videoBean.pageTitle);
+            shareIntent.putExtra(
+                    android.content.Intent.EXTRA_TITLE, videoBean.pageTitle);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(videoBean.videoPath)));
+            shareIntent
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET | Intent.FLAG_ACTIVITY_NEW_TASK);
+            Context context = MainApplication.getInstance().getApplicationContext();
+            Intent chooseIntent = Intent.createChooser(shareIntent,
+                    context.getString(R.string.str_share_this_video));
+            chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(chooseIntent);
+        }
+    }
+
 
 }

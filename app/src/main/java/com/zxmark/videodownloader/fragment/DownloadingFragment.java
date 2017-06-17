@@ -185,7 +185,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     public void onReceiveNewTask(String pageURL) {
 
         if (isAdded()) {
-            if (mProgressDialog.isShowing()) {
+            if ( mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
                 mProgressDialog = null;
             }
