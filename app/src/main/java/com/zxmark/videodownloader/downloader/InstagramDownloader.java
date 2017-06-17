@@ -84,9 +84,9 @@ public class InstagramDownloader extends BaseDownloader {
         if (!TextUtils.isEmpty(pageDesc)) {
             String array[] = pageDesc.split("Instagram:");
             if (array != null) {
-                String originTitle = array[array.length-1];
-                originTitle = originTitle.replace("“","");
-                originTitle = originTitle.replace("”","");
+                String originTitle = array[array.length - 1];
+                originTitle = originTitle.replace("“", "");
+                originTitle = originTitle.replace("”", "");
                 return originTitle;
             }
         }
@@ -104,10 +104,13 @@ public class InstagramDownloader extends BaseDownloader {
             data.addVideo(videoUrl);
             data.videoThumbnailUrl = getImageUrl(content);
         }
-
         String title = getPageTitle(content);
         data.pageTitle = title;
         data.appPageUrl = getLaunchInstagramUrl(content);
+
+        if (data.futureImageList == null && data.futureVideoList == null) {
+            return null;
+        }
         return data;
     }
 

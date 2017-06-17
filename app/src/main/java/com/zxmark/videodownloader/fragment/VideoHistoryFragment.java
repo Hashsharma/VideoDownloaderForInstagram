@@ -21,6 +21,7 @@ import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.LogUtil;
@@ -85,7 +86,7 @@ public class VideoHistoryFragment extends Fragment {
         showNativeAd();
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
-        DBHelper dbHelper = DBHelper.getDefault();
+        final DBHelper dbHelper = DBHelper.getDefault();
         mDataList = new ArrayList<DownloaderBean>();
         if (fileArray != null && fileArray.length > 0) {
             for (File item : fileArray) {
@@ -101,6 +102,22 @@ public class VideoHistoryFragment extends Fragment {
         }
         mAdapter = new MainListRecyclerAdapter(mDataList, false);
         mListView.setAdapter(mAdapter);
+
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                //TODO:校验所有的下载文件，如果用户已经删除就删掉该文件
+
+                List<String> dataPaths = dbHelper.getDownloadedVideoList();
+                for (String path : dataPaths) {
+                    if (!new File(path).exists()) {
+                        dbHelper.deleteDownloadingVideo(path);
+                    }
+                }
+
+                LogUtil.e("main","all delete video clear");
+            }
+        });
     }
 
     public void refreshUI() {
@@ -108,7 +125,7 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void showNativeAd() {
-        if(isAdded()) {
+        if (isAdded()) {
             mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
             mNativeAd.setAdListener(new AdListener() {
                 @Override

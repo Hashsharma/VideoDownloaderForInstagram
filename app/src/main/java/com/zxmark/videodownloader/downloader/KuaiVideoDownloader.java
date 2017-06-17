@@ -74,6 +74,11 @@ public class KuaiVideoDownloader extends BaseDownloader {
         return null;
     }
 
+    /**
+     * =null就是解析失败
+     * @param htmlUrl
+     * @return
+     */
     @Override
     public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
@@ -89,8 +94,9 @@ public class KuaiVideoDownloader extends BaseDownloader {
             data.appPageUrl = htmlUrl;
         }
 
-        LogUtil.v("kuaw", "" + data.pageTitle);
-
+        if(data.futureVideoList == null && data.futureImageList == null) {
+            return null;
+        }
         return data;
 
     }

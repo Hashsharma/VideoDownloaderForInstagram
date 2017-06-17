@@ -22,6 +22,8 @@ public class ActivityManagerUtils {
             ActivityManager.RunningTaskInfo taskInfo = runningTasks.get(0);
             topPackageName = taskInfo.topActivity.getPackageName();
         }
+
+        LogUtil.e("main","topPackageName:" + topPackageName);
         return TextUtils.isEmpty(topPackageName) ? false : topPackageName.equals(mContext.getPackageName());
 
     }

@@ -93,20 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         mBottomDialogView = findViewById(R.id.bottom);
 
-        drawer.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                LogUtil.e("fan","onPreDraw");
-                drawer.getViewTreeObserver().removeOnPreDrawListener(this);
 
-
-                return false;
-            }
-        });
-
-    }
-
-    private void initBottomBar() {
     }
 
     private void handleSendIntent() {
@@ -251,6 +238,19 @@ public class MainActivity extends AppCompatActivity
             if (mViewPagerAdapter != null && mViewPagerAdapter.getDownloadingFragment() != null) {
                 mViewPagerAdapter.getDownloadingFragment().publishProgress(key, progress);
             }
+        }
+
+        @Override
+        public void onReceiveNewTask(final String pageURL) throws RemoteException {
+            LogUtil.v("start", "onReceiveNewTask:" + pageURL);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mViewPagerAdapter.getDownloadingFragment() != null) {
+                        mViewPagerAdapter.getDownloadingFragment().onReceiveNewTask(pageURL);
+                    }
+                }
+            });
         }
 
         @Override

@@ -119,6 +119,7 @@ public class TumblrVideoDownloader extends BaseDownloader {
             ex.printStackTrace();
             data.futureVideoList = null;
             data.futureImageList = null;
+            data = null;
         }
 
         return data;

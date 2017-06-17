@@ -16,6 +16,7 @@ import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.widget.IToast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +35,7 @@ public class DownloadingTaskList {
 
 
     private List<String> mFuturedTaskList = new LinkedList<>();
+    private HashMap<String,WebPageStructuredData>  mFutureTaskDetailMap = new HashMap<>();
 
     private DownloadingTaskList() {
 
@@ -52,6 +54,24 @@ public class DownloadingTaskList {
         mFuturedTaskList.add(taskId);
         executeNextTask(needSaveDb);
     }
+
+    public void addNewDownloadTask(String taskId,WebPageStructuredData data) {
+        if (mFuturedTaskList.size() > 0) {
+            if (mFuturedTaskList.contains(taskId)) {
+                return;
+            }
+            mFuturedTaskList.add(taskId);
+            mFutureTaskDetailMap.put(taskId,data);
+            return;
+        }
+
+
+        mFuturedTaskList.add(taskId);
+        mFutureTaskDetailMap.put(taskId,data);
+        executeNextTask(false);
+    }
+
+
 
     private Handler mHandler;
 
@@ -104,6 +124,7 @@ public class DownloadingTaskList {
     private void downloadImage(final String taskId, WebPageStructuredData data) {
         if (data.futureImageList != null && data.futureImageList.size() > 0) {
             for (String imageUrl : data.futureImageList) {
+                mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(imageUrl)).sendToTarget();
                 LogUtil.e("download", imageUrl);
                 PowerfulDownloader.getDefault().startDownload(imageUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
                     @Override
@@ -124,7 +145,11 @@ public class DownloadingTaskList {
 
                     @Override
                     public void onProgress(String path, int progress) {
-
+                        Message msg = mHandler.obtainMessage();
+                        msg.what = DownloadService.MSG_UPDATE_PROGRESS;
+                        msg.arg1 = progress;
+                        msg.obj = path;
+                        mHandler.sendMessage(msg);
                     }
                 });
             }
@@ -134,6 +159,7 @@ public class DownloadingTaskList {
 
     public void finishTask(String taskId) {
         mFuturedTaskList.remove(taskId);
+        mFutureTaskDetailMap.remove(taskId);
     }
 
     public void executeNextTask(final boolean needSaveDB) {
@@ -143,41 +169,50 @@ public class DownloadingTaskList {
             mExecutorService.execute(new Runnable() {
                 @Override
                 public void run() {
-                    WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(taskId);
-                    if (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
-                        if (needSaveDB) {
-                            if (webPageStructuredData != null) {
-                                if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            DownloadUtil.showFloatView();
-                                        }
-                                    });
-                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
-                                }
 
-                                if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            DownloadUtil.showFloatView();
-                                        }
-                                    });
-                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureImageList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureImageList.get(0)));
+                    WebPageStructuredData  cacheData = mFutureTaskDetailMap.get(taskId);
+                    if(cacheData != null) {
+                        //TODO:之前已经请求过网络，合理直接诶进行下载
+                        downloadVideo(taskId, cacheData);
+                        downloadImage(taskId, cacheData);
+                    } else {
+                        WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(taskId);
+                        if (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
+                            if (needSaveDB) {
+                                if (webPageStructuredData != null) {
+                                    if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
+                                        mHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                DownloadUtil.showFloatView();
+                                            }
+                                        });
+                                        DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
+                                    }
+
+                                    if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
+                                        mHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                DownloadUtil.showFloatView();
+                                            }
+                                        });
+                                        DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, taskId, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureImageList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureImageList.get(0)));
+                                    }
                                 }
                             }
+                            downloadVideo(taskId, webPageStructuredData);
+                            downloadImage(taskId, webPageStructuredData);
+                        } else {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    IToast.makeText(MainApplication.getInstance().getApplicationContext(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-                        downloadVideo(taskId, webPageStructuredData);
-                        downloadImage(taskId, webPageStructuredData);
-                    } else {
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                IToast.makeText(MainApplication.getInstance().getApplicationContext(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
-                            }
-                        });
                     }
+
                     finishTask(taskId);
                     executeNextTask(needSaveDB);
                 }

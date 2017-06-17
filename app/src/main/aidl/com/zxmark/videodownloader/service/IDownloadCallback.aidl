@@ -5,6 +5,7 @@ package com.zxmark.videodownloader.service;
 interface IDownloadCallback {
 
 
+    void onReceiveNewTask(String pageUrl);
     void onStartDownload(String path);
     /**
      * Demonstrates some basic types that you can use as parameters

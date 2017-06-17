@@ -181,6 +181,28 @@ public class DBHelper {
         return null;
     }
 
+    /**
+     * 通过路径获取当前视频的相关信息
+     *
+     * @param
+     * @return
+     */
+    public List<String> getDownloadedVideoList() {
+        Cursor cursor = db.query("downloading_table", null, "video_status=?", new String[]{String.valueOf(STATE_VIDEO_DOWNLOAD_SUCESSFUL)}, null, null, "_ID desc");
+        try {
+            List<String> dataList = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                String  videoPath = cursor.getString(6);
+                dataList.add(videoPath);
+            }
+            return dataList;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public boolean isDownloadingByPath(String path) {
         LogUtil.v("sd", "bean.getVideoInfoByPath=" + path);
         Cursor cursor = db.query("downloading_table", null, "video_path = ?", new String[]{path}, null, null, "_ID desc");

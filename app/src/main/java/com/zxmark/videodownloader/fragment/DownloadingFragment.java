@@ -1,5 +1,6 @@
 package com.zxmark.videodownloader.fragment;
 
+import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +53,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private LinearLayoutManager mLayoutManager;
     private MainDownloadingRecyclerAdapter mAdapter;
     private List<VideoBean> mDataList;
+    private ProgressDialog mProgressDialog;
 
     private View mHowToView;
 
@@ -121,15 +123,30 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     private void startDownload(final String url) {
         if (isAdded()) {
-            if (VideoDownloadFactory.getInstance().isSupportWeb(URLMatcher.getHttpURL(url))) {
-                IToast.makeText(getActivity(),R.string.download_from_send_action, Toast.LENGTH_SHORT).show();
+            String pageURL = URLMatcher.getHttpURL(url);
+            if (VideoDownloadFactory.getInstance().isSupportWeb(pageURL)) {
+                showCheckURLProgressDialog();
                 Intent intent = new Intent(getActivity(), DownloadService.class);
                 intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
+                intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW,false);
                 intent.putExtra(Globals.EXTRAS, url);
                 getActivity().startService(intent);
             } else {
-                IToast.makeText(getActivity(),R.string.not_support_url, Toast.LENGTH_SHORT).show();
+                IToast.makeText(getActivity(), R.string.not_support_url, Toast.LENGTH_SHORT).show();
             }
+        }
+
+    }
+
+    private void showCheckURLProgressDialog() {
+        if (isAdded()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mProgressDialog = ProgressDialog.show(getActivity(), getActivity().getString(R.string.eheck_url_dialgo_title), getActivity().getString(R.string.check_url), true, true);
+                    mProgressDialog.show();
+                }
+            });
         }
 
     }
@@ -157,6 +174,30 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                     }
                 }
             });
+        }
+    }
+
+    /**
+     * receive new task
+     *
+     * @param pageURL
+     */
+    public void onReceiveNewTask(String pageURL) {
+
+        if (isAdded()) {
+            if (mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+            if (TextUtils.isEmpty(pageURL)) {
+                IToast.makeText(getActivity(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            VideoBean videoBean = DBHelper.getDefault().getVideoBeanByPageURL(pageURL);
+            if (videoBean != null) {
+                mDataList.add(1, videoBean);
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 

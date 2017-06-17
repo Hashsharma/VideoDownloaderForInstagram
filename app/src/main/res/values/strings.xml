@@ -29,4 +29,8 @@
 
     <string name="download_from_send_action">Start get the download url</string>
     <string name="not_support_url">Please send the correct url</string>
+
+
+    <string name="eheck_url_dialgo_title">Waiting.</string>
+    <string name="check_url">Checking URL....</string>
 </resources>
