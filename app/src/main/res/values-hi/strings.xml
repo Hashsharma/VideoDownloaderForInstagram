@@ -1,0 +1,772 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	    
+	<string name="start_content_one">आपकी सुरक्षा के लिए जोखिम वाले नंबरों से आने वाले हाल के कॉल स्कैन किए जा रहे हैं</string>
+	    
+	<string name="start_content_four">10 लाख नंबरों के बीच किसी भी नाम या नंबर की खोज करें</string>
+	    
+	<string name="start_content_two">परेशान करने वाले स्पैमर्स को दूर रखें</string>
+	    
+	<string name="start_content_five">नाम या प्रकार के आधार पर अपरिचित नंबरों की पहचान करें</string>
+	    
+	<string name="start_title_one">कॉल इतिहास स्कैन</string>
+	    
+	<string name="start_title_two">स्पैम कॉल अलर्ट </string>
+	    
+	<string name="gesturelock_gesturelock_modify">पैटर्न लॉक बदल दिया गया</string>
+	    
+	<string name="global_check">देखें</string>
+	        
+	<string name="global_ok">ठीक</string>
+	    
+	<string name="global_delete_uppercase">हटाएं</string>
+	    
+	<string name="global_delete">हटाएं</string>
+	    
+	<string name="global_play">चलाएं</string>
+	    
+	<string name="global_cancel_uppercase">रद्द कर</string>
+	    
+	<string name="global_remove_uppercase">निकालें</string>
+	    
+	<string name="global_confirm">पुष्टि करें</string>
+	    
+	<string name="global_net_error_tips">नेटवर्क त्रुटि, कृपया अपने इंटरनेट की जांच करें.</string>
+	    
+	<string name="global_success">सफल रहा</string>
+	    
+	<string name="global_save_uppercase">सहेजें</string>
+	    
+	<string name="global_close_lowercase">बंद करें</string>
+	    
+	<string name="global_got_it">समझ लिया</string>
+	            
+	<string name="recorder_floatview_hint">রেকর্ড করতে ক্লিক করুন</string>
+	    
+	<string name="recorder_floatview_record_started">রেকর্ড শুরু হয়েছে</string>
+	    
+	<string name="recorder_floatview_record_call_not_connect">এই কলটি সংযুক্ত নয়। কল রেকর্ড রাখা হবে না।</string>
+	    
+	<string name="recorder_notification_call_completed">কল রেকর্ড সম্পন্ন</string>
+	    
+	<string name="recorder_notification_check">যাচাই করতে অনুগ্রহ করে ক্লিক করুন</string>
+	    
+	<string name="recorder_floatview_hint_storage_lack">সঞ্চয় স্থান না থাকায় রেকর্ডিং সুলভ নয়।</string>
+	    
+	<string name="recorder_dialog_later">बाद में</string>
+	    
+	<string name="recorder_dialog_title">कॉल रिकॉर्डिंग खोलें?</string>
+	    
+	<string name="recorder_dialog_clause_message">आप अपनी इच्छानुसार किसी भी समय कॉल रिकॉर्ड कर सकते हैं. DU Caller आपकी किसी भी कॉल रिकॉर्डिंग फ़ाइलों को न तो अपलोड करेगा और न ही उनका उपयोग करेगा.</string>
+	    
+	<string name="recorder_dialog_clause_confirm">मैं इस बात की पुष्टि करता/करती हूँ कि मेरे देश में कॉल रिकॉर्डिंग की कानूनन अनुमति है.</string>
+	    
+	<string name="recorder_dialog_clause_privacy">मैं गोपनीयता नीति से सहमत हूँ.</string>
+	    
+	<string name="recorder_dialog_decline">इंकार करें</string>
+	    
+	<string name="recorder_manager_content_null">कोई रिकॉर्डिंग फ़ाइल नहीं है</string>
+	    
+	<string name="recorder_manager_delete_dialog_content">क्या आप वाकई इस कॉल रिकॉर्डिंग को रोकना चाहते हैं?</string>
+	    
+	<string name="recorder_manager_delete_dialog_title">वाकई हटाना चाहते हैं?</string>
+	    
+	<string name="recorder_manager_play_error_tip">प्लेयर ऐप्लिकेशन नहीं मिला.</string>
+	    
+	<string name="recorder_manager_tip">रिकॉर्डिंग फ़ंक्शन बंद है,आप सेटिंग्स पर जाकर इसे चालू कर सकते हैं.</string>
+	    
+	<string name="recorder_floatview_hint_disable">कॉल रिकॉर्डिंग संभव नहीं है.</string>
+	    
+	<string name="recorder_shortcall_message">छोटी रिकॉर्डिंग फ़ाइल. सहेजने की पुष्टि करें?</string>
+	    
+	<string name="recorder_shortcall_title">रिकॉर्डिंग सहेजें?</string>
+	            
+	<string name="adding_database">डेटाबेस अपडेट हो रहा है...</string>
+	    
+	<string name="phone_number_list_quick_searching">जल्द खोज</string>
+	    
+	<string name="manage_black_dialog_from_contacts">संपर्कों स</string>
+	    
+	<string name="phone_number_list_empty_contacts_title">कोई संपर्क नह</string>
+	    
+	<string name="phone_number_empty">कोई रिपोर्ट नही</string>
+	    
+	<string name="ypage_title">जीवन सहायक</string>
+	    
+	<string name="ypage_pop_title">लोकप्रिय सेवाएं</string>
+	    
+	<string name="manage_black_dialog_enter_number">कोई नंबर डालें</string>
+	    
+	<string name="manage_black_dialog_from_history">कॉल इतिहास से</string>
+	    
+	<string name="manage_block_dialog_title">ब्लॉक सूची में नंबर जोड़ें</string>
+	    
+	<string name="main_block_offlin">ऑफ़लाइन पहचान</string>
+	    
+	<string name="main_block_db">कुल प्रविष्टियां</string>
+	    
+	<string name="main_block_up">नवीनतम अपडेट</string>
+	    
+	<string name="global_call_history">कॉल इतिहास</string>
+	<string name="rating_content">हमने आपके लिए एक अपरिचित नंबर का पता लगाया है.  \n क्या यह 5-स्टार रेटिंग योग्य है?</string>
+	<string name="rating_btn_satisfy">5 स्टार</string>
+	    
+	<string name="rating_btn_complain">शिकायत कर</string>
+	                
+	<string name="setting_common_title">सामान्य स्पैमर</string>
+	    
+	<string name="setting_international_title">इंटरनेशनल नंबर</string>
+	    
+	<string name="setting_international_detail">विदेश से आने वाली कॉल ब्लॉक करें</string>
+	    
+	<string name="setting_contacts">मेरे फ़ोन के संपर्क</string>
+	    
+	<string name="setting_unknown_call">अज्ञात कॉल्स</string>
+	    
+	<string name="setting_outgoing_call">आउटगोइंग कॉल्स</string>
+	    
+	<string name="setting_recorder">রেকর্ডার</string>
+	    
+	<string name="setting_recorder_title">কল রেকর্ডার</string>
+	        
+	<string name="setting_record_auto_title">स्वचालित रिकॉर्डिंग</string>
+	    
+	<string name="setting_hide_number_title">नंबर छिपाएं</string>
+	    
+	<string name="setting_stranger_number_title">नंबर संपर्कों में नहीं हैं</string>
+	    
+	<string name="setting_stranger_number_detail">ऐसे नंबर ब्लॉक करें, जो आपके संपर्कों में नहीं हैं</string>
+	            
+	<string name="feedback_number_tip">फ़ोन नंबर/Email</string>
+	    
+	<string name="feedback_title">फ़ीडबैक दें</string>
+	    
+	<string name="feedback_success_tip">आपके योगदान के लिए धन्यवाद!</string>
+	    
+	<string name="feedback_messagenull_tip">कृपया अपना फ़ीडबैक डालें</string>
+	            
+	<string name="verify_title">अपने फ़ोन नंबर की पुष्टि करें</string>
+	    
+	<string name="verify_hint">कृपया अपना फ़ोन नंबर दर्ज करें और आपको एक सत्यापन कोड प्राप्त होगा.</string>
+	    
+	<string name="verify_input_code_tip">कृपया SMS से मिलने वाले सत्यापन कोड की प्रतीक्षा करें और उसे दर्ज करें</string>
+	    
+	<string name="verify_resend">दोबारा भेजें</string>
+	    
+	<string name="verify_failed">सत्यापन विफल हुआ. यदि कोड सही है तो कृपया पुष्टि करें या बाद में प्रयास करें</string>
+	    
+	<string name="verify_tips">कॉलर आइडेंटिफ़िकेशन से आपके दोस्तों, परिजनों और व्यावसायिक संपर्कों को पता चल जाताहै कि आप उन्हें कॉल कर रहे हैं.</string>
+	<string name="verify_tips2">कॉलर आईडी सेट करने और उपयोग करने के लिए कोई शुल्क नहीं है. चुनें कि आपकी प्रोफ़ाइल पर        क्या दिखे.</string>
+	    
+	<string name="verify_setup_str">अपने मोबाइल नंबर से सेट करें</string>
+	    
+	<string name="verify_first_name">पहला नाम</string>
+	    
+	<string name="verify_last_name">अंतिम नाम</string>
+	    
+	<string name="user_editinfo_hint_social_account">अपना सामाजिक खाता जोड़ें</string>
+	    
+	<string name="user_editinfo_hint_email">अपना ईमेल जोड़ें</string>
+	    
+	<string name="user_editinfo_hint_address">अपना पता जोड़ें</string>
+	    
+	<string name="user_editinfo_location_city">शहर</string>
+	    
+	<string name="user_editinfo_location_country">देश</string>
+	    
+	<string name="user_editinfo_hint_site">अपनी व्यक्तिगत साइट जोड़ें</string>
+	    
+	<string name="user_editinfo_email">Email</string>
+	    
+	<string name="user_editinfo_location">स्थान</string>
+	    
+	<string name="user_editinfo_site">साइट</string>
+	    
+	<string name="user_editinfo_collision_title">लॉगिन का समय समाप्त हो गया</string>
+	    
+	<string name="user_editinfo_collision_content">आपके सत्र की अवधि समाप्त हो गई है. अपना खाता एक्सेस करने के लिए कृपया दोबारा लॉगिन करें.</string>
+	    
+	<string name="user_detail_login_fail">लॉगिन विफल</string>
+	    
+	<string name="user_detail_dialog_logout_logout">साइन आउट करें</string>
+	    
+	<string name="user_detail_dialog_logout_title">साइन आउट करें</string>
+	    
+	<string name="user_detail_dialog_remove_message">क्या आप वाकई निकालना चाहते हैं?</string>
+	    
+	<string name="user_detail_dialog_remove_title">निकालें</string>
+	    
+	<string name="user_detail_dialog_logout_message">क्या आप वाकई साइन आउट करना चाहते हैं?</string>
+	    
+	<string name="verify_adddetail_login_with_facebook">FACEBOOK से साइन इन करें</string>
+	    
+	<string name="verify_adddetail_login_with_google">GOOGLE से साइन इन करें</string>
+	    
+	<string name="verify_setup_hint">अपनी कॉलर आईडी कार्ड सेट करें</string>
+	    
+	<string name="verify_change_your_photo">अपनी तस्वीर बदलें</string>
+	    
+	<string name="verify_upload_profile_title">एक फ़ोटो जोड़ें</string>
+	    
+	<string name="verify_upload_profile_takephoto">फ़ोटो लें</string>
+	    
+	<string name="verify_upload_profile_gallery">गैलरी से चुनें</string>
+	    
+	<string name="verify_get_photo_fail">फ़ोटो नहीं ली जा सकी，कृपया फिर से कोशिश करें</string>
+	    
+	<string name="user_editinfo_profile">प्रोफ़ाइल</string>
+	            
+	<string name="float_view_drag">कॉलर आईडी का स्थान बदलने के लिए उसे ड्रैग करें</string>
+	    
+	<string name="ducaller_last_call_info">पिछली कॉल %1$s</string>
+	            
+	<string name="bottom_sheet_rang_text">%1$d सेकंड तक घंटी बज</string>
+	    
+	<string name="detail_card_save">सहेजें</string>
+	    
+	<string name="detail_card_edit">संपादित करें</string>
+	    
+	<string name="detail_card_tag">टैग</string>
+	    
+	<string name="add_tag_suspect_spam">क्या आपको यह स्पैम नंबर लगता है ?</string>
+	    
+	<string name="button_spam">स्पैम</string>
+	    
+	<string name="button_not_spam">स्पैम नहीं है</string>
+	    
+	<string name="phonenumber_tag_suspected_spam">संदिग्ध स्पैम</string>
+	    
+	<string name="phonenumber_tag_services">टेलीमार्केटिंग</string>
+	    
+	<string name="phonenumber_tag_express">एक्सप्रेस</string>
+	    
+	<string name="phonenumber_tag_transportation">परिवहन</string>
+	    
+	<string name="phonenumber_tag_finance_insurance">फ़ाइनेंस एवं इंश्योरेंस</string>
+	    
+	<string name="phonenumber_tag_scam">घोटाला</string>
+	    
+	<string name="phonenumber_tag_restaurant">रेस्टोरेंट और कैफ़े</string>
+	    
+	<string name="phonenumber_tag_hotel">होटल</string>
+	    
+	<string name="phonenumber_tag_health">स्वास्थ्य</string>
+	    
+	<string name="phonenumber_tag_travel">यात्रा</string>
+	    
+	<string name="phonenumber_tag_public_service">सार्वजनिक सेवाएं</string>
+	    
+	<string name="phonenumber_tag_education">शिक्षा</string>
+	    
+	<string name="phonenumber_tag_entertainment">मनोरंजन</string>
+	    
+	<string name="phonenumber_tag_shopping">शॉपिंग</string>
+	    
+	<string name="phonenumber_tag_spam">स्पैम</string>
+	    
+	<string name="bottom_add_contact_btn">संपर्क में जोड़ें</string>
+	    
+	<string name="bottom_tag_more">अधिक</string>
+	    
+	<string name="detail_save_contact">संपर्कों में जोड़ें</string>
+	    
+	<string name="notification_title">{0, choice, 1#आपन&lt;font color=&quot;#F96367&quot;&gt; 1 &lt;/font&gt;कॉल ब्लॉक की ह|1&lt;आपने&lt;font color=&quot;#F96367&quot;&gt; {0} &lt;/font&gt;कॉल ब्लॉक की है}</string>
+	    
+	<string name="notification_content">अभी देखें</string>
+	        
+	<string name="phone_number_mobile_title">मोबाइल</string>
+	    
+	<string name="phone_number_landline_title">लैंडलाइन</string>
+	    
+	<string name="phone_number_other_str">अन्य</string>
+	    
+	<string name="whost_after_call_unblock">अनब्लॉक करें</string>
+	    
+	<string name="second">%1$d सेकंड पहले</string>
+	    
+	<string name="seconds">%1$d सेकंड पहले</string>
+	    
+	<string name="minute">%1$d मिनट पहले</string>
+	    
+	<string name="minutes">%1$d मिनट पहले</string>
+	    
+	<string name="hour">%1$d घंटा पहले</string>
+	    
+	<string name="hours">%1$d घंटे पहले</string>
+	    
+	<string name="day">%1$d दिन पहले</string>
+	    
+	<string name="days">%1$d दिन पहले</string>
+	    
+	<string name="week">%1$d सप्ताह पहले</string>
+	    
+	<string name="weeks">%1$d सप्ताह पहले</string>
+	    
+	<string name="jan">जनवरी</string>
+	    
+	<string name="feb">फ़रवरी</string>
+	    
+	<string name="mar">मार्च</string>
+	    
+	<string name="apr">अप्रैल</string>
+	    
+	<string name="may">मई</string>
+	    
+	<string name="jun">जून</string>
+	    
+	<string name="jul">जुलाई</string>
+	    
+	<string name="aug">अगस्त</string>
+	    
+	<string name="sep">सितंबर</string>
+	    
+	<string name="oct">अक्टूबर</string>
+	    
+	<string name="nov">नवंबर</string>
+	    
+	<string name="dec">दिसंबर</string>
+	    
+	<string name="setting_pop">पॉप अप डायलॉग</string>
+	    
+	<string name="action_settings">सेटिंग्स</string>
+	    
+	<string name="main_block_up_time">29 जून 2016</string>
+	    
+	<string name="confirm_dialog_confirm">ठीक</string>
+	    
+	<string name="whost_after_call_block_report">ब्लॉक और रिपोर्ट करें</string>
+	    
+	<string name="recent_text">हाल के</string>
+	    
+	<string name="block_text">ब्लॉक करें</string>
+	    
+	<string name="calllog_blocked">ब्लॉक की गई</string>
+	    
+	<string name="no_recent_contact">कोई हाल का नहीं.</string>
+	    
+	<string name="nav_rate">हमारा मूल्यांकन करें</string>
+	    
+	<string name="nav_feedbacks">फ़ीडबैक दें</string>
+	    
+	<string name="nav_about">इसके बारे में</string>
+	    
+	<string name="check_calllog">कॉल इतिहास स्कैन हो रहा है...</string>
+	    
+	<string name="identify_number">अपरिचित नंबर पहचाना जा रहा है...</string>
+	    
+	<string name="top_hint">इस समय लाखों स्पैम कॉल्स ब्लॉक हैं</string>
+	    
+	<string name="phone_identified_info">पहचाना गया</string>
+	    
+	<string name="detail_add_tag">टैग जोड़ें</string>
+	    
+	<string name="detail_edit_tag">टैग संपादित करें</string>
+	    
+	<string name="detail_edit_contact">संपर्क संपादित करें</string>
+	    
+	<string name="add_block">नंबर आपकी ब्लॉक सूची में जोड़ दिया गया है</string>
+	    
+	<string name="remove_block">नंबर आपकी ब्लॉक सूची से निकाल दिया गया है</string>
+	    
+	<string name="nav_invite_friends">मित्रों को आमंत्रित करें</string>
+	    
+	<string name="exit_title">बाहर निकलें</string>
+	        
+	<string name="contacts">संपर्क</string>
+	    
+	<string name="report_list_title">मेरी रिपोर्ट</string>
+	    
+	<string name="common_list_title">सामान्य रूप से उपयोग किए जाने वाले नंबर</string>
+	    
+	<string name="today">आज</string>
+	    
+	<string name="yesterday">बीता हुआ कल</string>
+	    
+	<string name="incoming_call_tips">इसका जवाब दें या काट दें, यह आपकी मर्ज़ी है</string>
+	    
+	<string name="incoming_call_tips2">अपरिचित इनकमिंग कॉल्स को पहचानें</string>
+	        
+	<string name="number_detail_copy_title">नंबर कॉपी करें</string>
+	    
+	<string name="number_detail_copy_toast">क्लिपबोर्ड पर कॉपी किए गए</string>
+	    
+	<string name="number_detail_search_title">Google पर खोजें</string>
+	    
+	<string name="global_share">साझा करें</string>
+	            
+	<string name="dialog_title_clear_all">सब साफ़ करें</string>
+	            
+	<string name="privacy_call_title">निजी संपर्क</string>
+	    
+	<string name="privacy_calllist_tip">निजी संपर्क सुरक्षा सक्षम है.</string>
+	    
+	<string name="remove_privacy_call_title">निजी संपर्क निकालें</string>
+	    
+	<string name="remove_privacy_call_text">इस निजी संपर्क को निकालने के बाद, इसके कॉल लॉग हटा दिए जाएंगे, लेकिन रिकॉर्डिंग बनी रहेगी. क्या आप इस निजी संपर्क को वाकई हटाना चाहते हैं?</string>
+	    
+	<string name="add_privacy_call_text">निजी संपर्कों का कॉल इतिहास केवल निजी संपर्कों में दिखाई देगा. कॉल लॉग सिस्टम या किसी अन्य सॉफ़्टवेयर में प्रदर्शित नहीं होते.</string>
+	    
+	<string name="add_privacy_call_title">निजी संपर्कों में नंबर जोड़ें</string>
+	    
+	<string name="privacy_guide_content1">-कॉल इतिहास स्वचालित रूप से एन्क्रिप्ट किया गया.</string>
+	    
+	<string name="privacy_guide_content2">-निजी संपर्कों की रिकॉर्ड की गई कॉल तुरंत छिपा दी जाती हैं.</string>
+	    
+	<string name="privacy_guide_content3">-दोहरी पासवर्ड सुरक्षा इसे और भी सुरक्षित बना देती है.</string>
+	    
+	<string name="privacy_guide_toobar_title">निजी संपर्क खोलें</string>
+	    
+	<string name="privacy_guide_title">अपनी निजी कॉल छिपाता है</string>
+	                
+	<string name="gesturelock_choose_security_question">सुरक्षा प्रश्न सेट करें</string>
+	    
+	<string name="gesturelock_forget_password">पासवर्ड भूल गए</string>
+	    
+	<string name="gesturelock_at_least_four_point">कम से कम 4 बिंदुओं को कनेक्ट करें. कृपया फिर से बनाएं.</string>
+	    
+	<string name="gesturelock_gesture_password">पैटर्न लॉक</string>
+	    
+	<string name="gesturelock_gesture_password_not_same">मेल नहीं खाता. कृपया फिर से बनाएं.</string>
+	    
+	<string name="gesturelock_gesturelock_open">पैटर्न लॉक सक्षम किया गया</string>
+	    
+	<string name="gesturelock_input_answer">अपना सुरक्षा उत्तर डालें</string>
+	    
+	<string name="gesturelock_password_locked_title">पासवर्ड लॉक हो गया</string>
+	    
+	<string name="gesturelock_please_set_gesture_password">कृपया एक पैटर्न बनाएं</string>
+	    
+	<string name="gesturelock_input_gesture_password">कृपया पैटर्न बनाएं</string>
+	    
+	<string name="gesturelock_please_set_gesture_password_twice">पैटर्न की पुष्टि करें</string>
+	    
+	<string name="gesturelock_question_setting_dialog_message">आपकी सुरक्षा के लिए, आपके द्वारा सेट किया जाने वाला प्रश्न और उत्तर ही आ        पके पैटर्न को दोबारा प्राप्त करने का उपाय है. कृपया सुनिश्चित करें कि आप उन्हें याद रखना चाहते हैं.</string>
+	    
+	<string name="gesturelock_question_setting_dialog_title">पासवर्ड सुरक्षा सक्षम की गई</string>
+	    
+	<string name="gesturelock_reset">रीसेट करें</string>
+	    
+	<string name="gesturelock_security_question_is">आपका सुरक्षा है:</string>
+	    
+	<string name="gesturelock_set_security_question">सुरक्षा प्रश्न सेट करें</string>
+	    
+	<string name="gesturelock_wrong_answer_input_twice">गलत पासवर्ड. कृपया फिर से कोशिश करें.</string>
+	            
+	<string name="tab_search_title">खोज</string>
+	    
+	<string name="search_tips">नाम या नंबर खोजें</string>
+	        
+	<string name="search_among">100,000,000 नंबरों के बीच खोजा जा रहा है</string>
+	    
+	<string name="clear_history_title">इतिहास साफ़ करें</string>
+	    
+	<string name="clear_history_msg">क्या आप वाकई इतिहास साफ़ करना चाहते हैं?</string>
+	        
+	<string name="no_search_result_tips">कोई भी मिलान नहीं मिला. हम अपनी सेवा में लगातार सुधार कर रहे हैं.</string>
+	    
+	<string name="search_detail_ask">विवरण का आग्रह करें</string>
+	    
+	<string name="search_detail_lock_tips">%1$s की जानकारी निजी है. आप उनसे विवरण पाने का आग्रह कर सकते ह</string>
+	    
+	<string name="main_search_category_request_title">आपका अनुरोध</string>
+	    
+	<string name="main_search_category_recent_title">हाल की खोजें</string>
+	    
+	<string name="main_search_new_tips">new</string>
+	    
+	<string name="search_notice_title">सूचना</string>
+	    
+	<string name="search_no_login_msg">दूसरों से विवरण का आग्रह करने से पहले आपको एक मान्य उपयोगकर्ता होना चाहिए.</string>
+	    
+	<string name="search_no_login_ok">सेल फ़ोन से साइन इन करें</string>
+	    
+	<string name="search_net_error_title">नेटवर्क त्र्</string>
+	    
+	<string name="search_net_error_msg">कृपया अपने इंटरनेट की जांच करें</string>
+	    
+	<string name="search_send_success">आपका अनुरोध भेज दिया गया है. आपको %1$s से जवाब मिलते ही सूचित किया जाएगा.</string>
+	    
+	<string name="search_detail_login_title">साइन इन सफल रहा </string>
+	    
+	<string name="search_detail_login_msg">अब आप किसी व्यक्ति से उसका संपर्क विवरण मांग सकते हैं.</string>
+	    
+	<string name="search_detail_login_ok">मैं समझता/समझती हूं</string>
+	    
+	<string name="search_push_message">%1$s ने अपनी संपर्क जानकारी आपसे साझा की है</string>
+	            
+	<string name="main_show_all_calls">सभी कॉल दिखाएं</string>
+	    
+	<string name="no_identified">आपके कॉल इतिहास में कोई भी जोखिम नहीं मिला</string>
+	    
+	<string name="no_block_calls">ब्लॉक की गई कोई भी कॉल नहीं</string>
+	    
+	<string name="no_incoming_calls">कोई इनकमिंग कॉल नहीं</string>
+	    
+	<string name="no_missed_calls">कोई छूटी कॉल नहीं</string>
+	    
+	<string name="no_outgoing_calls">कोई आउटगोइंग कॉल नहीं</string>
+	    
+	<string name="main_filter_all_calls">सभी</string>
+	    
+	<string name="main_filter_identified">पहचाना गया</string>
+	    
+	<string name="main_filter_blocked">ब्लॉक की गई</string>
+	    
+	<string name="main_filter_outgoing">आउटगोइंग</string>
+	    
+	<string name="main_filter_missed">छूटी</string>
+	<string name="main_identified_strange_number">आपके लिए &lt;font color=&quot;#000000&quot;&gt;%1$d &lt;/font&gt; अपरिचित नंबर की पहचान की गई</string>
+	<string name="dial_option_title">%1$s को कॉल करने के लिए कोई सिम कार्ड चुनेंु</string>
+	    
+	<string name="global_simcard_1">सिम कार्ड 1</string>
+	    
+	<string name="global_simcard_2">सिम कार्ड 2</string>
+	        
+	<string name="number_selecter_title">कॉल करें %1$s</string>
+	    
+	<string name="global_no_wifi">कोई WIFI नहीं</string>
+	    
+	<string name="dialog_clear_all_mes">इस नंबर का कॉल इतिहास साफ़ करें?</string>
+	    
+	<string name="ok">पुष्टि करें</string>
+	    
+	<string name="call_no_answer">कोई जवाब नहीं</string>
+	    
+	<string name="verify_countrycode_title">कृपया अपना देश चुनें</string>
+	    
+	<string name="verify_error_required">आवश्यक</string>
+	    
+	<string name="recorder_manager_auto_record_dialog_content">अपनी प्रत्येक कॉल रिकॉर्ड करें, अब कोई भी महत्वपूर्ण कॉल जानकारी छूटने की कोई चिंता नहीं. </string>
+	    
+	<string name="global_do_not_show_again">दोबारा याद न दिलाएं</string>
+	    
+	<string name="recorder_dialog_clause_agress"> </string>
+	    
+	<string name="recorder_manager_dialog_auto_record">कॉल की स्वचालित रिकॉर्डिंग</string>
+	    
+	<string name="share_dialog_title">मित्रों से नंबर जानकारी साझा करें</string>
+	    
+	<string name="dialer_title">डायलर</string>
+	    
+	<string name="dialer_favorites">नियमित संपर्क</string>
+	    
+	<string name="sign_tag_card_title">दूसरे लोगों को इस नंबर को पहचानने में सहायता करें</string>
+	    
+	<string name="privacy_unhide_btn_text">दिखाएं</string>
+	    
+	<string name="detail_open_auto_record_tips">स्वचालित रिकॉर्डिंग चालू है</string>
+	    
+	<string name="detail_closed_auto_record_tips">स्वचालित रिकॉर्डिंग बंद है</string>
+	    
+	<string name="global_batch_delete">एक साथ हटाएं</string>
+	    
+	<string name="global_all_select">सभी</string>
+	    
+	<string name="global_recorded">रिकॉर्ड किया गया</string>
+	    
+	<string name="with_record_files">रिकॉर्डिंग फ़ाइल से</string>
+	    
+	<string name="global_delete_with_count">हटाएं(%1$d)</string>
+	    
+	<string name="batch_delete_dialog_msg">क्या आप वाकई चयनित %1$s कॉल लॉग हटाना चाहते हैं?</string>
+	    
+	<string name="batch_delete_dialog_msg_with_record">क्या आप वाकई चयनित %1$s कॉल रिकॉर्ड और उनकी रिकॉर्डिंग हटाना चाहते हैं?</string>
+	    
+	<string name="recorder_manager_batch_delete_content">क्या आप वाकई चयनित %1$d रिकॉर्डिंग फ़ाइल हटाना चाहते हैं?</string>
+	    
+	<string name="recorder_manager_tab_calllog">कॉल लॉग</string>
+	    
+	<string name="recorder_dialog_edit_note">नोट्स</string>
+	    
+	<string name="recorder_dialog_edit_note_hint">इस रिकॉर्ड की जानकारी रखें…</string>
+	    
+	<string name="recorder_dialog_note_saved">नोट्स सहेजे गए</string>
+	    
+	<string name="recorder_notification_storage_lack_title">SD कार्ड भर गया</string>
+	    
+	<string name="recorder_notification_storage_lack_content">कृपया SD कार्ड की मेमोरी साफ़ करें या इसे सामान्य रूप से रिकॉर्ड नहीं किया जा सकता.</string>
+	    
+	<string name="recorder_manager_filter_numbers">अधिकतम रिकॉर्डिंग</string>
+	    
+	<string name="recorder_manager_filter_latest">हाल की रिकॉर्डिंग</string>
+	                
+	<string name="recorder_pwd_guide_title">रिकॉर्डिंग फ़ाइल के लिए पासवर्ड सेट करें</string>
+	    
+	<string name="recorder_pwd_guide_content">- कॉल रिकॉर्डिंग की सुरक्षा के लिए डबल पासवर्ड का उपयोग करें. \n  - कॉल की व्यापक सुरक्षा</string>
+	    
+	<string name="recorder_pwd_guide_btn">लॉगिन करके पासवर्ड सेट करें</string>
+	    
+	<string name="recorder_manager_menu_password">पासवर्ड सुरक्षा</string>
+	    
+	<string name="privacy_call_empty_text2">कॉल गोपनीयता की सुरक्षा करता है और निजी कॉल्स को स्वचालित रूप से छिपाता है</string>
+	    
+	<string name="privacy_add_privacycontacts_btn_text">निजी संपर्कों में नंबर जोड़ें</string>
+	    
+	<string name="privacy_add_privacy_failed">कृपया अपना पासवर्ड सेट करें</string>
+	    
+	<string name="privacy_guide_dialog_content">सभी निजी कॉल रिकॉर्ड को स्वचालित रूप से छिपाने के लिए निजी संपर्क आज़माएं.</string>
+	    
+	<string name="privacy_guide_try">आज़माएं</string>
+	    
+	<string name="privacy_incoming_card_switch_text">मिस्ड कॉल कार्ड</string>
+	    
+	<string name="privacy_miss_card_dialog_title">निजी संपर्कों से मिस्ड कॉल कार्ड बंद करें</string>
+	    
+	<string name="privacy_miss_card_dialog_content1">- DU Caller में अब और मिस्ड कॉल कार्ड नहीं है</string>
+	    
+	<string name="privacy_miss_card_dialog_content2">- केवल DU Caller में निजी कॉल इतिहास देखें</string>
+	    
+	<string name="privacy_miss_card_dialog_content3">- अपनी गोपनीयता की पूरी तरह से सुरक्षा करें</string>
+	    
+	<string name="privacy_done">हो गया</string>
+	    
+	<string name="verify_error_incorrect_information">कृपया सही जानकारी भरें</string>
+	    
+	<string name="identification_card_title">DU Caller ने इस कॉल को पहचाना</string>
+	    
+	<string name="detail_text">विवरण</string>
+	    
+	<string name="ignore_text">अनदेखा करें</string>
+	    
+	<string name="callback_text">वापस कॉल करें</string>
+	    
+	<string name="has_miss_block_text">आपके %1$d कॉल मिस हुए, आपने %2$d कॉल ब्लॉक किए हैं</string>
+	    
+	<string name="has_block_text">आपने %1$d कॉल ब्लॉक किए हैं</string>
+	    
+	<string name="has_miss_text">आपके %1$d कॉल मिस हुए</string>
+	    
+	<string name="gesturelock_password_locked_message">पासवर्ड लॉक है. %1$d मिनट में दोबारा कोशिश करें.</string>
+	    
+	<string name="gesturelock_password_locked_messages">पासवर्ड लॉक है. %1$d मिनट में दोबारा कोशिश करें.</string>
+	    
+	<string name="gesturelock_input_error_left_count">गलत पासवर्ड. आप %1$d बार भी कोशिश कर सकते हैं.</string>
+	    
+	<string name="gesturelock_input_error_left_counts">गलत पासवर्ड. आप %1$d बार भी कोशिश कर सकते हैं.</string>
+	<string name="manage_block_man">ब्लॉक सूची प्रबंधित करें</string>
+	<string name="manage_block_setting">ब्लॉक सेटिंग्स</string>
+	<string name="block_protect_numbers">कॉल्स</string>
+	<string name="block_protect_number">कॉल</string>
+	<string name="block_protect_you">DU Caller आपकी सुरक्षा कर रहा है</string>
+	<string name="manage_block_add">आपने अभी तक किसी को भी ब्लॉक सूची में नहीं जोड़ा है. </string>
+	<string name="manage_block_add_icon">किसी को जोड़ने के लिए + पर क्लिक करें.</string>
+	<string name="card_click_block_text">क्या आप वाकई इस नंबर को ब्लॉक करना चाहते हैं?</string>
+	<string name="add_tag_success_tips">इस नंबर के बारे में ज़्यादा लोगों को जानकारी देने के लिए धन्यवाद! आपने %1$s नंबरों की रिपोर्ट की है.</string>
+	<string name="setting_language">भाषा</string>
+	<string name="setting_app_language">ऐप्लिकेशन की भाषा</string>
+	<string name="global_scam_uppercase">घोटाला</string>
+	<string name="copynumber_dialog_title">नंबर कॉपी किया गया</string>
+	<string name="copynumber_dialog_content">क्या आप इसकी खोज करना चाहते हैं%s</string>
+	<string name="setting_common_detail_modify">अन्य लोगों द्वारा स्पैम के रूप में रिपोर्ट किए गए टेलीमार्केटर और बाधा डालने वाले कॉलर को ब्लॉक करें (सुझाव दिया जाता है)</string>
+	<string name="setting_hide_number_detail_modify">टेलीकॉम सेवा का उपयोग करके छिपाए गए नंबर ब्लॉक करें</string>
+	<string name="new_search_tips">आप किसे या क्या ढूंढ रहे हैं ?</string>
+	<string name="search_in_database">DU Caller के डेटाबेस में खोजें</string>
+	<string name="new_no_search_result_tips">इस देश या क्षेत्र में कोई भी मिलान नहीं मिला.</string>
+	<string name="no_more_result">अधिक परिणाम नहीं मिले </string>
+	<string name="limite_200_result">हमने पहले से प्रदर्शित 200 प्रविष्टियों से काफ़ी मिलती-जुलती कुछ प्रविष्टियां छोड़ दी हैं. </string>
+	<string name="search_in_the_world">वैश्विक डेटाबेस में खोज कर देखें</string>
+	<string name="search_detail_check_detail">विवरण देखें</string>
+	<string name="permission_guide_content">पॉप-अप विंडो प्रदर्शित करें</string>
+	<string name="permission_guide_title">अनुमति प्रबंधक</string>
+	<string name="permission_btn_text">सक्षम करें</string>
+	<string name="permission_cc_content">परेशान करने वाली कॉल्स को पहचानने और उन्हें ब्लॉक करने के लिए आपको कॉल इतिहास और संपर्क अनुमतियां सक्षम करनी होंगी.</string>
+	<string name="permission_title">कॉलर आईडी सेवा सक्रिय करें</string>
+	<string name="permission_content">कॉलर आईडी दिखाने के लिए आपको पॉप-अप विंडो अनुमति सक्षम करनी होगी</string>
+	<string name="main_dialog_call">कॉल करें</string>
+	<string name="main_dialog_message">संदेश</string>
+	<string name="main_dialog_clear_calls">कॉल साफ़ करें</string>
+	<string name="clear_all_calls_title">सभी कॉल साफ़ करें</string>
+	<string name="clear_all_calls_msg">क्या आप वाकई सभी कॉल साफ़ करना चाहते हैं?</string>
+	<string name="ctb_title">योगदान</string>
+	<string name="ctb_des_o">आपकी रिपोर्ट से अन्य लोगों को xxx बार अपरिचित कॉल्स को पहचानने में सहायता</string>
+	<string name="ctb_people">%1$sमिली है</string>
+	<string name="ctb_defected">सारी दुनिया के %1$s उपयोगकर्ताओं को हरा दिया है</string>
+	<string name="ctb_identify">आपके कॉल लॉग में अपरिचित कॉल्स का पता चला</string>
+	<string name="ctb_by_user">%1$s आपके द्वारा रिपोर्ट की गईं</string>
+	<string name="ctb_by_us">%1$s DU Caller द्वारा रिपोर्ट की गईं</string>
+	<string name="ctb_report">रिपोर्ट करना शुरू करें</string>
+	<string name="ctb_none_des">आप बस एक नंबर की रिपोर्ट करके सैकड़ों लोगों की सहायता कर सकते हैं.</string>
+	<string name="add_tag_success_content">आपने &lt;font color=&amp;quot;#000000&amp;quot;&gt;%1$d&lt;/font&gt; नंबरों की रिपोर्ट की है और अन्य लोगों को &lt;font color=&amp;quot;#000000&amp;quot;&gt;%2$d&lt;/font&gt; अपरिचित कॉल्स पहचानने में सहायता की है.</string>
+	<string name="identified_unknown_number">पहचाने गए अपरिचित नंबर</string>
+	<string name="start_page_city">न्यूयॉर्क</string>
+	<string name="start_title_four">ऑनलाइन खोज</string>
+	<string name="start_page_two_spam_title">स्पैम-टेलीकॉम मिला</string>
+	<string name="start_page_four_startbucks">स्टारबक्स</string>
+	<string name="report_title">मेरे योगदान</string>
+	<string name="add_tag_btn_text">मेरे योगदान देखें</string>
+	<string name="spam_content2">क्या आपको लगता कि आपको इस कॉल से परेशानी हो रही है?</string>
+	<string name="spam_yes">हां</string>
+	<string name="spam_no">नहीं</string>
+	<string name="whost_incoming_call_from">इनकमिंग</string>
+	<string name="global_block">ब्लॉक करें</string>
+	<string name="exit_message">क्या आप वाकई स्कैनिंग रोकना चाहते हैं?</string>
+	<string name="security_question_school_street">आपका प्राथमिक विद्यालय किस मार्ग पर है?</string>
+	<string name="security_question_first_phone">आपका पहला फ़ोन नंबर क्या है?</string>
+	<string name="security_question_father_birth">आपके पिता की जन्मतिथि क्या है?</string>
+	<string name="security_question_birth_place">आपका जन्म स्थान कौन सा है?</string>
+	<string name="security_question_food">आपका पसंदीदा भोजन क्या है?</string>
+	<string name="global_collect">पसंदीदा</string>
+	<string name="global_cancel_collect">पसंदीदा को पूर्ववत करें</string>
+	<string name="recorder_setting_auto_file_directory">रिकॉर्डिंग निर्देशिका (%1$s)</string>
+	<string name="recorder_recorder_setting">रिकॉर्डिंग सेटिंग</string>
+	<string name="recorder_setting_choice_auto">सभी कॉल ऑटो-रिकॉर्ड करें</string>
+	<string name="recorder_setting_choice_manual">कुछ कॉल ऑटो-रिकॉर्ड करें</string>
+	<string name="recorder_setting_manual_auto_unfamiliar_phone"> - अज्ञात कॉल ऑटो-रिकॉर्ड करें</string>
+	<string name="recorder_setting_manual_custom_recording_list"> - ऑटो-रिकॉर्ड सूची संपादित करें (%1$d)</string>
+	<string name="recorder_setting_manual_custom_recording_list_title">ऑटो-रिकॉर्ड सूची</string>
+	<string name="recorder_setting_custom_list_empty_hint_left">आपने अभी तक ऑटो-रिकॉर्ड सूची में कोई भी नंबर जोड़ा है</string>
+	<string name="recorder_setting_custom_list_empty_hint_right">एक नंबर जोड़ने के लिए + पर क्लिक करें</string>
+	<string name="recorder_setting_custom_list_add_dialog_title">ऑटो-रिकॉर्ड सूची में नंबर जोड़ें </string>
+	<string name="recorder_floatview_get_calllog_fail">आपके कॉल लॉग तक एक्सेस न होने के कारण रिकॉर्डिंग नहीं हो सकी.</string>
+	<string name="invite_fridents_text">%s मित्रों को आमंत्रित करें</string>
+	<string name="share_on_text"> %s पर शेयर करें</string>
+	<string name="questionnaire_tips">हमारे उत्पाद को बेहतर बनाने में हमारी सहायता करने में आपको बस %1$s मिनट लगेगा(लगेंगे).</string>
+	<string name="questionnaire_ok">जाएं और देखें </string>
+	<string name="invite_friends_content">अपरिचित फ़ोन नंबरों को पहचानने और उन्हें ब्लॉक करने के लिए मैं DU Caller का उपयोग कर रहा/रही हूं. DU Caller इस्तेमाल करें और परेशान करने वाली कॉल को अलविदा कहें!</string>
+	<string name="recorder_setting_switch_master_hint">आप इस श्रेणी में अपनी कॉल रिकॉर्डिंग विधियां कस्टमाइज़ कर सकते हैं</string>
+	<string name="global_customize">कस्टमाइज़ करें</string>
+	<string name="security_question_dialog_title_choose_question">एक सुरक्षा प्रश्न चुनें</string>
+	<string name="recorder_manager_contact_batch_delete_dialog_content">चयनित %1$d संपर्क की रिकॉर्डिंग फ़ाइलें हटाने की पुष्टि करें?</string>
+	<string name="share_title">शीर्षक</string>
+	<string name="share_number">नंबर</string>
+	<string name="share_identify">अज्ञात नंबरों की आसानी से पहचान करें!</string>
+	<string name="qustionnair_title">DU Caller के उपयोग की आदत का सर्वेक्षण</string>
+	<string name="recorder_dialog_use_mic">सर्वश्रेष्ठ परिणामों के लिए, रिकॉर्डिंग के दौरान स्पीकर चालू करें.</string>
+	<string name="recorder_record_start_with_mic_tip">रिकॉर्डिंग शुरू करें. रिकॉर्डिंग की बेहतर गुणवत्ता के लिए स्पीकर चालू करें</string>
+	<string name="recorder_manager_mic_tip">आपका डिवाइस स्पीकर का उपयोग करके कॉल रिकॉर्ड करता है. कृपया रिकॉर्डिंग के दौरान स्पीकर चालू करें</string>
+	<string name="caller_notification_title">कॉल सुरक्षा चालू है!</string>
+	<string name="caller_notification_content">विवरण देखें</string>
+	<string name="caller_notification_dialog_title">कॉल सुरक्षा बंद करें?</string>
+	<string name="caller_notificaiton_dialog_content">यदि आप कॉल सुरक्षा को बंद कर देते हैं, तो DU Caller आपकी स्पैम कॉल्स से सुरक्षा नहीं कर सकेगा. </string>
+	<string name="private_number">निजी कॉलर</string>
+	<string name="private_number_describe">दूसरे व्यक्ति ने अपना फ़ोन नंबर छिपा दिया है</string>
+	<string name="private_number_dailog_title3">क्या आप वाकई सभी निजी कॉलर को अनब्लॉक करना चाहते हैं?</string>
+	<string name="private_number_unblock_toast">निजी कॉलर अनब्लॉक कर दिए गए</string>
+	<string name="private_number_dailog_title2">क्या आप वाकई सभी निजी कॉलर को ब्लॉक करना चाहते हैं?</string>
+	<string name="private_number_block_toast">निजी कॉलर ब्लॉक कर दिए गए</string>
+	<string name="private_number_dailog_title">क्या आप निजी कॉलर को ब्लॉक करना चाहते हैं?</string>
+	<string name="private_number_describe2">हां पर क्लिक करने से सभी निजी नंबर ब्लॉक हो जाएंगे</string>
+	<string name="notification_protecting_you">DU Caller आपकी सुरक्षा कर रहा है </string>
+	<string name="notification_call_times_singular">%s कॉल</string>
+	<string name="notification_call_times">%s कॉल्स</string>
+	<string name="notification_call_day_singular">%s  दिन</string>
+	<string name="notification_call_day">%s  दिन</string>
+	<string name="notification_see_detail">DU Caller में विवरण देखें</string>
+	<string name="notification_close_bar">नोटिफ़िकेशन बार बंद करें</string>
+	<string name="notification_cancel">रद्द करें</string>
+	<string name="notification_stop_protection">कॉल सुरक्षा बंद करें?</string>
+	<string name="notification_dialog_content">यदि आप कॉल सुरक्षा को बंद कर देते हैं, तो DU Caller आपकी स्पैम कॉल्स से सुरक्षा नहीं कर सकेगा.</string>
+	<string name="rating_title">DU Caller को पसंद करें</string>
+	<string name="number_detail_digest_bar_in_your_contact">आपके संपर्कों से</string>
+	<string name="number_detail_digest_identified_by_ducaller">DU Caller द्वारा पहचाना गया</string>
+	<string name="number_detail_title_calllog">कॉल लॉग</string>
+	<string name="recorder_mic_toast">कॉल ऑटो - रिकॉर्ड शुरू करें</string>
+	<string name="main_global_intercept">वैश्विक अवरोध</string>
+	<string name="main_scanning">स्कैन हो रहा है</string>
+	<string name="setting_block_method_title">ब्लॉक करने का तरीका</string>
+	<string name="setting_block_method_ring_silent">खामोश करें</string>
+	<string name="setting_block_method_reject_auto">अपने आप खारिज करें</string>
+	<string name="recorder_setting_mic_hint">(बेहतर परिणाम के लिए रिकॉर्डिंग के दौरान माइक चालू करें)</string>
+	<string name="upgrade_now">अभी अपडेट करें</string>
+	<string name="detail_block_number_tips">यह नंबर ब्लॉक कर दिया गया है</string>
+</resources>

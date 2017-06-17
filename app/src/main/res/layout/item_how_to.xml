@@ -22,7 +22,7 @@
         android:layout_marginBottom="10dip"
         android:layout_marginLeft="15dip"
         android:fontFamily="sans-serif-medium"
-        android:text="1. Open  Instagram"
+        android:text="@string/how_to_1"
         android:layout_marginTop="10dip"
         android:textColor="@color/cardview_dark_background"
         android:textSize="18dip" />
@@ -44,7 +44,7 @@
         android:layout_marginLeft="15dip"
         android:layout_marginTop="15dip"
         android:fontFamily="sans-serif-medium"
-        android:text="2.Open InstaDownloader"
+        android:text="@string/how_to_2"
         android:textColor="@color/cardview_dark_background"
         android:textSize="18dip" />
 
@@ -65,7 +65,7 @@
         android:layout_marginLeft="15dip"
         android:layout_marginTop="15dip"
         android:fontFamily="sans-serif-medium"
-        android:text="3.Click the right Button"
+        android:text="@string/how_to_3"
         android:textColor="@color/cardview_dark_background"
         android:textSize="18dip" />
 

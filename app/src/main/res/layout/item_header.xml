@@ -33,7 +33,7 @@
                 android:layout_marginRight="5dip"
                 android:layout_weight="1"
                 android:background="@drawable/button_bg_pink"
-                android:text="HOW TO"
+                android:text="@string/how_to"
                 android:textColor="@android:color/white"
                 android:textSize="12dip" />
 

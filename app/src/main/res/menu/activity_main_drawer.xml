@@ -9,20 +9,14 @@
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/icon_howto"
-            android:title="HOW TO" />
-    </group>
-
-    <item android:title="Communicate">
-        <menu>
+            android:title="@string/how_to" />
             <item
                 android:id="@+id/nav_rate"
                 android:icon="@drawable/icon_rate"
-                android:title="Rate US" />
+                android:title="@string/nav_rate_us" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
-
+                android:title="@string/nav_send" />
+</group>
 </menu>

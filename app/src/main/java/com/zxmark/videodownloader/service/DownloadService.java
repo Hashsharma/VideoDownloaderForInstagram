@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
@@ -63,17 +64,17 @@ public class DownloadService extends Service {
             super.handleMessage(msg);
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
                 if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    IToast.makeText(DownloadService.this, "Download Success", Toast.LENGTH_SHORT).show();
+                    IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
                 }
                 FloatViewManager.getDefault().dismissFloatView();
                 DownloadService.this.notifyDownloadFinished((String) msg.obj);
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    IToast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_SHORT).show();
+                    IToast.makeText(DownloadService.this,R.string.download_failed, Toast.LENGTH_SHORT).show();
                 }
             } else if (msg.what == MSG_DOWNLOAD_START) {
                 if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    IToast.makeText(DownloadService.this, "start download", Toast.LENGTH_SHORT).show();
+                    IToast.makeText(DownloadService.this,R.string.download_result_start, Toast.LENGTH_SHORT).show();
                 }
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {

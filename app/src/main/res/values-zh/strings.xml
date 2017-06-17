@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+
+    <string name="btn_download_from_clipboard">粘贴</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">设置</string>
+
+    <string name="tab_title_downloading">下载</string>
+    <string name="tab_title_history">历史纪录</string>
+
+    <string name="how_to">使用说明</string>
+
+    <string name="option_delete">删除</string>
+    <string name="option_launch">打开 Instagram</string>
+    <string name="option_copy">复制链接</string>
+    <string name="option_share">分享</string>
+    <string name="menu_download_video">下载视频</string>
+    <string name="menu_download_image">下载图片</string>
+    <string name="menu_delete">删除</string>
+    <string-array name="fan_labels">
+        <item>@string/menu_download_video</item>
+        <item>@string/menu_download_image</item>
+        <item>@string/menu_delete</item>
+    </string-array>
+
+    <string name="download_home_lable">文件保存在: /%s</string>
+    <string name="repost">重新发布</string>
+    <string name="spider_request_error">获取下载地址失败!</string>
+
+    <string name="download_from_send_action">开始下载</string>
+    <string name="not_support_url">请输入正确链接地址</string>
+
+
+    <string name="eheck_url_dialgo_title">等待</string>
+    <string name="check_url">正在识别链接，请等待</string>
+
+    <string name="str_share_this_video">分享</string>
+
+    <string name="clipboard_copy_text">链接已经存入剪切板</string>
+
+    <string name="download_result_success">下载成功</string>
+    <string name="download_failed">下载失败</string>
+    <string name="download_result_start">开始下载</string>
+
+    <string name="how_to_1">1.打开 Instagram</string>
+    <string name="how_to_2">2.打开 InstaDownloader</string>
+    <string name="how_to_3">3.点击右下角下载按钮</string>
+
+    <string name="nav_rate_us">给我打好评</string>
+    <string name="nav_send">分享</string>
+</resources>

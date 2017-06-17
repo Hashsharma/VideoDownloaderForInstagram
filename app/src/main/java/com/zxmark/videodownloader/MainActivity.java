@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity
         String action = intent.getAction();
         String type = intent.getType();
         if (Intent.ACTION_SEND.equals(action) && type != null) {
-            LogUtil.v("tl", "action:" + action + ":" + type);
             String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
             if (sharedText != null) {
                 // Update UI to reflect text being shared

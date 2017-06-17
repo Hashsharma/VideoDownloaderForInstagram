@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	    
+	<string name="start_content_one">최근 전화에서 위험한 번호를 탐색하여 보안 유지</string>
+	    
+	<string name="start_content_four">10억 개 이상의 번호 중 이름 또는 번호 검색</string>
+	    
+	<string name="start_content_two">성가신 스팸 전화에서 벗어나기</string>
+	    
+	<string name="start_content_five">이름이나 유형에 따라 모르는 번호 식별</string>
+	    
+	<string name="start_title_one">통화 히스토리 스캔</string>
+	    
+	<string name="start_title_two">스팸 전화 경고 </string>
+	    
+	<string name="gesturelock_gesturelock_modify">패턴 잠금 변경 완료</string>
+	    
+	<string name="global_check">확인</string>
+	    
+	<string name="phone_number_other_str">기타</string>
+	    
+	<string name="main_block_up_time">2016년 6월 29일</string>
+	    
+	<string name="identification_card_title">DU Caller에서 이 전화를 식별함</string>
+	    
+	<string name="detail_text">세부 사항</string>
+	    
+	<string name="ignore_text">무시</string>
+	    
+	<string name="callback_text">회신</string>
+	    
+	<string name="has_miss_block_text">%1$d건의 부재중 전화, %2$d건의 차단 전화가 있음</string>
+	    
+	<string name="has_block_text">%1$d건의 차단 전화가 있음</string>
+	    
+	<string name="has_miss_text">%1$d건의 부재중 전화가 있음</string>
+	    
+	<string name="action_settings">설정</string>
+	    
+	<string name="add_block">번호가 차단 목록에 추가되었습니다.</string>
+	    
+	<string name="add_privacy_call_text">비공개 연락처의 통화 히스토리는 비공개 연락처에서만 표시됩니다. 해당 통화 로그는 시스템이나 다른 소프트웨어에서 표시되지 않습니다.</string>
+	    
+	<string name="add_privacy_call_title">비공개 연락처에 번호 추가</string>
+	    
+	<string name="adding_database">데이터베이스 업데이트 진행 중...</string>
+	    
+	<string name="apr">4월</string>
+	    
+	<string name="aug">8월</string>
+	    
+	<string name="bottom_add_contact_btn">연락처에 추가</string>
+	    
+	<string name="bottom_tag_more">더 보기</string>
+	    
+	<string name="button_not_spam">스팸 아님</string>
+	    
+	<string name="call_no_answer">응답 없음</string>
+	    
+	<string name="calllog_blocked">차단됨</string>
+	    
+	<string name="check_calllog">통화 히스토리 스캔 중...</string>
+	    
+	<string name="clear_history_title">히스토리 삭제</string>
+	    
+	<string name="day">%1$d일 전</string>
+	    
+	<string name="days">%1$d일 전</string>
+	    
+	<string name="dec">12월</string>
+	    
+	<string name="detail_card_edit">편집</string>
+	    
+	<string name="detail_card_tag">태그</string>
+	    
+	<string name="detail_edit_contact">연락처 편집</string>
+	    
+	<string name="detail_edit_tag">태그 편집</string>
+	    
+	<string name="dialog_title_clear_all">모두 삭제</string>
+	    
+	<string name="ducaller_last_call_info">마지막 통화 %1$s</string>
+	    
+	<string name="exit_title">종료</string>
+	    
+	<string name="feb">2월</string>
+	    
+	<string name="feedback_number_tip">전화번호/Email</string>
+	    
+	<string name="feedback_success_tip">공헌해 주셔서 감사합니다!</string>
+	    
+	<string name="feedback_title">피드백</string>
+	    
+	<string name="float_view_drag">끌어서 발신자 ID 이동하기</string>
+	    
+	<string name="gesturelock_at_least_four_point">점을 4개 이상 연결합니다. 다시 그려 주세요.</string>
+	    
+	<string name="gesturelock_forget_password">비밀번호 찾기</string>
+	    
+	<string name="gesturelock_gesture_password">패턴 잠금</string>
+	    
+	<string name="gesturelock_gesture_password_not_same">일치하지 않습니다. 다시 그려 주세요.</string>
+	    
+	<string name="gesturelock_gesturelock_open">패턴 잠금이 사용됨</string>
+	    
+	<string name="gesturelock_input_answer">보안 답변 입력</string>
+	    
+	<string name="gesturelock_input_gesture_password">패턴을 그리세요.</string>
+	    
+	<string name="gesturelock_password_locked_title">비밀번호 잠김</string>
+	    
+	<string name="gesturelock_please_set_gesture_password">패턴을 그리세요.</string>
+	    
+	<string name="gesturelock_please_set_gesture_password_twice">패턴 확인</string>
+	    
+	<string name="gesturelock_question_setting_dialog_title">비밀번호 보호가 활성화됨</string>
+	    
+	<string name="gesturelock_reset">재설정</string>
+	    
+	<string name="gesturelock_security_question_is">귀하의 보안 질문:</string>
+	    
+	<string name="gesturelock_set_security_question">보안 질문 설정</string>
+	    
+	<string name="gesturelock_wrong_answer_input_twice">잘못된 비밀번호입니다. 다시 시도하세요.</string>
+	    
+	<string name="global_call_history">통화 히스토리</string>
+	    
+	<string name="global_cancel_uppercase">취소</string>
+	    
+	<string name="global_close_lowercase">닫기</string>
+	    
+	<string name="global_confirm">확인</string>
+	    
+	<string name="global_delete_uppercase">삭제</string>
+	    
+	<string name="global_got_it">알겠습니다</string>
+	    
+	<string name="global_no_wifi">WiFi 없음</string>
+	    
+	<string name="global_ok">확인</string>
+	    
+	<string name="global_play">재생</string>
+	    
+	<string name="global_remove_uppercase">제거</string>
+	    
+	<string name="global_save_uppercase">저장</string>
+	    
+	<string name="global_success">성공</string>
+	    
+	<string name="hour">%1$d시간 전</string>
+	    
+	<string name="hours">%1$d시간 전</string>
+	    
+	<string name="incoming_call_tips2">알 수 없는 수신 전화 식별</string>
+	    
+	<string name="jan">1월</string>
+	    
+	<string name="jul">7월</string>
+	    
+	<string name="jun">6월</string>
+	    
+	<string name="main_block_db">전체 항목</string>
+	    
+	<string name="main_block_offlin">오프라인 확인</string>
+	    
+	<string name="main_block_up">최근 업데이트</string>
+	    
+	<string name="main_search_category_recent_title">최근 검색</string>
+	    
+	<string name="main_search_category_request_title">나의 요청</string>
+	    
+	<string name="manage_black_dialog_enter_number">번호 입력</string>
+	    
+	<string name="manage_black_dialog_from_contacts">연락처에서 찾기</string>
+	    
+	<string name="manage_black_dialog_from_history">통화 히스토리에서 추가</string>
+	    
+	<string name="manage_block_dialog_title">차단 목록에 번호 추가</string>
+	    
+	<string name="mar">3월</string>
+	    
+	<string name="may">5월</string>
+	    
+	<string name="minute">%1$d분 전</string>
+	    
+	<string name="minutes">%1$d분 전</string>
+	    
+	<string name="nav_feedbacks">피드백</string>
+	    
+	<string name="nav_invite_friends">친구 초대</string>
+	    
+	<string name="nav_rate">평가하기</string>
+	        
+	<string name="notification_content">지금 확인</string>
+	    
+	<string name="nov">11월</string>
+	    
+	<string name="number_detail_copy_title">번호 복사</string>
+	    
+	<string name="number_detail_copy_toast">클립보드에 복사됨</string>
+	    
+	<string name="number_detail_search_title">Google에서 검색</string>
+	    
+	<string name="global_share">공유</string>
+	    
+	<string name="oct">10월</string>
+	    
+	<string name="phone_identified_info">식별됨</string>
+	    
+	<string name="phone_number_empty">보고 없음</string>
+	    
+	<string name="phone_number_landline_title">유선 전화</string>
+	    
+	<string name="phone_number_list_empty_contacts_title">연락처 없음</string>
+	    
+	<string name="phone_number_mobile_title">모바일</string>
+	    
+	<string name="phonenumber_tag_education">교육</string>
+	    
+	<string name="phonenumber_tag_entertainment">엔터테인먼트</string>
+	    
+	<string name="phonenumber_tag_express">배달</string>
+	    
+	<string name="phonenumber_tag_finance_insurance">금융 및 보험</string>
+	    
+	<string name="phonenumber_tag_health">건강</string>
+	    
+	<string name="phonenumber_tag_hotel">호텔</string>
+	    
+	<string name="phonenumber_tag_public_service">공공 서비스</string>
+	    
+	<string name="phonenumber_tag_restaurant">식당 및 카페</string>
+	    
+	<string name="phonenumber_tag_services">텔레마케팅</string>
+	    
+	<string name="phonenumber_tag_shopping">쇼핑</string>
+	    
+	<string name="phonenumber_tag_suspected_spam">스팸으로 의심됨</string>
+	    
+	<string name="phonenumber_tag_transportation">교통</string>
+	    
+	<string name="phonenumber_tag_travel">여행</string>
+	    
+	<string name="privacy_call_title">비공개 연락처</string>
+	    
+	<string name="privacy_calllist_tip">비공개 연락처 보호가 활성화되어 있습니다.</string>
+	    
+	<string name="privacy_guide_content1">-통화 히스토리를 자동으로 암호화합니다.</string>
+	    
+	<string name="privacy_guide_content3">-이중 비밀번호로 보호하여 더 안전합니다.</string>
+	    
+	<string name="privacy_guide_title">비공개 통화 숨기기</string>
+	    
+	<string name="rating_btn_complain">불만 제기</string>
+	    
+	<string name="rating_btn_satisfy">별 5개</string>
+	    
+	<string name="recent_text">최근 기록</string>
+	    
+	<string name="recorder_dialog_decline">동의 안 함</string>
+	    
+	<string name="recorder_dialog_later">나중에</string>
+	    
+	<string name="recorder_dialog_title">전화 레코딩을 열까요?</string>
+	    
+	<string name="recorder_floatview_hint">클릭하여 레코딩</string>
+	    
+	<string name="recorder_floatview_hint_storage_lack">저장소 공간 부족으로 인해 레코딩을 할 수 없습니다.</string>
+	    
+	<string name="recorder_floatview_record_started">레코딩이 시작됨</string>
+	    
+	<string name="recorder_manager_content_null">레코딩 파일 없음</string>
+	    
+	<string name="recorder_manager_delete_dialog_content">이 전화 레코딩을 정말로 삭제하시겠습니까?</string>
+	    
+	<string name="recorder_manager_delete_dialog_title">삭제하시겠어요?</string>
+	    
+	<string name="recorder_manager_play_error_tip">플레이어 응용 프로그램을 찾을 수 없습니다.</string>
+	    
+	<string name="recorder_notification_call_completed">전화 레코딩이 완료되었습니다.</string>
+	    
+	<string name="recorder_notification_check">클릭하여 확인하세요.</string>
+	    
+	<string name="recorder_shortcall_message">레코딩 파일이 작습니다. 이대로 저장할까요?</string>
+	    
+	<string name="recorder_shortcall_title">레코딩을 저장할까요?</string>
+	    
+	<string name="remove_block">번호가 차단 목록에서 제거되었습니다.</string>
+	    
+	<string name="remove_privacy_call_text">이 비공개 연락처를 제거한 후에는 해당 통화 로그가 삭제되지만 레코딩은 그대로 유지됩니다. 이 비공개 연락처를 삭제하시겠습니까?</string>
+	    
+	<string name="remove_privacy_call_title">비공개 연락처 제거</string>
+	    
+	<string name="search_detail_ask">세부 정보 요청하기</string>
+	    
+	<string name="search_detail_login_msg">이제 다른 사람의 연락처 세부 정보를 요청하실 수 있습니다.</string>
+	    
+	<string name="search_detail_login_ok">알겠습니다</string>
+	    
+	<string name="search_net_error_msg">인터넷 상태를 확인하고 다시 시도하세요.</string>
+	    
+	<string name="search_net_error_title">네트워크 오류</string>
+	    
+	<string name="search_no_login_ok">휴대폰으로 로그인하기</string>
+	    
+	<string name="search_notice_title">알림</string>
+	    
+	<string name="search_tips">이름 또는 번호 검색</string>
+	    
+	<string name="second">%1$d초 전</string>
+	    
+	<string name="seconds">%1$d초 전</string>
+	    
+	<string name="sep">9월</string>
+	        
+	<string name="setting_common_title">일반 스패머</string>
+	    
+	<string name="setting_contacts">내 휴대폰의 연락처</string>
+	    
+	<string name="setting_international_detail">해외에서 걸려오는 전화 차단</string>
+	    
+	<string name="setting_international_title">국제 전화번호</string>
+	    
+	<string name="setting_outgoing_call">발신 전화</string>
+	    
+	<string name="setting_pop">팝업 대화 상자</string>
+	    
+	<string name="setting_record_auto_title">자동 레코딩</string>
+	    
+	<string name="setting_recorder">레코더</string>
+	        
+	<string name="setting_recorder_title">전화 레코더</string>
+	    
+	<string name="setting_stranger_number_detail">연락처에 없는 번호를 차단</string>
+	    
+	<string name="setting_stranger_number_title">연락처에 없는 번호</string>
+	    
+	<string name="setting_unknown_call">알 수 없는 전화</string>
+	    
+	<string name="tab_search_title">검색</string>
+	    
+	<string name="today">오늘</string>
+	    
+	<string name="top_hint">현재 수많은 스팸 전화가 차단되었습니다.</string>
+	    
+	<string name="user_detail_dialog_logout_logout">로그아웃</string>
+	    
+	<string name="user_detail_dialog_logout_message">정말로 로그아웃하시겠어요?</string>
+	    
+	<string name="user_detail_dialog_remove_message">정말로 제거하시겠어요?</string>
+	    
+	<string name="user_detail_login_fail">로그인 실패</string>
+	    
+	<string name="user_editinfo_collision_title">로그인 시간 초과</string>
+	    
+	<string name="user_editinfo_email">Email</string>
+	    
+	<string name="user_editinfo_hint_address">주소 추가</string>
+	    
+	<string name="user_editinfo_hint_email">Email 추가</string>
+	    
+	<string name="user_editinfo_hint_site">개인 사이트 추가</string>
+	    
+	<string name="user_editinfo_location">위치</string>
+	    
+	<string name="user_editinfo_location_city">도시</string>
+	    
+	<string name="user_editinfo_location_country">국가</string>
+	    
+	<string name="user_editinfo_profile">프로필</string>
+	    
+	<string name="user_editinfo_site">사이트</string>
+	    
+	<string name="verify_adddetail_login_with_facebook">Facebook으로 로그인</string>
+	    
+	<string name="verify_adddetail_login_with_google">Google로 로그인</string>
+	    
+	<string name="verify_change_your_photo">사진 변경하기</string>
+	    
+	<string name="verify_countrycode_title">국가를 선택해 주세요.</string>
+	    
+	<string name="verify_error_required">필수</string>
+	    
+	<string name="verify_failed">확인 실패. 코드를 올바르게 입력했는지 확인하거나 나중에 시도하세요.</string>
+	    
+	<string name="verify_first_name">이름</string>
+	    
+	<string name="verify_get_photo_fail">사진을 가져오지 못했습니다. 다시 시도하세요.</string>
+	    
+	<string name="verify_last_name">성</string>
+	    
+	<string name="verify_resend">재전송</string>
+	    
+	<string name="verify_setup_hint">발신자 ID 카드를 설정하세요.</string>
+	    
+	<string name="verify_setup_str">휴대폰 번호로 설정</string>
+	    
+	<string name="verify_tips2">발신자 ID는 자유롭게 설정 및 사용 가능합니다. 프로필에 무엇을 표시할지 선택하세요.</string>
+	    
+	<string name="verify_title">전화번호를 확인해 주세요.</string>
+	    
+	<string name="verify_upload_profile_gallery">갤러리에서 선택</string>
+	    
+	<string name="verify_upload_profile_takephoto">사진 촬영</string>
+	    
+	<string name="verify_upload_profile_title">사진 추가</string>
+	    
+	<string name="week">%1$d주 전</string>
+	    
+	<string name="weeks">%1$d주 전</string>
+	    
+	<string name="whost_after_call_block_report">차단 및 보고</string>
+	    
+	<string name="whost_after_call_unblock">차단 해제</string>
+	    
+	<string name="yesterday">어제</string>
+	    
+	<string name="ypage_pop_title">인기 서비스</string>
+	    
+	<string name="ypage_title">라이프 도우미</string>
+	    
+	<string name="block_text">차단 기록</string>
+	    
+	<string name="add_tag_suspect_spam">이 번호가 스팸이라고 생각되시나요?</string>
+	    
+	<string name="button_spam">스팸</string>
+	    
+	<string name="clear_history_msg">히스토리를 청소하시겠습니까?</string>
+	    
+	<string name="common_list_title">일반적으로 사용되는 번호</string>
+	    
+	<string name="confirm_dialog_confirm">확인</string>
+	    
+	<string name="contacts">연락처</string>
+	    
+	<string name="detail_add_tag">태그 추가</string>
+	    
+	<string name="detail_card_save">저장</string>
+	    
+	<string name="detail_save_contact">연락처에 저장</string>
+	        
+	<string name="gesturelock_choose_security_question">보안 질문 입력</string>
+	    
+	<string name="gesturelock_question_setting_dialog_message">개인 정보를 보호하기 위해, 패턴을 복구하는 유일한 방법은 사용자가 설정한 보안 질문 및 답변 뿐입니다. 보안 질문과 답변을 반드시 기억하시기 바랍니다.</string>
+	    
+	<string name="global_delete">삭제</string>
+	    
+	<string name="global_net_error_tips">네트워크 오류. 인터넷 상태를 확인하세요.</string>
+	    
+	<string name="identify_number">알 수 없는 번호 식별 중...</string>
+	    
+	<string name="incoming_call_tips">받거나 끊는 것은 사용자의 몫입니다.</string>
+	    
+	<string name="verify_hint">전화번호를 입력하시면 확인 코드가 전송됩니다.</string>
+	    
+	<string name="verify_input_code_tip">SMS 확인 코드를 기다려 받은 다음 해당 코드를 입력하세요.</string>
+	    
+	<string name="verify_tips">발신자 ID는 귀하가 전화를 건다는 사실을 친구, 가족 및 비즈니스 연락처 측이 알게 해줍니다.</string>
+	    
+	<string name="user_editinfo_collision_content">세션 시간이 만료되었습니다. 계정에 액세스하려면 다시 로그인하세요.</string>
+	    
+	<string name="user_editinfo_hint_social_account">소셜 계정 추가</string>
+	    
+	<string name="search_no_login_msg">유효한 사용자만이 다른 사람에게 세부 정보를 요청할 수 있습니다.  </string>
+	    
+	<string name="search_detail_login_title">로그인됨</string>
+	    
+	<string name="report_list_title">내 보고</string>
+	    
+	<string name="recorder_floatview_record_call_not_connect">이 통화는 연결되어 있지 않습니다. 전화 레코딩이 보존되지 않습니다.</string>
+	    
+	<string name="recorder_floatview_hint_disable">통화 레코딩이 불가능합니다.</string>
+	    
+	<string name="recorder_dialog_clause_message">원한다면 언제든 전화를 레코딩할 수 있습니다. DU Caller는 전화 레코딩 파일을 사용하거나 업로드하지 않습니다.</string>
+	    
+	<string name="recorder_dialog_clause_confirm">나의 거주 국가에서 전화 레코딩은 합법임을 확인합니다.</string>
+	    
+	<string name="rating_content">알 수 없는 번호를 식별해 드렸습니다.  \n 별 5개의 가치가 있었나요?</string>
+	    
+	<string name="phone_number_list_quick_searching">빠른 검색</string>
+	    
+	<string name="privacy_guide_content2">비공개 연락처와의 통화 레코딩은 즉시 숨김 상태가 됩니다.</string>
+	    
+	<string name="user_detail_dialog_remove_title">제거</string>
+	    
+	<string name="phonenumber_tag_scam">사기</string>
+	        
+	<string name="user_detail_dialog_logout_title">로그아웃</string>
+	    
+	<string name="phonenumber_tag_spam">스팸</string>
+	    
+	<string name="search_detail_lock_tips">%1$s님의 정보는 비공개 상태입니다. 세부 정보를 요청하실 수 있습니다.</string>
+	    
+	<string name="search_push_message">%1$s님이 연락처 정보를 공유했습니다.</string>
+	        
+	<string name="no_search_result_tips">일치 결과가 없습니다. 서비스 향상을 위해 계속 노력하겠습니다.</string>
+	    
+	<string name="search_send_success">요청이 전송되었습니다. %1$s 님이 응답하는 즉시 알림을 받으실 수 있습니다.</string>
+	        
+	<string name="bottom_sheet_rang_text">%1$d 초 울림</string>
+	    
+	<string name="main_show_all_calls">모든 전화 표시</string>
+	    
+	<string name="no_identified">통화 히스토리에 위험 요소가 없음</string>
+	    
+	<string name="no_block_calls">차단된 전화 없음</string>
+	    
+	<string name="no_incoming_calls">수신 전화 없음</string>
+	    
+	<string name="no_missed_calls">부재중 전화 없음</string>
+	    
+	<string name="no_outgoing_calls">발신 전화 없음</string>
+	    
+	<string name="main_filter_all_calls">전체</string>
+	    
+	<string name="main_filter_identified">식별됨</string>
+	    
+	<string name="main_filter_blocked">차단됨</string>
+	    
+	<string name="main_filter_outgoing">발신</string>
+	    
+	<string name="main_filter_missed">부재중</string>
+	    
+	<string name="main_identified_strange_number">알 수 없는 &lt;font color=&quot;#000000&quot;&gt;%1$d &lt;/font&gt;번호를 식별함</string>
+	    
+	<string name="dial_option_title">%1$s 에게 전화하려면 SIM 카드를 선택하세요.</string>
+	    
+	<string name="global_simcard_1">SIM 카드 1</string>
+	    
+	<string name="global_simcard_2">SIM 카드 2</string>
+	    
+	<string name="number_selecter_title">전화 %1$s</string>
+	    
+	<string name="dialog_clear_all_mes">이 번호의 통화 히스토리를 지울까요?</string>
+	    
+	<string name="nav_about">소개</string>
+	    
+	<string name="recorder_dialog_clause_privacy">나는 개인 정보 정책에 동의합니다.</string>
+	    
+	<string name="no_recent_contact">최근 기록 없음.</string>
+	    
+	<string name="ok">확인</string>
+	    
+	<string name="privacy_guide_toobar_title">비공개 연락처 열기</string>
+	    
+	<string name="feedback_messagenull_tip">피드백을 입력해 주세요.</string>
+	    
+	<string name="recorder_manager_auto_record_dialog_content">모든 통화를 레코딩하면 중요한 통화 정보를 놓칠 걱정이 사라집니다. </string>
+	    
+	<string name="global_do_not_show_again">더 이상 알리지 않음</string>
+	    
+	<string name="setting_hide_number_title">번호 숨기기</string>
+	    
+	<string name="recorder_dialog_clause_agress"> </string>
+	    
+	<string name="search_among">100,000,000개 번호 중에서 검색 중</string>
+	    
+	<string name="recorder_manager_dialog_auto_record">자동 레코딩 통화</string>
+	    
+	<string name="recorder_manager_tip">레코딩 기능이 꺼져 있습니다.설정으로 가서 켜실 수 있습니다.</string>
+	    
+	<string name="share_dialog_title">번호 정보를 친구와 공유</string>
+	    
+	<string name="notification_title">&lt;font color=&quot;#F96367&quot;&gt; {0} &lt;/font&gt;건의 차단 통화가 있습니다.</string>
+	    
+	<string name="unit_h">시간</string>
+	    
+	<string name="unit_m">분</string>
+	    
+	<string name="unit_s">초</string>
+	    
+	<string name="dialer_title">발신자</string>
+	    
+	<string name="dialer_favorites">자주 사용하는 연락처</string>
+	    
+	<string name="sign_tag_card_title">다른 사람들이 이 번호를 알아보도록 도와주세요</string>
+	    
+	<string name="privacy_unhide_btn_text">숨기기 해제</string>
+	    
+	<string name="detail_open_auto_record_tips">자동 레코딩 켜짐</string>
+	    
+	<string name="detail_closed_auto_record_tips">자동 레코딩 꺼짐</string>
+	    
+	<string name="global_batch_delete">배치 삭제</string>
+	    
+	<string name="global_all_select">전체</string>
+	    
+	<string name="global_recorded">레코딩됨</string>
+	    
+	<string name="with_record_files">레코딩 파일과 함께 제공</string>
+	    
+	<string name="global_delete_with_count">삭제(%1$d)</string>
+	    
+	<string name="batch_delete_dialog_msg">선택한 %1$s 전화 로그를 삭제하시겠습니까?</string>
+	    
+	<string name="batch_delete_dialog_msg_with_record">선택한 %1$s 전화 기록 및 레코딩을 삭제하시겠습니까?</string>
+	    
+	<string name="recorder_manager_batch_delete_content">선택한 %1$d 레코딩 파일을 삭제하시겠습니까?</string>
+	    
+	<string name="recorder_manager_tab_calllog">전화 로그</string>
+	    
+	<string name="recorder_dialog_edit_note">노트</string>
+	    
+	<string name="recorder_dialog_edit_note_hint">이 레코딩에 대한 노트 작성…</string>
+	    
+	<string name="recorder_dialog_note_saved">노트 저장됨</string>
+	    
+	<string name="recorder_notification_storage_lack_title">SD 카드 공간이 부족함</string>
+	    
+	<string name="recorder_notification_storage_lack_content">SD 카드 메모리를 청소하지 않으면 정상적으로 레코딩할 수 없습니다.</string>
+	    
+	<string name="recorder_manager_filter_numbers">최대 레코딩</string>
+	    
+	<string name="recorder_manager_filter_latest">최근 레코딩</string>
+	                
+	<string name="recorder_pwd_guide_title">레코딩 파일에 비밀번호 설정</string>
+	    
+	<string name="recorder_pwd_guide_content">- 이중 비밀번호를 사용하여 전화 레코딩을 보호하세요. \n  - 전화 보안을 위한 포괄적 보호</string>
+	    
+	<string name="recorder_pwd_guide_btn">로그인 및 비밀번호 설정</string>
+	    
+	<string name="recorder_manager_menu_password">비밀번호 보호</string>
+	    
+	<string name="privacy_call_empty_text2">통화 프라이버시 보호 및 비공개 통화 자동 숨기기</string>
+	    
+	<string name="privacy_add_privacycontacts_btn_text">비공개 연락처에 번호 추가</string>
+	    
+	<string name="privacy_add_privacy_failed">비밀번호를 설정하세요.</string>
+	    
+	<string name="privacy_guide_dialog_content">비공개 연락처 기능을 통해 모든 비공개 통화 기록을 자동으로 숨기세요.</string>
+	    
+	<string name="privacy_guide_try">사용해 보기</string>
+	    
+	<string name="privacy_incoming_card_switch_text">부재중 전화 카드</string>
+	    
+	<string name="privacy_miss_card_dialog_title">비공개 연락처에서 부재중 전화 카드 닫기</string>
+	    
+	<string name="privacy_miss_card_dialog_content1">- DU Caller 부재중 전화 카드가 더 이상 없음</string>
+	    
+	<string name="privacy_miss_card_dialog_content2">- DU Caller에서만 비공개 전화 기록 확인</string>
+	    
+	<string name="privacy_miss_card_dialog_content3">- 프라이버시를 완벽하게 보호</string>
+	    
+	<string name="privacy_done">마침</string>
+	    
+	<string name="verify_error_incorrect_information">올바른 정보를 기입해 주세요.</string>
+	    
+	<string name="dialpad_0_letters">+\nㅇㅁ</string>
+	    
+	<string name="dialpad_1_letters"/>
+	    
+	<string name="dialpad_2_letters">ABC</string>
+	    
+	<string name="dialpad_3_letters">DEF</string>
+	    
+	<string name="dialpad_4_letters">GHI\nㄱㅋ</string>
+	    
+	<string name="dialpad_5_letters">JKL\nㄴㄹ</string>
+	    
+	<string name="dialpad_6_letters">MNO\nㄷㅌ</string>
+	    
+	<string name="dialpad_7_letters">PQRS\nㅂㅍ</string>
+	    
+	<string name="dialpad_8_letters">TUV\nㅅㅎ</string>
+	    
+	<string name="dialpad_9_letters">WXYZ\nㅈㅊ</string>
+	    
+	<string name="gesturelock_password_locked_message">비밀번호가 잠겼습니다. %1$d 분 후에 다시 시도하세요.</string>
+	    
+	<string name="gesturelock_password_locked_messages">비밀번호가 잠겼습니다. %1$d 분 후에 다시 시도하세요.</string>
+	    
+	<string name="gesturelock_input_error_left_count">잘못된 비밀번호입니다.%1$d 회 시도하실 수 있습니다.</string>
+	    
+	<string name="gesturelock_input_error_left_counts">잘못된 비밀번호입니다. %1$d 회 시도하실 수 있습니다.</string>
+	    
+	<string name="manage_block_man">차단 목록 관리</string>
+	    
+	<string name="manage_block_setting">차단 설정</string>
+	    
+	<string name="block_protect_numbers">전화</string>
+	    
+	<string name="block_protect_number">전화</string>
+	    
+	<string name="block_protect_you">DU Caller가 사용자 보호 중</string>
+	    
+	<string name="manage_block_add">차단 목록에 추가한 번호가 없습니다. </string>
+	    
+	<string name="manage_block_add_icon">+를 클릭하여 추가하세요.</string>
+	    
+	<string name="card_click_block_text">이 번호를 정말로 차단하시겠습니까?</string>
+	    
+	<string name="add_tag_success_tips">이 번호에 대해 더 많은 사람들에게 알려주셔서 감사합니다! %1$s개의 번호를 보고하셨습니다.</string>
+	    
+	<string name="setting_language">언어</string>
+	    
+	<string name="setting_app_language">앱 언어</string>
+	    
+	<string name="global_scam_uppercase">사기</string>
+	    
+	<string name="copynumber_dialog_title">복사한 번호</string>
+	    
+	<string name="copynumber_dialog_content">다음을 검색하시겠습니까%s</string>
+	    
+	<string name="setting_common_detail_modify">다른 사람들이 스팸으로 신고한 텔레마케터 및 방해 전화 발신자 차단(권장)</string>
+	    
+	<string name="setting_hide_number_detail_modify">통신사 서비스를 사용하여 번호를 숨긴 전화 차단</string>
+	<string name="new_search_tips">무엇을 찾으시나요?</string>
+	<string name="search_in_database">DU Caller 데이터베이스 검색</string>
+	<string name="new_no_search_result_tips">해당 국가 또는 지역의 일치 결과가 없습니다.</string>
+	<string name="no_more_result">더 이상 결과 없음</string>
+	<string name="limite_200_result">이미 표시된 200개 항목과 유사한 항목은 생략했습니다.</string>
+	<string name="search_in_the_world">전 세계 데이터베이스에서 검색해 보세요.</string>
+	<string name="search_detail_check_detail">세부 정보 확인</string>
+	<string name="permission_guide_content">팝업 윈도우 표시</string>
+	<string name="permission_guide_title">권한 관리자</string>
+	<string name="permission_btn_text">사용하기</string>
+	<string name="permission_cc_content">불건전 전화를 식별 및 차단하려면 통화 히스토리 및 연락처 권한을 사용해야 합니다.</string>
+	<string name="permission_title">발신인 ID 서비스 활성화</string>
+	<string name="permission_content">발신인 ID를 표시하려면 팝업 윈도우 권한을 사용해야 합니다.</string>
+	<string name="main_dialog_call">통화</string>
+	<string name="main_dialog_message">메시지</string>
+	<string name="main_dialog_clear_calls">통화 삭제</string>
+	<string name="clear_all_calls_title">모든 통화 삭제</string>
+	<string name="clear_all_calls_msg">모든 통화를 삭제하시겠습니까?</string>
+	<string name="ctb_title">공헌</string>
+	<string name="ctb_des_o">보고해 주신 덕분에 다른 사용자들이 수상한 전화를</string>
+	<string name="ctb_people">%1$s회 식별했습니다.</string>
+	<string name="ctb_defected">전 세계 사용자의 %1$s을(를) 물리침</string>
+	<string name="ctb_identify">전화 로그에서 알 수 없는 전화가 식별됨</string>
+	<string name="ctb_by_user">사용자가 %1$s회 보고함</string>
+	<string name="ctb_by_us">DU Caller가 %1$s회 식별함</string>
+	<string name="ctb_report">보고 시작</string>
+	<string name="ctb_none_des">한 가지 번호만 보고해도 수많은 사람들에게 도움이 됩니다.</string>
+	<string name="add_tag_success_content">&lt;font color=&amp;quot;#000000&amp;quot;&gt;%1$d&lt;/font&gt;개 번호를 보고하였으며 다른 사람들이 &lt;font color=&amp;quot;#000000&amp;quot;&gt;%2$d&lt;/font&gt;건의 수상한 전화를 식별하는 데 도움이 되었습니다.</string>
+	<string name="identified_unknown_number">알 수 없는 번호를 식별함</string>
+	<string name="start_page_city">서울</string>
+	<string name="start_title_four">온라인 검색</string>
+	<string name="start_page_two_spam_title">스팸-통신사 사기</string>
+	<string name="start_page_four_startbucks">스타벅스</string>
+	<string name="report_title">내 공헌</string>
+	<string name="add_tag_btn_text">내 공헌 확인</string>
+	<string name="spam_content2">성가신 전화라고 생각되시나요?</string>
+	<string name="spam_yes">예</string>
+	<string name="spam_no">아니요</string>
+	<string name="whost_incoming_call_from">수신</string>
+	<string name="global_block">차단</string>
+	<string name="exit_message">정말로 스캔을 중지하시겠어요?</string>
+	<string name="security_question_school_street">어느 동네에 위치한 초등학교를 다녔나요?</string>
+	<string name="security_question_first_phone">첫 번째 전화번호는 무엇인가요?</string>
+	<string name="security_question_father_birth">아버지의 생신은 언제인가요?</string>
+	<string name="security_question_birth_place">태어난 곳은 어디인가요?</string>
+	<string name="security_question_food">좋아하는 음식은 무엇인가요?</string>
+	<string name="global_collect">즐겨찾기</string>
+	<string name="global_cancel_collect">즐겨찾기 해제</string>
+	<string name="recorder_setting_auto_file_directory">녹음 디렉터리 (%1$s)</string>
+	<string name="recorder_recorder_setting">녹음 설정</string>
+	<string name="recorder_setting_choice_auto">모든 전화 자동 녹음</string>
+	<string name="recorder_setting_choice_manual">일부 전화 자동 녹음</string>
+	<string name="recorder_setting_manual_auto_unfamiliar_phone"> - 알 수 없는 전화 자동 녹음</string>
+	<string name="recorder_setting_manual_custom_recording_list"> - 자동 녹음 목록 편집 (%1$d)</string>
+	<string name="recorder_setting_manual_custom_recording_list_title">자동 녹음 목록</string>
+	<string name="recorder_setting_custom_list_empty_hint_left">자동 녹음 목록에 추가한 번호가 없습니다.</string>
+	<string name="recorder_setting_custom_list_empty_hint_right">번호를 추가하려면 +를 클릭하세요.</string>
+	<string name="recorder_setting_custom_list_add_dialog_title">자동 녹음 목록에 번호 추가</string>
+	<string name="recorder_floatview_get_calllog_fail">전화 로그에 대한 액세스가 없어 녹음하지 못했습니다.</string>
+	<string name="invite_fridents_text">%s명의 친구 초대</string>
+	<string name="share_on_text">%s에서 공유</string>
+	<string name="questionnaire_tips">%1$s분만 투자해 주시면 제품 향상에 도움이 됩니다.</string>
+	<string name="questionnaire_ok">이동 및 참여</string>
+	<string name="invite_friends_content">알 수 없는 전화번호를 식별하고 차단하기 위해 DU Caller를 사용 중입니다. DU Caller를 받고 성가신 전화에서 벗어나세요!</string>
+	<string name="recorder_setting_switch_master_hint">이 카테고리에서 전화 녹음 방식을 맞춤 설정할 수 있습니다.</string>
+	<string name="global_customize">맞춤 설정</string>
+	<string name="security_question_dialog_title_choose_question">보안 질문을 선택하세요.</string>
+	<string name="recorder_manager_contact_batch_delete_dialog_content">선택한 %1$d 연락처의 레코딩 파일을 삭제하시겠습니까?</string>
+	<string name="share_title">제목</string>
+	<string name="share_number">번호</string>
+	<string name="share_identify">알 수 없는 번호를 간편하게 식별하세요!</string>
+	<string name="qustionnair_title">DU Caller 사용 습관 설문 조사</string>
+	<string name="recorder_dialog_use_mic">최상의 결과물을 얻으려면 레코딩을 하는 동안 스피커를 켜세요.</string>
+	<string name="recorder_record_start_with_mic_tip">레코딩을 시작합니다. 더 나은 품질의 레코딩을 위해 스피커를 켜세요.</string>
+	<string name="recorder_manager_mic_tip">기기의 통화 레코딩 시 스피커가 사용됩니다. 레코딩 시 스피커를 켜시기 바랍니다.</string>
+	<string name="caller_notification_title">전화 보호가 켜졌습니다!</string>
+	<string name="caller_notification_content">세부 사항 보기</string>
+	<string name="caller_notification_dialog_title">전화 보호를 중지할까요?</string>
+	<string name="caller_notificaiton_dialog_content">전화 보호를 중지하면 DU Caller가 스팸 전화를 계속 막는 것이 불가능해집니다.</string>
+	<string name="private_number">비공개 발신자</string>
+	<string name="private_number_describe">상대방이 전화번호를 숨김 처리했습니다.</string>
+	<string name="private_number_dailog_title3">모든 비공개 발신자를 차단 해제하시겠습니까?</string>
+	<string name="private_number_unblock_toast">비공개 발신자 차단 해제됨</string>
+	<string name="private_number_dailog_title2">모든 비공개 발신자를 차단하시겠습니까?</string>
+	<string name="private_number_block_toast">비공개 발신자 차단됨</string>
+	<string name="private_number_dailog_title">비공개 발신자를 차단하시겠습니까?</string>
+	<string name="private_number_describe2">&quot;예&quot;를 클릭한 후에는 모든 비공개 번호가 차단됩니다.</string>
+	<string name="notification_protecting_you">DU Caller가 사용자 보호 중 </string>
+	<string name="notification_call_times_singular">%s통의 전화</string>
+	<string name="notification_call_times">%s통의 전화</string>
+	<string name="notification_call_day_singular">%s일</string>
+	<string name="notification_call_day">%s일</string>
+	<string name="notification_see_detail">DU Caller 세부 사항 보기</string>
+	<string name="notification_close_bar">알림 막대 닫기</string>
+	<string name="notification_cancel">취소</string>
+	<string name="notification_stop_protection">전화 보호를 중지할까요?</string>
+	<string name="notification_dialog_content">전화 보호를 중지하면 DU Caller가 더 이상 스팸 전화를 막지 못할 수 있습니다.</string>
+	<string name="rating_title">DU Caller \'좋아요\'</string>
+	<string name="number_detail_digest_bar_in_your_contact">연락처에서</string>
+	<string name="number_detail_digest_identified_by_ducaller">DU Caller에 의해 식별됨</string>
+	<string name="number_detail_title_calllog">전화 로그</string>
+	<string name="recorder_mic_toast">전화 자동 레코딩 시작</string>
+	<string name="main_global_intercept">전방위적 차단</string>
+	<string name="main_scanning">탐색 중</string>
+	<string name="setting_block_method_title">차단 방법</string>
+	<string name="setting_block_method_ring_silent">무음</string>
+	<string name="setting_block_method_reject_auto">자동으로 차단</string>
+	<string name="recorder_setting_mic_hint">(레코딩 시 마이크를 켜면 더 나은 결과물을 얻을 수 있습니다.)</string>
+	<string name="upgrade_now">지금 업데이트</string>
+	<string name="detail_block_number_tips">해당 번호는 차단되었습니다.</string>
+</resources>

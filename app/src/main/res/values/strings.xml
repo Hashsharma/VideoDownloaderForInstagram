@@ -5,6 +5,8 @@
     <string name="btn_download_from_clipboard">PASTE</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="how_to">How To</string>
     <string name="action_settings">Settings</string>
 
     <string name="tab_title_downloading">Download</string>
@@ -23,7 +25,7 @@
         <item>@string/menu_delete</item>
     </string-array>
 
-    <string name="download_home_lable">File saved to:%s</string>
+    <string name="download_home_lable">File saved to: /%s</string>
     <string name="repost">REPOST</string>
     <string name="spider_request_error">Failed to get the download Link!</string>
 
@@ -37,4 +39,16 @@
     <string name="str_share_this_video">Share</string>
 
     <string name="clipboard_copy_text">The Link has be copyed into clipboard</string>
+
+    <string name="download_result_success">Download Success</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_result_start">Start Download</string>
+
+
+    <string name="how_to_1">1.Open Instagram</string>
+    <string name="how_to_2">2.Open InstaDownloader</string>
+    <string name="how_to_3">3.Click the right button</string>
+
+    <string name="nav_rate_us">Rate Us</string>
+    <string name="nav_send">Send</string>
 </resources>
