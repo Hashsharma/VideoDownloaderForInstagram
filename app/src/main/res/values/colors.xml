@@ -12,11 +12,13 @@
     <color name="red_3">#F44336</color>
     <color name="red_4">#FF5722</color>
     <integer-array name="button_colors">
-        <item>@color/red_1</item>
-        <item>@color/red_2</item>
-        <item>@color/red_3</item>
+        <item>@color/colorPrimary</item>
+        <item>@color/button_normal_color</item>
+        <item>@color/deep_orange_color</item>
     </integer-array>
 
+    
+    <color name="deep_orange_color">#FF3D00</color>
     <color name="page_bg_color">#F4F4F4</color>
     <color name="image_bg_color">#D8D8D8</color>
 
