@@ -115,7 +115,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void launchAppByUrl() {
                             if (videoBean != null) {
-                                LogUtil.e("history","videoBean.appPageURL:" + videoBean.appPageUrl);
+                                LogUtil.e("history", "videoBean.appPageURL:" + videoBean.appPageUrl);
                                 Utils.openInstagramByUrl(videoBean.appPageUrl);
                             }
                         }
@@ -124,6 +124,13 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         public void onPasteSharedUrl() {
                             if (videoBean != null) {
                                 Utils.copyText2Clipboard(videoBean.sharedUrl);
+                            }
+                        }
+
+                        @Override
+                        public void onShare() {
+                            if (videoBean != null) {
+                                Utils.startShareIntent(videoBean);
                             }
                         }
                     });
@@ -157,6 +164,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public interface IPopWindowClickCallback {
         void onDelete();
+
+        void onShare();
 
         void launchAppByUrl();
 
