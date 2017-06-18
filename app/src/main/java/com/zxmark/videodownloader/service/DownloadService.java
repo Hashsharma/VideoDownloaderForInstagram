@@ -63,9 +63,9 @@ public class DownloadService extends Service {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
-                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
-                }
+//                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
+//                    IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
+//                }
                 FloatViewManager.getDefault().dismissFloatView();
                 DownloadService.this.notifyDownloadFinished((String) msg.obj);
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
@@ -73,9 +73,9 @@ public class DownloadService extends Service {
                     IToast.makeText(DownloadService.this,R.string.download_failed, Toast.LENGTH_SHORT).show();
                 }
             } else if (msg.what == MSG_DOWNLOAD_START) {
-                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    IToast.makeText(DownloadService.this,R.string.download_result_start, Toast.LENGTH_SHORT).show();
-                }
+//                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
+//                    IToast.makeText(DownloadService.this,R.string.download_result_start, Toast.LENGTH_SHORT).show();
+//                }
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg1);
@@ -84,12 +84,9 @@ public class DownloadService extends Service {
     };
 
     private void showFloatView() {
-
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-
-                LogUtil.e("main", "isTopActivity:" + ActivityManagerUtils.isTopActivity(DownloadService.this));
                 if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
                     FloatViewManager manager = FloatViewManager.getDefault();
                     manager.showFloatView();

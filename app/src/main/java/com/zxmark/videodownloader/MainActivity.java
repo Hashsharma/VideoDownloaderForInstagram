@@ -35,6 +35,7 @@ import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
+import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //TODO: dismiss float view
+        FloatViewManager.getDefault().dismissFloatView();
         findViewById(R.id.ins_icon).setOnClickListener(this);
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
         mMainViewPager.setOffscreenPageLimit(2);
