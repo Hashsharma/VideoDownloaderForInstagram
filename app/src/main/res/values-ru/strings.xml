@@ -1,55 +1,52 @@
 <resources>
-	<string name="facebook_app_id">2099565523604162</string>
-	<string name="app_name">InstaDownloader</string>
-
-	<string name="btn_download_from_clipboard">PASTE</string>
+	<string name="btn_download_from_clipboard">ВСТАВИТЬ</string>
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 
-	<string name="how_to">How To</string>
-	<string name="action_settings">Settings</string>
+	<string name="how_to">Как</string>
+	<string name="action_settings">настройки</string>
 
-	<string name="tab_title_downloading">Download</string>
-	<string name="tab_title_history">History</string>
+	<string name="tab_title_downloading">Скачать</string>
+	<string name="tab_title_history">история</string>
 
-	<string name="option_delete">Delete</string>
-	<string name="option_launch">Open Instagram</string>
-	<string name="option_copy">Copy Link</string>
-	<string name="option_share">Share</string>
-	<string name="menu_download_video">DownLoad Video</string>
-	<string name="menu_download_image">Download Image</string>
-	<string name="menu_delete">Delete</string>
+	<string name="option_delete">Удалить</string>
+	<string name="option_launch">Открыть Instagram</string>
+	<string name="option_copy">Копировать ссылку</string>
+	<string name="option_share">Поделиться</string>
+	<string name="menu_download_video">Скачать видео</string>
+	<string name="menu_download_image">Загрузить изображение</string>
+	<string name="menu_delete">Удалить</string>
 	<string-array name="fan_labels">
 		<item>@string/menu_download_video</item>
 		<item>@string/menu_download_image</item>
 		<item>@string/menu_delete</item>
 	</string-array>
 
-	<string name="download_home_lable">File saved to: /%s</string>
+	<string name="download_home_lable">Файл сохранен в: /%s</string>
 	<string name="repost">REPOST</string>
-	<string name="spider_request_error">Failed to get the download Link!</string>
+	<string name="spider_request_error">Не удалось загрузить ссылку!</string>
 
-	<string name="download_from_send_action">Start get the download Link</string>
-	<string name="not_support_url">Please send the correct Link</string>
-
-
-	<string name="eheck_url_dialgo_title">Waiting.</string>
-	<string name="check_url">Checking Link....</string>
-
-	<string name="str_share_this_video">Share</string>
-
-	<string name="clipboard_copy_text">The Link has be copyed into clipboard</string>
-
-	<string name="download_result_success">Download Success</string>
-	<string name="download_failed">Download Failed</string>
-	<string name="download_result_start">Start Download</string>
+	<string name="download_from_send_action">Начать получать ссылку на скачивание</string>
+	<string name="not_support_url">Отправьте правильную ссылку</string>
 
 
-	<string name="how_to_1">1.Open Instagram</string>
-	<string name="how_to_2">2.Open InstaDownloader</string>
-	<string name="how_to_3">3.Click the right button</string>
+	<string name="eheck_url_dialgo_title">ждущий.</string>
+	<string name="check_url">Проверка ссылки ....</string>
 
-	<string name="nav_rate_us">Rate Us</string>
-	<string name="nav_send">Send</string>
-	<string name="nav_change_language">언어 전환</string>
+	<string name="str_share_this_video">Поделиться</string>
+
+	<string name="clipboard_copy_text">Ссылка скопирована в буфер обмена</string>
+
+	<string name="download_result_success">Скачать Success</string>
+	<string name="download_failed">Ошибка загрузки</string>
+	<string name="download_result_start">Начать загрузку</string>
+
+
+	<string name="how_to_1">1.Открыть Instagram</string>
+	<string name="how_to_2">2.Открыть InstaDownloader</string>
+	<string name="how_to_3">3.Нажмите правую кнопку</string>
+
+	<string name="nav_rate_us">Оцените нас</string>
+	<string name="nav_send">послать</string>
+	<string name="nav_change_language">Переключить язык</string>
 </resources>

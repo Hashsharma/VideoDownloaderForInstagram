@@ -1,54 +1,52 @@
 <resources>
-	<string name="facebook_app_id">2099565523604162</string>
-	<string name="app_name">InstaDownloader</string>
-
-	<string name="btn_download_from_clipboard">PASTE</string>
+	<string name="btn_download_from_clipboard">चिपकाएं</string>
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 
-	<string name="how_to">How To</string>
-	<string name="action_settings">Settings</string>
+	<string name="how_to">कैसे</string>
+	<string name="action_settings">सेटिंग्स</string>
 
-	<string name="tab_title_downloading">Download</string>
-	<string name="tab_title_history">History</string>
+	<string name="tab_title_downloading">डाउनलोड</string>
+	<string name="tab_title_history">इतिहास</string>
 
-	<string name="option_delete">Delete</string>
-	<string name="option_launch">Open Instagram</string>
-	<string name="option_copy">Copy Link</string>
-	<string name="option_share">Share</string>
-	<string name="menu_download_video">DownLoad Video</string>
-	<string name="menu_download_image">Download Image</string>
-	<string name="menu_delete">Delete</string>
+	<string name="option_delete">हटाना</string>
+	<string name="option_launch">खोलें Instagram</string>
+	<string name="option_copy">प्रतिरूप जोड़ना</string>
+	<string name="option_share">शेयर</string>
+	<string name="menu_download_video">वीडियो डाउनलोड करें</string>
+	<string name="menu_download_image">छवि डाउनलोड करें</string>
+	<string name="menu_delete">हटाना</string>
 	<string-array name="fan_labels">
 		<item>@string/menu_download_video</item>
 		<item>@string/menu_download_image</item>
 		<item>@string/menu_delete</item>
 	</string-array>
 
-	<string name="download_home_lable">File saved to: /%s</string>
-	<string name="repost">REPOST</string>
-	<string name="spider_request_error">Failed to get the download Link!</string>
+	<string name="download_home_lable">फ़ाइल को सहेजा गया: /%s</string>
+	<string name="repost">पोस्ट</string>
+	<string name="spider_request_error">डाउनलोड लिंक प्राप्त करने में विफल!</string>
 
-	<string name="download_from_send_action">Start get the download Link</string>
-	<string name="not_support_url">Please send the correct Link</string>
-
-
-	<string name="eheck_url_dialgo_title">Waiting.</string>
-	<string name="check_url">Checking Link....</string>
-
-	<string name="str_share_this_video">Share</string>
-
-	<string name="clipboard_copy_text">The Link has be copyed into clipboard</string>
-
-	<string name="download_result_success">Download Success</string>
-	<string name="download_failed">Download Failed</string>
-	<string name="download_result_start">Start Download</string>
+	<string name="download_from_send_action">डाउनलोड लिंक प्राप्त करें शुरू करें</string>
+	<string name="not_support_url">कृपया सही लिंक भेजें</string>
 
 
-	<string name="how_to_1">1.Open Instagram</string>
-	<string name="how_to_2">2.Open InstaDownloader</string>
-	<string name="how_to_3">3.Click the right button</string>
+	<string name="eheck_url_dialgo_title">इंतज़ार कर रही.</string>
+	<string name="check_url">चेकिंग लिंक....</string>
 
-	<string name="nav_rate_us">Rate Us</string>
-	<string name="nav_send">Send</string>
+	<string name="str_share_this_video">शेयर</string>
+
+	<string name="clipboard_copy_text">लिंक को क्लिपबोर्ड में कॉपी किया गया है</string>
+
+	<string name="download_result_success">डाउनलोड सफलता</string>
+	<string name="download_failed">डाउनलोड विफल</string>
+	<string name="download_result_start">डाउनलोड शुरू करें</string>
+
+
+	<string name="how_to_1">1.खोलें Instagram</string>
+	<string name="how_to_2">2.ओपन InstaDownloader</string>
+	<string name="how_to_3">3.दाएं बटन पर क्लिक करें</string>
+
+	<string name="nav_rate_us">हमें रेटिंग दें</string>
+	<string name="nav_send">भेजना</string>
+	<string name="nav_change_language">भाषा स्विच करें</string>
 </resources>
