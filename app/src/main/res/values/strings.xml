@@ -68,6 +68,8 @@
     <string name="locale_de">Deutsch</string>
     <string name="locale_hi">हिन्दी</string>
     <string name="locale_in_rID">Indonesia</string>
+    <string name="locale_uk_rUA">український</string>
+    <string name="locale_vi">tiếng Việt</string>
     <string name="locale_ar">العربية</string>
 
     <string-array name="support_languages">
@@ -85,6 +87,8 @@
         <item>@string/locale_de</item>
         <item>@string/locale_hi</item>
         <item>@string/locale_in_rID</item>
+        <item>@string/locale_uk_rUA</item>
+        <item>@string/locale_vi</item>
         <item>@string/locale_ar</item>
     </string-array>
     <string-array name="support_languages_ccd">
@@ -102,6 +106,8 @@
         <item>de</item>
         <item>hi</item>
         <item>in-ID</item>
+        <item>uk-rUA</item>
+        <item>vi</item>
         <item>ar</item>
     </string-array>
 
