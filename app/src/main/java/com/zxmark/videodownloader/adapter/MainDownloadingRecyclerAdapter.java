@@ -42,6 +42,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     private boolean mFullImageState = false;
     private Context mContext;
     private IBtnCallback callback;
+    private boolean mClickedPasteBtn = false;
 
     public MainDownloadingRecyclerAdapter(List<VideoBean> dataList, boolean isFullImage, IBtnCallback callback) {
         mDataList = dataList;
@@ -49,6 +50,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
         mFullImageState = isFullImage;
         mContext = MainApplication.getInstance().getApplicationContext();
         this.callback = callback;
+        mClickedPasteBtn = false;
     }
 
     @Override
@@ -87,6 +89,8 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     holder.fanMenuButtons.toggleShow();
                 }
             });
+
+            holder.progressBar.setProgress(0);
             holder.fanMenuButtons.setOnFanButtonClickListener(new FanMenuButtons.OnFanClickListener() {
                 @Override
                 public void onFanButtonClicked(int index) {
@@ -94,7 +98,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     if (index == 0) {
                         holder.progressBar.setProgress(0);
                         holder.progressBar.setVisibility(View.VISIBLE);
-
                         DownloadUtil.startDownload(bean.sharedUrl);
                     } else if (index == 1) {
                         DownloadUtil.downloadThumbnail(bean.thumbnailUrl);
@@ -138,16 +141,21 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 @Override
                 public void onClick(View v) {
                     holder.downloadBtn.setVisibility(View.GONE);
+                    mClickedPasteBtn = true;
                     if (callback != null) {
                         callback.onDownloadFromClipboard();
                     }
                 }
             });
 
-            if (VideoDownloadFactory.getInstance().isSupportWeb(Utils.getTextFromClipboard())) {
-                holder.downloadBtn.setVisibility(View.VISIBLE);
-            } else {
+            if(mClickedPasteBtn) {
                 holder.downloadBtn.setVisibility(View.GONE);
+            } else {
+                if (VideoDownloadFactory.getInstance().needShowPasteBtn(Utils.getTextFromClipboard())) {
+                    holder.downloadBtn.setVisibility(View.VISIBLE);
+                } else {
+                    holder.downloadBtn.setVisibility(View.GONE);
+                }
             }
         }
 

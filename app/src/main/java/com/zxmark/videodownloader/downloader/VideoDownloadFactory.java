@@ -4,8 +4,10 @@ import android.os.Looper;
 import android.provider.MediaStore;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
+import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.URLMatcher;
+import com.zxmark.videodownloader.util.Utils;
 
 /**
  * Created by fanlitao on 17/6/8.
@@ -83,6 +85,14 @@ public final class VideoDownloadFactory {
         }
 
         return false;
+    }
+
+    public boolean needShowPasteBtn(String url) {
+        String normalURL = URLMatcher.getHttpURL(Utils.getTextFromClipboard());
+        if (DBHelper.getDefault().isDownloadedPage(normalURL)) {
+            return false;
+        }
+        return VideoDownloadFactory.getInstance().isSupportWeb(normalURL);
     }
 
 

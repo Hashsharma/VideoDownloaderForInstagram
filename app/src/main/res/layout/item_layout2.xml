@@ -57,9 +57,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#CCFFFFFF"
+                android:paddingBottom="@dimen/fab_margin_2"
                 android:paddingLeft="@dimen/fab_margin"
                 android:paddingRight="@dimen/fab_margin"
-                android:paddingBottom="@dimen/fab_margin_2"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:visibility="gone"
@@ -79,15 +79,15 @@
             <!--android:scaleType="centerInside"-->
             <!--android:src="@mipmap/float_download" />-->
 
-            <android.support.design.widget.FloatingActionButton
+            <ImageView
                 android:id="@+id/btn_operation"
                 android:layout_width="40dip"
                 android:layout_height="40dip"
                 android:layout_gravity="right|bottom"
                 android:layout_margin="@dimen/fab_margin"
-                android:src="@drawable/ic_add_white_48dp"
-                app:fabSize="normal"
-                />
+                android:background="@drawable/float_action_btn"
+                android:padding="10dip"
+                android:src="@drawable/ic_add_white_48dp" />
 
         </FrameLayout>
 

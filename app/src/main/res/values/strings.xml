@@ -1,6 +1,6 @@
 <resources>
-    <string name="facebook_app_id">2099565523604162</string>
-    <string name="app_name">InstaDownloader</string>
+    <string name="facebook_app_id" translatable="false">2099565523604162</string>
+    <string name="app_name" translatable="false">InstaDownloader</string>
 
     <string name="btn_download_from_clipboard">PASTE</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -54,25 +54,25 @@
     <string name="nav_change_language">Switch language</string>
 
 
-    <string name="locale_english">English</string>
-    <string name="locale_chinese_china">简体中文</string>
-    <string name="locale_chinese_taiwan">繁體中文</string>
-    <string name="locale_ko">한국의</string>
-    <string name="locale_ja">日本の</string>
-    <string name="locale_th">ไทย</string>
-    <string name="locale_it">lingua italiana</string>
-    <string name="locale_tr">Türk dili</string>
-    <string name="locale_ru">русский</string>
-    <string name="locale_fr">français</string>
-    <string name="locale_es">español</string>
-    <string name="locale_de">Deutsch</string>
-    <string name="locale_hi">हिन्दी</string>
-    <string name="locale_in_rID">Indonesia</string>
-    <string name="locale_uk_rUA">український</string>
-    <string name="locale_vi">tiếng Việt</string>
-    <string name="locale_ar">العربية</string>
+    <string name="locale_english" translatable="false">English</string>
+    <string name="locale_chinese_china" translatable="false">简体中文</string>
+    <string name="locale_chinese_taiwan" translatable="false">繁體中文</string>
+    <string name="locale_ko" translatable="false">한국의</string>
+    <string name="locale_ja" translatable="false">日本の</string>
+    <string name="locale_th" translatable="false">ไทย</string>
+    <string name="locale_it" translatable="false">lingua italiana</string>
+    <string name="locale_tr" translatable="false">Türk dili</string>
+    <string name="locale_ru" translatable="false">русский</string>
+    <string name="locale_fr" translatable="false">français</string>
+    <string name="locale_es" translatable="false">español</string>
+    <string name="locale_de" translatable="false">Deutsch</string>
+    <string name="locale_hi" translatable="false">हिन्दी</string>
+    <string name="locale_in_rID" translatable="false">Indonesia</string>
+    <string name="locale_uk_rUA" translatable="false">український</string>
+    <string name="locale_vi" translatable="false">tiếng Việt</string>
+    <string name="locale_ar" translatable="false">العربية</string>
 
-    <string-array name="support_languages">
+    <string-array name="support_languages" translatable="false">
         <item>@string/locale_english</item>
         <item>@string/locale_chinese_china</item>
         <item>@string/locale_chinese_taiwan</item>
@@ -91,7 +91,7 @@
         <item>@string/locale_vi</item>
         <item>@string/locale_ar</item>
     </string-array>
-    <string-array name="support_languages_ccd">
+    <string-array name="support_languages_ccd" translatable="false">
         <item>en</item>
         <item>zh</item>
         <item>zh-TW</item>
