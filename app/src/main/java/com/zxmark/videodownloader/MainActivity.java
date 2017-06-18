@@ -2,6 +2,7 @@ package com.zxmark.videodownloader;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +33,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
+import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
@@ -39,10 +42,12 @@ import com.zxmark.videodownloader.util.DeviceUtil;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.PreferenceUtils;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.util.Utils;
 
 import java.util.List;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity
@@ -168,6 +173,8 @@ public class MainActivity extends AppCompatActivity
             Utils.sendMyApp();
         } else if (id == R.id.nav_rate) {
             Utils.rateUs5Star();
+        } else if (id == R.id.nav_change_language) {
+            showLocaleSelectDialog();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -308,5 +315,35 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+
+    private void showLocaleSelectDialog() {
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+
+                final String[] supportLanguages = getResources().getStringArray(R.array.support_languages);
+                final String[] countryCode = getResources().getStringArray(R.array.support_languages_ccd);
+                String keyLanguage = PreferenceUtils.getCurrentLanguage();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle(R.string.nav_change_language)
+                                .setSingleChoiceItems(supportLanguages, 0, new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        LogUtil.e("la","countryCode=" + countryCode[which]);
+                                        PreferenceUtils.saveCurrentLanguage(countryCode[which], which);
+                                        Utils.changeLocale(countryCode[which]);
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                    }
+                });
+            }
+        });
     }
 }

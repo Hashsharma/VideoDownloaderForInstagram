@@ -49,4 +49,7 @@
 
     <string name="nav_rate_us">给我打好评</string>
     <string name="nav_send">分享</string>
+    <string name="nav_change_language">切换语言</string>
+
+
 </resources>

@@ -99,6 +99,7 @@ public class DownloadingTaskList {
 
                     @Override
                     public void onFinish(int code, String path) {
+                        LogUtil.e("download","code:" + code);
                         DBHelper.getDefault().finishDownload(path);
                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, path).sendToTarget();
                     }

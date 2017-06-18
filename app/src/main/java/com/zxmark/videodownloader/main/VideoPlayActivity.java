@@ -37,6 +37,8 @@ public class VideoPlayActivity extends Activity  implements View.OnClickListener
     private Uri mVideoURI;
     private String mVideoPath;
 
+    private boolean mErrorHappened = false;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class VideoPlayActivity extends Activity  implements View.OnClickListener
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
+                mErrorHappened = true;
                 return false;
             }
         });
@@ -80,6 +83,9 @@ public class VideoPlayActivity extends Activity  implements View.OnClickListener
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                if(mErrorHappened) {
+                    return;
+                }
                 mVideoView.setVideoURI(mVideoURI);
                 mVideoView.start();
             }

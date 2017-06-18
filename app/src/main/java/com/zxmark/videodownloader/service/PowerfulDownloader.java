@@ -26,7 +26,7 @@ public class PowerfulDownloader {
 
 
     public static final int CODE_OK = 0;
-    public static final int CODE_DOWNLOAD_FAILED = 1;
+    public static final int CODE_DOWNLOAD_FAILED = -1;
     public volatile static PowerfulDownloader sInstance;
 
     private static volatile boolean sIntrupted = false;

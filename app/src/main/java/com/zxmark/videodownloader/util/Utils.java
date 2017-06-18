@@ -4,10 +4,13 @@ import android.content.ActivityNotFoundException;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Looper;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.zxmark.videodownloader.MainActivity;
@@ -17,6 +20,7 @@ import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.widget.IToast;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -155,6 +159,22 @@ public class Utils {
             chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             context.startActivity(chooseIntent);
         }
+    }
+
+    public static void changeLocale(String ccd) {
+        Context context = MainApplication.getInstance();
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+// 应用用户选择语言
+        String array[] = ccd.split("-");
+        config.locale = array.length == 1 ? new Locale(ccd,"") : new Locale(array[0], array[1]);
+        resources.updateConfiguration(config, dm);
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+
     }
 
 

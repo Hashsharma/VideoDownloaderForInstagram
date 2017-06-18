@@ -51,4 +51,58 @@
 
     <string name="nav_rate_us">Rate Us</string>
     <string name="nav_send">Send</string>
+    <string name="nav_change_language">Switch language</string>
+
+
+    <string name="locale_english">English</string>
+    <string name="locale_chinese_china">简体中文</string>
+    <string name="locale_chinese_taiwan">繁體中文</string>
+    <string name="locale_ko">한국의</string>
+    <string name="locale_ja">日本の</string>
+    <string name="locale_th">ไทย</string>
+    <string name="locale_it">lingua italiana</string>
+    <string name="locale_tr">Türk dili</string>
+    <string name="locale_ru">русский</string>
+    <string name="locale_fr">français</string>
+    <string name="locale_es">español</string>
+    <string name="locale_de">Deutsch</string>
+    <string name="locale_hi">हिन्दी</string>
+    <string name="locale_in_rID">Indonesia</string>
+    <string name="locale_ar">العربية</string>
+
+    <string-array name="support_languages">
+        <item>@string/locale_english</item>
+        <item>@string/locale_chinese_china</item>
+        <item>@string/locale_chinese_taiwan</item>
+        <item>@string/locale_ko</item>
+        <item>@string/locale_ja</item>
+        <item>@string/locale_th</item>
+        <item>@string/locale_it</item>
+        <item>@string/locale_tr</item>
+        <item>@string/locale_ru</item>
+        <item>@string/locale_fr</item>
+        <item>@string/locale_es</item>
+        <item>@string/locale_de</item>
+        <item>@string/locale_hi</item>
+        <item>@string/locale_in_rID</item>
+        <item>@string/locale_ar</item>
+    </string-array>
+    <string-array name="support_languages_ccd">
+        <item>en</item>
+        <item>zh</item>
+        <item>zh-TW</item>
+        <item>ko</item>
+        <item>ja</item>
+        <item>th</item>
+        <item>it</item>
+        <item>tr</item>
+        <item>ru</item>
+        <item>fr</item>
+        <item>es</item>
+        <item>de</item>
+        <item>hi</item>
+        <item>in-ID</item>
+        <item>ar</item>
+    </string-array>
+
 </resources>

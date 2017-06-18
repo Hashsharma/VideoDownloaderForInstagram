@@ -50,4 +50,5 @@
 
 	<string name="nav_rate_us">賞賛を与えます</string>
 	<string name="nav_send">シェア</string>
+	<string name="nav_change_language">スイッチの言語</string>
 </resources>
