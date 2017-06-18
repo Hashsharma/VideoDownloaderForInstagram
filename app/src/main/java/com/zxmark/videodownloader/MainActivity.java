@@ -56,11 +56,8 @@ public class MainActivity extends AppCompatActivity
 
     private ViewPager mMainViewPager;
     private MainViewPagerAdapter mViewPagerAdapter;
-
     private TabLayout mTabLayout;
 
-    private DrawerLayout mRootViewContainer;
-    private View mBottomDialogView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mRootViewContainer = drawer;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -95,9 +91,6 @@ public class MainActivity extends AppCompatActivity
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        mBottomDialogView = findViewById(R.id.bottom);
-
 
     }
 
@@ -325,17 +318,16 @@ public class MainActivity extends AppCompatActivity
 
                 final String[] supportLanguages = getResources().getStringArray(R.array.support_languages);
                 final String[] countryCode = getResources().getStringArray(R.array.support_languages_ccd);
-                String keyLanguage = PreferenceUtils.getCurrentLanguage();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setTitle(R.string.nav_change_language)
-                                .setSingleChoiceItems(supportLanguages, 0, new DialogInterface.OnClickListener() {
+                                .setSingleChoiceItems(supportLanguages,PreferenceUtils.getCurrentLanguagePos(), new DialogInterface.OnClickListener() {
 
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        LogUtil.e("la","countryCode=" + countryCode[which]);
                                         PreferenceUtils.saveCurrentLanguage(countryCode[which], which);
                                         Utils.changeLocale(countryCode[which]);
                                         dialog.dismiss();

@@ -32,6 +32,11 @@ public class PreferenceUtils {
         mMainSharedPreference.edit().putInt(KEY_LANGUAGE_POSITION,position).commit();
     }
 
+    public static int getCurrentLanguagePos() {
+        getSharedPreferences();
+       return  mMainSharedPreference.getInt(KEY_LANGUAGE_POSITION,0);
+    }
+
     public static String getCurrentLanguage() {
         getSharedPreferences();
         return mMainSharedPreference.getString(KEY_LANGUAGE_PRFS,"");

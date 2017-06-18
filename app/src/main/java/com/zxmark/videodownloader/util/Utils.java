@@ -173,6 +173,7 @@ public class Utils {
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Globals.ACTION_CHANGE_LOCALE);
         context.startActivity(intent);
 
     }
