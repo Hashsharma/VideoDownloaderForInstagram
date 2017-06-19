@@ -47,14 +47,23 @@ public class Utils {
     }
 
 
-    public static void openAppByPackageName(String packageName) {
-        Intent intent = MainApplication.getInstance().getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        MainApplication.getInstance().getApplicationContext().startActivity(intent);
+    public static boolean openAppByPackageName(String packageName) {
+        try {
+            Intent intent = MainApplication.getInstance().getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApplication.getInstance().getApplicationContext().startActivity(intent);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     public static void openInstagram() {
-        openAppByPackageName("com.instagram.android");
+
+        boolean result = openAppByPackageName("com.instagram.android");
+        if(!result) {
+            goToGpByPackageName(MainApplication.getInstance().getApplicationContext(),"com.instagram.android");
+        }
     }
 
 
@@ -168,7 +177,7 @@ public class Utils {
         Configuration config = resources.getConfiguration();
 // 应用用户选择语言
         String array[] = ccd.split("-");
-        config.locale = array.length == 1 ? new Locale(ccd,"") : new Locale(array[0], array[1]);
+        config.locale = array.length == 1 ? new Locale(ccd, "") : new Locale(array[0], array[1]);
         resources.updateConfiguration(config, dm);
 
         Intent intent = new Intent(context, MainActivity.class);

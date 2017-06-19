@@ -128,7 +128,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 showCheckURLProgressDialog();
                 Intent intent = new Intent(getActivity(), DownloadService.class);
                 intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
-                intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW,false);
+                intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, false);
                 intent.putExtra(Globals.EXTRAS, url);
                 getActivity().startService(intent);
             } else {
@@ -185,7 +185,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     public void onReceiveNewTask(String pageURL) {
 
         if (isAdded()) {
-            if ( mProgressDialog != null && mProgressDialog.isShowing()) {
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
                 mProgressDialog = null;
             }
@@ -225,33 +225,24 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.btn_paste:
-//                final ClipboardManager cb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-//                String pastUrl = cb.getText().toString();
-//                if (!TextUtils.isEmpty(pastUrl)) {
-//                    startDownload(pastUrl);
-//                }
-//                break;
-            case R.id.btn_howto:
-                showHotToInfo();
-                break;
-        }
     }
 
 
     private boolean isShowHowToPage;
+    private VideoBean mHowToBean = null;
 
     public void showHotToInfo() {
         if (isShowHowToPage) {
             isShowHowToPage = false;
-            mDataList.remove(1);
+            mDataList.remove(mHowToBean);
             mAdapter.notifyDataSetChanged();
         } else {
             isShowHowToPage = true;
-            VideoBean bean = new VideoBean();
-            bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HOW_TO;
-            mDataList.add(1, bean);
+            if (mHowToBean == null) {
+                mHowToBean = new VideoBean();
+                mHowToBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HOW_TO;
+            }
+            mDataList.add(1, mHowToBean);
             mAdapter.notifyDataSetChanged();
         }
     }

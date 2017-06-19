@@ -137,6 +137,7 @@ public class DownloadService extends Service {
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
+                LogUtil.e("main","DownoadService.showFloatView:");
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {

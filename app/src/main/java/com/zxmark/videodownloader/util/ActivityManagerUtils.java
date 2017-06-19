@@ -11,7 +11,6 @@ import java.util.List;
  */
 
 public class ActivityManagerUtils {
-
     public static boolean isTopActivity(Context mContext) {
         String topPackageName = "";
         ActivityManager am = (ActivityManager) mContext

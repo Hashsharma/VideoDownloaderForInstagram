@@ -34,6 +34,7 @@ public class DownloadUtil {
         final Context context = MainApplication.getInstance().getApplicationContext();
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
+        intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
         intent.putExtra(Globals.EXTRAS, pageUrl);
         context.startService(intent);
     }

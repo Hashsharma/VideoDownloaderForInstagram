@@ -27,13 +27,22 @@ public class VideoBean {
     @Override
     public boolean equals(Object obj) {
 
-
         if (obj instanceof VideoBean) {
             VideoBean bean = (VideoBean) obj;
-            if (type == MainDownloadingRecyclerAdapter.VIEW_TYPE_AD) {
-                return false;
+            if (type == MainDownloadingRecyclerAdapter.VIEW_TYPE_NORMAL) {
+                return videoPath.equals(bean.videoPath);
+            } else {
+                if (type == MainDownloadingRecyclerAdapter.VIEW_TYPE_AD) {
+                    return false;
+                }
+                if (type == MainDownloadingRecyclerAdapter.VIEW_TYPE_HOW_TO) {
+                    if(type == bean.type) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             }
-            return videoPath.equals(bean.videoPath);
         }
         return super.equals(obj);
 
