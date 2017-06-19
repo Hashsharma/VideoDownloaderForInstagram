@@ -132,13 +132,20 @@ public class VideoPlayActivity extends Activity  implements View.OnClickListener
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        mVideoView.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        mVideoView.pause();
     }
 
 
+    @Override
+    protected void onDestroy() {
+        mVideoView.destroyDrawingCache();
+        super.onDestroy();
+    }
 }
