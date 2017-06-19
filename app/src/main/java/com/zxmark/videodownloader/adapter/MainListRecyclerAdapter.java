@@ -109,6 +109,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         public void onDelete() {
                             bean.file.delete();
                             mDataList.remove(bean);
+                            DBHelper.getDefault().deleteDownloadingVideo(bean.file.getAbsolutePath());
                             notifyDataSetChanged();
                         }
 

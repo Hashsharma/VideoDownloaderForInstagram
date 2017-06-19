@@ -243,13 +243,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public void onReceiveNewTask(final String pageURL) throws RemoteException {
-            LogUtil.v("start", "onReceiveNewTask:" + pageURL);
+        public void onReceiveNewTask(final String filePath) throws RemoteException {
+            LogUtil.v("start", "onReceiveNewTask:" + filePath);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (mViewPagerAdapter.getDownloadingFragment() != null) {
-                        mViewPagerAdapter.getDownloadingFragment().onReceiveNewTask(pageURL);
+                        mViewPagerAdapter.getDownloadingFragment().onReceiveNewTask(filePath);
                     }
                 }
             });

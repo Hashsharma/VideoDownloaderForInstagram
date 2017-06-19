@@ -124,6 +124,27 @@ public class DBHelper {
         return null;
     }
 
+    public VideoBean getVideoBeanByVideoPath(String videoPath) {
+        Cursor cursor = db.query("downloading_table", null, "video_path = ?", new String[]{videoPath}, null, null, "_ID desc");
+        try {
+            if (cursor.moveToNext()) {
+                VideoBean bean = new VideoBean();
+                bean.pageTitle = cursor.getString(1);
+                bean.sharedUrl = cursor.getString(2);
+                bean.thumbnailUrl = cursor.getString(3);
+                bean.downloadVideoUrl = cursor.getString(4);
+                bean.appPageUrl = cursor.getString(5);
+                bean.videoPath = cursor.getString(6);
+                return bean;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
     public boolean isDownloadedPage(String pageURL) {
         Cursor cursor = db.query("downloading_table", null, "page_url = ?", new String[]{pageURL}, null, null, "_ID desc");
         try {

@@ -180,20 +180,20 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     /**
      * receive new task
      *
-     * @param pageURL
+     * @param videoPath
      */
-    public void onReceiveNewTask(String pageURL) {
-
+    public void onReceiveNewTask(String videoPath) {
         if (isAdded()) {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
                 mProgressDialog = null;
             }
-            if (TextUtils.isEmpty(pageURL)) {
+            if (TextUtils.isEmpty(videoPath)) {
                 IToast.makeText(getActivity(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
                 return;
             }
-            VideoBean videoBean = DBHelper.getDefault().getVideoBeanByPageURL(pageURL);
+            VideoBean videoBean = DBHelper.getDefault().getVideoBeanByVideoPath(videoPath);
+            LogUtil.e("downloading","receiveNewTask=" + videoPath + ":" + videoBean);
             if (videoBean != null) {
                 mDataList.add(1, videoBean);
                 mAdapter.notifyDataSetChanged();

@@ -137,7 +137,7 @@ public class DownloadService extends Service {
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
-                LogUtil.e("main","DownoadService.showFloatView:");
+                LogUtil.e("main","DownloadService.showFloatView:");
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -147,26 +147,34 @@ public class DownloadService extends Service {
                                 if (showFloatView) {
                                     showFloatView();
                                 }
-                                DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.videoThumbnailUrl, webPageStructuredData.futureVideoList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureVideoList.get(0)));
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notifyReceiveNewTask(url);
-                                    }
-                                });
+
+                                for(String videoUrl : webPageStructuredData.futureVideoList) {
+                                    final String videoPath = DownloadUtil.getDownloadTargetInfo(videoUrl);
+                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.videoThumbnailUrl,videoUrl, webPageStructuredData.appPageUrl,videoPath);
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            notifyReceiveNewTask(videoPath);
+                                        }
+                                    });
+                                }
                             }
 
                             if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
                                 if (showFloatView) {
                                     showFloatView();
                                 }
-                                DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.futureImageList.get(0), webPageStructuredData.futureImageList.get(0), webPageStructuredData.appPageUrl, DownloadUtil.getDownloadTargetInfo(webPageStructuredData.futureImageList.get(0)));
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notifyReceiveNewTask(url);
-                                    }
-                                });
+
+                                for(String imageUrl : webPageStructuredData.futureImageList) {
+                                    final String imagePath =  DownloadUtil.getDownloadTargetInfo(imageUrl);
+                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, imageUrl, imageUrl, webPageStructuredData.appPageUrl,imagePath);
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            notifyReceiveNewTask(imagePath);
+                                        }
+                                    });
+                                }
                             }
 
                             //TODO:如果当前是WIFI连接，自动下载该资源

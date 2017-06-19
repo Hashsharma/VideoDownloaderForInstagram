@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +27,7 @@ public class InstagramDownloader extends BaseDownloader {
     public static final String IMAGE_SUFFIX = "https://scontent-arn2-1.cdninstagram.com";
     public static final String REPLACE_SUFFIX = "https://ig-s-a-a.akamaihd.net/hphotos-ak-xpa1";
 
+    public static final String CDN_IMAGE_SUFFIX = "cdninstagram.com";
 
     public String startRequest(String htmlUrl) {
         return HttpRequestSpider.getInstance().request(htmlUrl);
@@ -62,9 +65,13 @@ public class InstagramDownloader extends BaseDownloader {
 
 
         if (!TextUtils.isEmpty(imageUrl)) {
-            if (imageUrl.startsWith(IMAGE_SUFFIX)) {
-                imageUrl = REPLACE_SUFFIX + imageUrl.substring(IMAGE_SUFFIX.length());
+
+            if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
+                String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
+                imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
             }
+
+            LogUtil.e("image", "imageUrl=" + imageUrl);
         }
         return imageUrl;
     }
@@ -93,17 +100,62 @@ public class InstagramDownloader extends BaseDownloader {
         return null;
     }
 
+    public List<String> getPageHashTags(String content) {
+        String regex;
+        String hashTags = "";
+        regex = "<meta property=\"instapp:hashtags\" content=\"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+        List<String> hashTagsList = new ArrayList<String>();
+        while (ma.find()) {
+            Log.v("fan2", "" + ma.group());
+            hashTags = ma.group(1);
+            LogUtil.e("ins", "hashTags=" + hashTags);
+            hashTagsList.add(hashTags);
+        }
+
+        return hashTagsList;
+    }
+
+    public List<String> getImageUrlFromJs(String content) {
+        String regex;
+        String imageUrl = "";
+        regex = "\"display_url\": \"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+        List<String> imageList = new ArrayList<>();
+        while (ma.find()) {
+            imageUrl = ma.group(1);
+            if (!TextUtils.isEmpty(imageUrl)) {
+                if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
+                    String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
+                    imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
+                    if (!imageList.contains(imageUrl)) {
+                        imageList.add(imageUrl);
+                    }
+                }
+            }
+        }
+
+        return imageList;
+    }
+
     public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
         String videoUrl = getVideoUrl(content);
+        getPageHashTags(content);
         WebPageStructuredData data = new WebPageStructuredData();
         if (TextUtils.isEmpty(videoUrl)) {
-            String imageUrl = getImageUrl(content);
-            data.addVideo(imageUrl);
+            List<String> imageList = getImageUrlFromJs(content);
+            if (imageList.size() == 0) {
+                data.addImage(getImageUrl(content));
+            } else {
+                data.futureImageList = imageList;
+            }
         } else {
             data.addVideo(videoUrl);
-            data.videoThumbnailUrl = getImageUrl(content);
         }
+        data.videoThumbnailUrl = getImageUrl(content);
         String title = getPageTitle(content);
         data.pageTitle = title;
         data.appPageUrl = getLaunchInstagramUrl(content);
