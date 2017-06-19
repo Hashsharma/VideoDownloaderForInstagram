@@ -17,6 +17,7 @@ public class PreferenceUtils {
     public static final String PREFERNCE_FILE_NAME = "shared_pfs";
     public static final String KEY_LANGUAGE_PRFS = "KEY_LANGUAGE";
     public static final String KEY_LANGUAGE_POSITION = "KEY_LANGUAGE_POSTION";
+    public static final String FIRST_LAUNCH = "first_launch";
 
     private static SharedPreferences getSharedPreferences() {
         if (mMainSharedPreference == null) {
@@ -26,19 +27,26 @@ public class PreferenceUtils {
         return mMainSharedPreference;
     }
 
-    public static void saveCurrentLanguage(String ccd,int position) {
+    public static void saveCurrentLanguage(String ccd, int position) {
         getSharedPreferences();
         mMainSharedPreference.edit().putString(KEY_LANGUAGE_PRFS, ccd).commit();
-        mMainSharedPreference.edit().putInt(KEY_LANGUAGE_POSITION,position).commit();
+        mMainSharedPreference.edit().putInt(KEY_LANGUAGE_POSITION, position).commit();
     }
 
     public static int getCurrentLanguagePos() {
         getSharedPreferences();
-       return  mMainSharedPreference.getInt(KEY_LANGUAGE_POSITION,0);
+        return mMainSharedPreference.getInt(KEY_LANGUAGE_POSITION, 0);
     }
 
     public static String getCurrentLanguage() {
         getSharedPreferences();
-        return mMainSharedPreference.getString(KEY_LANGUAGE_PRFS,"");
+        return mMainSharedPreference.getString(KEY_LANGUAGE_PRFS, "");
+    }
+
+    public static boolean isFirstRunMainFragment() {
+        getSharedPreferences();
+        boolean result = mMainSharedPreference.getBoolean(FIRST_LAUNCH, true);
+        mMainSharedPreference.edit().putBoolean(FIRST_LAUNCH, false).commit();
+        return result;
     }
 }

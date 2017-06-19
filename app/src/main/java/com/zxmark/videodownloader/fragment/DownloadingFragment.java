@@ -32,6 +32,7 @@ import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.PreferenceUtils;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.widget.IToast;
 
@@ -108,6 +109,12 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         VideoBean headerBean = new VideoBean();
         headerBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HEAD;
         mDataList.add(0, headerBean);
+        if (PreferenceUtils.isFirstRunMainFragment()) {
+            isShowHowToPage = true;
+            mHowToBean = new VideoBean();
+            mHowToBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HOW_TO;
+            mDataList.add(mHowToBean);
+        }
         mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true, this);
         mListView.setAdapter(mAdapter);
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
@@ -193,7 +200,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 return;
             }
             VideoBean videoBean = DBHelper.getDefault().getVideoBeanByVideoPath(videoPath);
-            LogUtil.e("downloading","receiveNewTask=" + videoPath + ":" + videoBean);
+            LogUtil.e("downloading", "receiveNewTask=" + videoPath + ":" + videoBean);
             if (videoBean != null) {
                 mDataList.add(1, videoBean);
                 mAdapter.notifyDataSetChanged();
