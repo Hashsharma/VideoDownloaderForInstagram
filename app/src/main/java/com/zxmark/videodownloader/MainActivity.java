@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
                         }
 
                         if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
-                            mViewPagerAdapter.getVideoHistoryFragment().refreshUI();
+                            mViewPagerAdapter.getVideoHistoryFragment().onAddNewDownloadedFile(path);
                         }
                     }
 

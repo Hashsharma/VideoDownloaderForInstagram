@@ -66,7 +66,7 @@ public class DownloadService extends Service {
 //                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
 //                    IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
 //                }
-                FloatViewManager.getDefault().dismissFloatView();
+                //FloatViewManager.getDefault().dismissFloatView();
                 DownloadService.this.notifyDownloadFinished((String) msg.obj);
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {

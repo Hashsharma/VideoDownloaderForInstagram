@@ -104,6 +104,8 @@ public class VideoPlayActivity extends Activity  implements View.OnClickListener
                     VideoBean videoBean  = DBHelper.getDefault().getVideoInfoByPath(mVideoPath);
                     if(videoBean  != null) {
                         Utils.startShareIntent(videoBean);
+                    } else {
+                        Utils.startShareIntent(mVideoPath);
                     }
                 }
 

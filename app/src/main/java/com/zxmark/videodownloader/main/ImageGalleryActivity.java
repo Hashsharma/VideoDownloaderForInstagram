@@ -25,17 +25,13 @@ import com.zxmark.videodownloader.util.Utils;
  * Created by fanlitao on 17/6/15.
  */
 
-public class ImageGalleryActivity extends Activity implements View.OnClickListener{
-
-
-
-
+public class ImageGalleryActivity extends Activity implements View.OnClickListener {
 
 
     private Uri mImageUri;
     private String mImagePath;
 
-    private ImageView  mImageView;
+    private ImageView mImageView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,11 +43,11 @@ public class ImageGalleryActivity extends Activity implements View.OnClickListen
 
         setContentView(R.layout.image_play);
 
-        mImageView =  (ImageView) findViewById(R.id.image);
+        mImageView = (ImageView) findViewById(R.id.image);
 
         //  4.  videoview 的设置
 
-        mImageUri  = getIntent().getData();
+        mImageUri = getIntent().getData();
         mImagePath = getIntent().getStringExtra(Globals.EXTRAS);
 
         Glide.with(this).load(mImageUri).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImageView);
@@ -61,20 +57,22 @@ public class ImageGalleryActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.more_vert) {
-            PopWindowUtils.showPlayVideoMorePopWindow(v,new PopWindowUtils.IPopWindowCallback() {
+        if (v.getId() == R.id.more_vert) {
+            PopWindowUtils.showPlayVideoMorePopWindow(v, new PopWindowUtils.IPopWindowCallback() {
                 @Override
                 public void onShare() {
-                    VideoBean videoBean  = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
-                    if(videoBean  != null) {
+                    VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
+                    if (videoBean != null) {
                         Utils.startShareIntent(videoBean);
+                    } else {
+                        Utils.startShareIntent(mImagePath);
                     }
                 }
 
                 @Override
                 public void launchInstagram() {
-                    VideoBean videoBean  = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
-                    if(videoBean  != null) {
+                    VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
+                    if (videoBean != null) {
                         Utils.openInstagramByUrl(videoBean.appPageUrl);
                     }
 
@@ -82,8 +80,8 @@ public class ImageGalleryActivity extends Activity implements View.OnClickListen
 
                 @Override
                 public void onPastePageUrl() {
-                    VideoBean videoBean  = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
-                    if(videoBean  != null) {
+                    VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
+                    if (videoBean != null) {
                         Utils.copyText2Clipboard(videoBean.appPageUrl);
                     }
                 }

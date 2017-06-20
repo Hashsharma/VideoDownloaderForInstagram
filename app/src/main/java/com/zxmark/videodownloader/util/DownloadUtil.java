@@ -53,18 +53,18 @@ public class DownloadUtil {
         return targetDir;
     }
 
-    public static void openVideo(File file) {
+    public static void openVideo(String filePath) {
 
         Intent intent = new Intent();
-        if (file.getName().endsWith("mp4")) {
+        if (filePath.endsWith("mp4")) {
             intent.setClass(MainApplication.getInstance().getApplicationContext(), VideoPlayActivity.class);
-            intent.putExtra(Globals.EXTRAS,file.getAbsolutePath());
-            intent.setDataAndType(Uri.fromFile(file), "video/mp4");
+            intent.putExtra(Globals.EXTRAS,filePath);
+            intent.setDataAndType(Uri.fromFile(new File(filePath)), "video/mp4");
         } else {
             intent.setClass(MainApplication.getInstance().getApplicationContext(), ImageGalleryActivity.class);
-            intent.setDataAndType(Uri.fromFile(file), "image/*");
+            intent.setDataAndType(Uri.fromFile(new File(filePath)), "image/*");
         }
-        intent.putExtra(Globals.EXTRAS,file.getAbsolutePath());
+        intent.putExtra(Globals.EXTRAS,filePath);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MainApplication.getInstance().startActivity(intent);
     }

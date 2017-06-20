@@ -44,7 +44,7 @@ public class PowerfulDownloader {
 
     private PowerfulDownloader() {
         final int cpuCount = CpuUtils.getNumberOfCPUCores();
-        THREAD_COUNT = cpuCount + 1;
+        THREAD_COUNT =cpuCount +1;
     }
 
 
@@ -72,7 +72,6 @@ public class PowerfulDownloader {
      * 下载文件
      */
     private void download(String fileUrl, String targetPath, int threadNum) {
-        LogUtil.v("download", "fileUrl:" + fileUrl + ":" + threadNum);
         int codeStatus = CODE_OK;
         CountDownLatch latch = new CountDownLatch(threadNum);
         mReadBytesCount = 0;
@@ -90,6 +89,7 @@ public class PowerfulDownloader {
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 // 获取文件大小。
                 int fileSize = conn.getContentLength();
+                LogUtil.e("fileSize","fileUrl="+fileUrl + ":" + targetPath);
                 targetFileSize = fileSize;
                 //得到文件名
                 //根据文件大小及文件名，创建一个同样大小，同样文件名的文件
@@ -104,7 +104,7 @@ public class PowerfulDownloader {
                     //传入线程编号，并开始下载。
                     executorService.execute(new DownloadPartialFileRunnable(threadId, fileSize, block, file, url, latch));
                 }
-                LogUtil.v("download", "wait all downloading thread");
+                LogUtil.e("download", "wait all downloading thread");
                 latch.await();
                 mReadBytesCount = 0;
             }
@@ -125,11 +125,12 @@ public class PowerfulDownloader {
             if (new File(targetPath).length() < targetFileSize) {
                 codeStatus = CODE_DOWNLOAD_FAILED;
             }
+            LogUtil.e("fileSize","fileUrl="+new File(targetPath).length() + ":" + targetFileSize);
             mCallback.onFinish(codeStatus, targetPath);
         }
 
 
-        LogUtil.v("download", "all thread executed finished");
+        LogUtil.e("download", "all thread executed finished");
     }
 
     class DownloadPartialFileRunnable implements Runnable {
@@ -182,7 +183,7 @@ public class PowerfulDownloader {
                         }
                         raf.write(b, 0, len);
                     }
-                    LogUtil.v("download", "线程:" + threadId + ":下载完毕");
+                    LogUtil.e("download", "线程:" + threadId + ":下载完毕");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

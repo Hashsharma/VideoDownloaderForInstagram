@@ -3,6 +3,8 @@ package com.zxmark.videodownloader.bean;
 import com.facebook.ads.NativeAd;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 
+import java.io.File;
+
 /**
  * Created by fanlitao on 17/6/13.
  */
@@ -20,6 +22,8 @@ public class VideoBean {
     public int progress;
 
     public int type;
+
+    public File file;
 
     public NativeAd facebookNativeAd;
 

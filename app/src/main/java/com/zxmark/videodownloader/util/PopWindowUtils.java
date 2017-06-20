@@ -69,6 +69,17 @@ public class PopWindowUtils {
             }
         });
 
+        contentView.findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onShare();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+
         int windowPos[] = calculatePopWindowPos(trigerView, contentView);
 
         float positon  = trigerView.getY() - DimensUtil.dip2px(15) + DimensUtil.dip2px(100);

@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,13 +43,13 @@ import java.util.List;
 
 public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<DownloaderBean> mDataList;
+    private List<VideoBean> mDataList;
     private RequestManager imageLoader;
     private boolean mFullImageState = false;
     private Context mContext;
     private DBHelper mDBHelper;
 
-    public MainListRecyclerAdapter(List<DownloaderBean> dataList, boolean isFullImage) {
+    public MainListRecyclerAdapter(List<VideoBean> dataList, boolean isFullImage) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
         mFullImageState = isFullImage;
@@ -75,32 +76,28 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
-        final DownloaderBean bean = mDataList.get(position);
+        final VideoBean bean = mDataList.get(position);
 
         if (baseHolder instanceof ItemViewHolder) {
             ItemViewHolder holder = (ItemViewHolder) baseHolder;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DownloadUtil.openVideo(bean.file);
+                    DownloadUtil.openVideo(bean.videoPath);
                 }
             });
 
-            final VideoBean videoBean = mDBHelper.getVideoInfoByPath(bean.file.getAbsolutePath());
-            if (videoBean != null) {
-                holder.titleTv.setText(videoBean.pageTitle);
-            } else {
-                holder.titleTv.setText(bean.file.getName());
-            }
+            holder.titleTv.setText(bean.pageTitle);
 
-            holder.playView.setVisibility(MimeTypeUtil.isVideoType(bean.file.getName()) ? View.VISIBLE : View.GONE);
+            holder.playView.setVisibility(MimeTypeUtil.isVideoType(bean.videoPath) ? View.VISIBLE : View.GONE);
             holder.repostView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), bean.file.getAbsolutePath());
+                    ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), bean.videoPath);
                 }
             });
-            imageLoader.load(bean.file).into(holder.thumbnailView);
+
+            imageLoader.load(bean.videoPath).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             holder.moreIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -115,24 +112,21 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void launchAppByUrl() {
-                            if (videoBean != null) {
-                                LogUtil.e("history", "videoBean.appPageURL:" + videoBean.appPageUrl);
-                                Utils.openInstagramByUrl(videoBean.appPageUrl);
+                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
+                                Utils.openInstagramByUrl(bean.appPageUrl);
                             }
                         }
 
                         @Override
                         public void onPasteSharedUrl() {
-                            if (videoBean != null) {
-                                Utils.copyText2Clipboard(videoBean.sharedUrl);
+                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
+                                Utils.copyText2Clipboard(bean.sharedUrl);
                             }
                         }
 
                         @Override
                         public void onShare() {
-                            if (videoBean != null) {
-                                Utils.startShareIntent(videoBean);
-                            }
+                            Utils.startShareIntent(bean.file.getAbsolutePath());
                         }
                     });
                 }

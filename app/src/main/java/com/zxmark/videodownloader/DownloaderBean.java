@@ -12,7 +12,6 @@ import java.io.File;
 public class DownloaderBean {
     public File file;
     public int progress;
-
     public int type;
     public NativeAd facebookNativeAd;
 

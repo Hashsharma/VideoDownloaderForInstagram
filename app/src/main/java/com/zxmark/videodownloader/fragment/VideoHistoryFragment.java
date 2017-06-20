@@ -42,9 +42,11 @@ public class VideoHistoryFragment extends Fragment {
     private Button mDownloadBtn;
     private RecyclerView mListView;
     private LinearLayoutManager mLayoutManager;
-    private List<DownloaderBean> mDataList;
+    private List<VideoBean> mDataList;
     private MainListRecyclerAdapter mAdapter;
     private NativeAd mNativeAd;
+    private boolean mHaveDeletedUselessFiles = false;
+    private VideoBean mAdVideoBean;
 
     public static VideoHistoryFragment newInstance() {
         VideoHistoryFragment fragment = new VideoHistoryFragment();
@@ -87,69 +89,93 @@ public class VideoHistoryFragment extends Fragment {
         File file = DownloadUtil.getHomeDirectory();
         File[] fileArray = file.listFiles();
         final DBHelper dbHelper = DBHelper.getDefault();
-        mDataList = new ArrayList<DownloaderBean>();
+        mDataList = new ArrayList<VideoBean>();
+
         if (fileArray != null && fileArray.length > 0) {
             for (File item : fileArray) {
                 if (dbHelper.isDownloadingByPath(item.getAbsolutePath())) {
                     continue;
                 }
-                DownloaderBean bean = new DownloaderBean();
+                VideoBean bean = dbHelper.getVideoInfoByPath(item.getAbsolutePath());
+                if (bean == null) {
+                    bean = new VideoBean();
+                    bean.videoPath = item.getAbsolutePath();
+                    bean.pageTitle = item.getName();
+                    bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_NORMAL;
+                }
                 bean.file = item;
-                bean.progress = 0;
                 mDataList.add(bean);
             }
             Collections.sort(mDataList, new FileComparator());
         }
+
+        if (mAdVideoBean != null) {
+            if (mDataList.size() > 2) {
+                mDataList.add(2, mAdVideoBean);
+            } else {
+                mDataList.add(mAdVideoBean);
+            }
+        }
         mAdapter = new MainListRecyclerAdapter(mDataList, false);
         mListView.setAdapter(mAdapter);
+        if (!mHaveDeletedUselessFiles) {
+            mHaveDeletedUselessFiles = true;
+            DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+                @Override
+                public void run() {
+                    //TODO:校验所有的下载文件，如果用户已经删除就删掉该文件
 
-        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                //TODO:校验所有的下载文件，如果用户已经删除就删掉该文件
-
-                List<String> dataPaths = dbHelper.getDownloadedVideoList();
-                for (String path : dataPaths) {
-                    if (!new File(path).exists()) {
-                        dbHelper.deleteDownloadingVideo(path);
+                    List<String> dataPaths = dbHelper.getDownloadedVideoList();
+                    for (String path : dataPaths) {
+                        if (!new File(path).exists()) {
+                            dbHelper.deleteDownloadingVideo(path);
+                        }
                     }
-                }
 
-                LogUtil.e("main","all delete video clear");
-            }
-        });
+                    LogUtil.e("main", "all delete video clear");
+                }
+            });
+        }
     }
 
-    public void refreshUI() {
-        initData();
+    public void onAddNewDownloadedFile(String path) {
+        if (mDataList != null) {
+            VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(path);
+            if (videoBean != null) {
+                mDataList.add(0, videoBean);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void showNativeAd() {
-        if (isAdded()) {
-            mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
-            mNativeAd.setAdListener(new AdListener() {
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    LogUtil.v("facebook", "onError:" + adError);
-                }
+        if (mAdVideoBean == null) {
+            if (isAdded()) {
+                mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
+                mNativeAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onError(Ad ad, AdError adError) {
+                        LogUtil.v("facebook", "onError:" + adError);
+                    }
 
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    onFacebookAdLoaded(ad);
-                }
+                    @Override
+                    public void onAdLoaded(Ad ad) {
+                        onFacebookAdLoaded(ad);
+                    }
 
-                @Override
-                public void onAdClicked(Ad ad) {
+                    @Override
+                    public void onAdClicked(Ad ad) {
 
-                }
+                    }
 
-                @Override
-                public void onLoggingImpression(Ad ad) {
+                    @Override
+                    public void onLoggingImpression(Ad ad) {
 
-                }
-            });
+                    }
+                });
 
-            mNativeAd.loadAd();
+                mNativeAd.loadAd();
+            }
         }
     }
 
@@ -164,18 +190,18 @@ public class VideoHistoryFragment extends Fragment {
             return;
         }
 
+        if (mAdVideoBean == null) {
+            VideoBean bean = new VideoBean();
+            bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
+            bean.facebookNativeAd = mNativeAd;
+            if (mDataList.size() > 2) {
+                mDataList.add(2, bean);
+            } else {
+                mDataList.add(bean);
+            }
 
-        DownloaderBean bean = new DownloaderBean();
-        bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
-        bean.facebookNativeAd = mNativeAd;
-        if (mDataList.size() > 2) {
-            mDataList.add(2, bean);
-        } else {
-            mDataList.add(bean);
+            mAdapter.notifyDataSetChanged();
         }
-
-        mAdapter.notifyDataSetChanged();
-
 
     }
 }

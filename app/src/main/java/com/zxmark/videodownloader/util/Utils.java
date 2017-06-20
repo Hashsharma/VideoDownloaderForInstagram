@@ -170,6 +170,22 @@ public class Utils {
         }
     }
 
+    public static void startShareIntent(String filePath) {
+        if (filePath != null) {
+            Intent shareIntent = new Intent(
+                    android.content.Intent.ACTION_SEND);
+            shareIntent.setType(MimeTypeUtil.getMimeTypeByFileName(filePath));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+            shareIntent
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET | Intent.FLAG_ACTIVITY_NEW_TASK);
+            Context context = MainApplication.getInstance().getApplicationContext();
+            Intent chooseIntent = Intent.createChooser(shareIntent,
+                    context.getString(R.string.str_share_this_video));
+            chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(chooseIntent);
+        }
+    }
+
     public static void changeLocale(String ccd) {
         Context context = MainApplication.getInstance();
         Resources resources = context.getResources();
