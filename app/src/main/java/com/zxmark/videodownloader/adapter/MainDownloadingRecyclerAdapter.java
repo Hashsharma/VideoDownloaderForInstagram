@@ -21,6 +21,7 @@ import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.Utils;
 
 import java.io.File;
@@ -106,6 +107,12 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
             });
+
+            if (MimeTypeUtil.isVideoType(bean.downloadVideoUrl)) {
+                holder.playView.setVisibility(View.VISIBLE);
+            } else {
+                holder.playView.setVisibility(View.GONE);
+            }
             imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             holder.titleTv.setText(bean.pageTitle);
         } else if (baseHolder instanceof NativeAdItemHolder) {
@@ -148,7 +155,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 }
             });
 
-            if(mClickedPasteBtn) {
+            if (mClickedPasteBtn) {
                 holder.downloadBtn.setVisibility(View.GONE);
             } else {
                 if (VideoDownloadFactory.getInstance().needShowPasteBtn(Utils.getTextFromClipboard())) {

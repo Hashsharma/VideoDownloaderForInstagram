@@ -16,11 +16,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
  * Created by fanlitao on 17/6/9.
  * <p>
  * 支持多线程同时下载同一个文件，加快文件的下载速度
+ *
+ * 开启多线程下载之后，会导致下载失败率暴涨，为了保证下载成功率，放弃下载速度
+ *
  */
 
 public class PowerfulDownloader {
@@ -30,17 +35,12 @@ public class PowerfulDownloader {
     public static final int CODE_DOWNLOAD_FAILED = -1;
     public volatile static PowerfulDownloader sInstance;
 
-    private static volatile boolean sIntrupted = false;
-
-    private Object mSyncedLocked = new Object();
-
-    private volatile boolean mMutilThreadDownloading = false;
-
-    private boolean mSyncedLockedWaiting = false;
-
-    public int THREAD_COUNT = 5;
+    public int THREAD_COUNT = 1;
 
     private volatile int mReadBytesCount = 0;
+
+    private AtomicBoolean mSepcDownloadThreadError = new AtomicBoolean(false);
+    private AtomicBoolean mInternalErrorInterupted = new AtomicBoolean(false);
     private IPowerfulDownloadCallback mCallback;
 
     private PowerfulDownloader() {
@@ -48,7 +48,7 @@ public class PowerfulDownloader {
         if (cpuCount < 4) {
             cpuCount = 4;
         }
-        THREAD_COUNT = cpuCount;
+        THREAD_COUNT = 1;
     }
 
 
@@ -63,12 +63,12 @@ public class PowerfulDownloader {
 
 
     public void interupted() {
-        sIntrupted = true;
+        mInternalErrorInterupted.set(true);
     }
 
     public void startDownload(String fileUrl, IPowerfulDownloadCallback callback) {
         mCallback = callback;
-        sIntrupted = false;
+
         LogUtil.e("download", "startDownload:" + THREAD_COUNT);
         download(fileUrl, DownloadUtil.getDownloadTargetInfo(fileUrl), THREAD_COUNT);
     }
@@ -82,9 +82,10 @@ public class PowerfulDownloader {
         if (threadNum > 1) {
             latch = new CountDownLatch(threadNum);
         }
+        mSepcDownloadThreadError.set(false);
+        mInternalErrorInterupted.set(false);
         mReadBytesCount = 0;
         HttpURLConnection conn = null;
-        int targetFileSize = 0;
         try {
             //通过下载路径获取连接
             URL url = new URL(fileUrl);
@@ -98,12 +99,10 @@ public class PowerfulDownloader {
                 int fileSize = conn.getContentLength();
                 if (fileSize <= 0) {
                     if (mCallback != null) {
-                        mCallback.onFinish(-2, targetPath);
+                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetPath);
                     }
                     return;
                 }
-                LogUtil.e("fileSize", "fileUrl=" + fileUrl + ":" + fileSize);
-                targetFileSize = fileSize;
                 //得到文件名
                 //根据文件大小及文件名，创建一个同样大小，同样文件名的文件
                 if (threadNum == 1) {
@@ -153,8 +152,10 @@ public class PowerfulDownloader {
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            mSepcDownloadThreadError.set(true);
         } catch (IOException e) {
             e.printStackTrace();
+            mSepcDownloadThreadError.set(true);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -163,94 +164,105 @@ public class PowerfulDownloader {
             }
         }
 
-        if (mCallback != null) {
-            if (new File(targetPath).length() != targetFileSize) {
-                codeStatus = CODE_DOWNLOAD_FAILED;
-                //TODO:经过多线程下载后发现下载大小和服务器返回不一致,用单线程retry一次，保证下载成功率
-                if (threadNum > 1) {
-                    download(fileUrl, targetPath, 1);
+        if (mSepcDownloadThreadError.get()) {
+            LogUtil.e("download", "multi task download error");
+            codeStatus = CODE_DOWNLOAD_FAILED;
+            if (threadNum > 1) {
+                LogUtil.e("download", "single thread retry");
+                download(fileUrl, targetPath, 1);
+                if (!mSepcDownloadThreadError.get()) {
+                    codeStatus = CODE_OK;
+                } else {
+                    LogUtil.e("download", "single thread retry failed");
                 }
-
-
+            } else {
+                LogUtil.e("download", "single thread retry failed");
             }
-            LogUtil.e("fileSize", "fileUrl=" + new File(targetPath).length() + ":" + targetFileSize);
-            mCallback.onFinish(codeStatus, targetPath);
+        } else {
+            LogUtil.e("download", threadNum + " thread download success");
+        }
+
+        if (threadNum == THREAD_COUNT) {
+            if (mCallback != null) {
+                mCallback.onFinish(codeStatus, targetPath);
+            }
+
         }
 
         LogUtil.e("download", "all thread executed finished");
     }
 
-    class DownloadPartialFileRunnable implements Runnable {
-
-        int start, end, threadId;
-        File file = null;
-        URL url = null;
-        CountDownLatch latch;
-        String filePath;
-        int fileSize;
-
-        public DownloadPartialFileRunnable(int threadId, int fileSize, int block, File file, URL url, CountDownLatch latch) {
-            this.threadId = threadId;
-            start = block * threadId;
-            end = block * (threadId + 1) - 1;
-            this.file = file;
-            this.url = url;
-            this.latch = latch;
-            filePath = file.getAbsolutePath();
-            this.fileSize = fileSize;
-        }
-
-        @Override
-        public void run() {
-            HttpURLConnection conn = null;
-            InputStream inputStream = null;
-            try {
-                //获取连接并设置相关属性。
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
-                conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
-                //此步骤是关键。
-                conn.setRequestProperty("Range", "bytes=" + start + "-" + end);
-                int responseCode = conn.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_PARTIAL) {
-                    RandomAccessFile raf = new RandomAccessFile(file, "rw");
-                    //移动指针至该线程负责写入数据的位置。
-                    raf.seek(start);
-                    //读取数据并写入
-                    inputStream = conn.getInputStream();
-                    byte[] b = new byte[1024];
-                    int len = 0;
-                    int lengthPlus = 0;
-                    while ((len = inputStream.read(b)) != -1) {
-                        if (sIntrupted) {
-                            break;
-                        }
-                        lengthPlus += len;
-                        mReadBytesCount += len;
-                        if (mCallback != null) {
-                            mCallback.onProgress(filePath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
-                        }
-                        raf.write(b, 0, len);
-                    }
-                    LogUtil.e("download", "线程:" + threadId + ":" + lengthPlus + ":下载完毕");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                latch.countDown();
-                if (conn != null) {
-                    conn.disconnect();
-                }
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
+//    class DownloadPartialFileRunnable implements Runnable {
+//
+//        int start, end, threadId;
+//        File file = null;
+//        URL url = null;
+//        CountDownLatch latch;
+//        String filePath;
+//        int fileSize;
+//
+//        public DownloadPartialFileRunnable(int threadId, int fileSize, int block, File file, URL url, CountDownLatch latch) {
+//            this.threadId = threadId;
+//            start = block * threadId;
+//            end = block * (threadId + 1) - 1;
+//            this.file = file;
+//            this.url = url;
+//            this.latch = latch;
+//            filePath = file.getAbsolutePath();
+//            this.fileSize = fileSize;
+//        }
+//
+//        @Override
+//        public void run() {
+//            HttpURLConnection conn = null;
+//            InputStream inputStream = null;
+//            try {
+//                //获取连接并设置相关属性。
+//                conn = (HttpURLConnection) url.openConnection();
+//                conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
+//                conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
+//                //此步骤是关键。
+//                conn.setRequestProperty("Range", "bytes=" + start + "-" + end);
+//                int responseCode = conn.getResponseCode();
+//                if (responseCode == HttpURLConnection.HTTP_PARTIAL) {
+//                    RandomAccessFile raf = new RandomAccessFile(file, "rw");
+//                    //移动指针至该线程负责写入数据的位置。
+//                    raf.seek(start);
+//                    //读取数据并写入
+//                    inputStream = conn.getInputStream();
+//                    byte[] b = new byte[1024];
+//                    int len = 0;
+//                    int lengthPlus = 0;
+//                    while ((len = inputStream.read(b)) != -1) {
+//                        if (sIntrupted) {
+//                            break;
+//                        }
+//                        lengthPlus += len;
+//                        mReadBytesCount += len;
+//                        if (mCallback != null) {
+//                            mCallback.onProgress(filePath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
+//                        }
+//                        raf.write(b, 0, len);
+//                    }
+//                    LogUtil.e("download", "线程:" + threadId + ":" + lengthPlus + ":下载完毕");
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//                latch.countDown();
+//                if (conn != null) {
+//                    conn.disconnect();
+//                }
+//                if (inputStream != null) {
+//                    try {
+//                        inputStream.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     //文件下载线程
     class DownloadThread extends Thread {
@@ -293,9 +305,10 @@ public class PowerfulDownloader {
                     int len = 0;
                     int lengthPlus = 0;
                     while ((len = inputStream.read(b)) != -1) {
-                        if (sIntrupted) {
+                        if (mInternalErrorInterupted.get()) {
                             break;
                         }
+
                         lengthPlus += len;
                         mReadBytesCount += len;
                         if (mCallback != null) {
@@ -303,9 +316,12 @@ public class PowerfulDownloader {
                         }
                         raf.write(b, 0, len);
                     }
-                    LogUtil.e("download", "线程:" + threadId + ":" + lengthPlus + ":下载完毕");
+                    LogUtil.e("download", "线程:" + threadId + ":" + lengthPlus + ":download success");
                 }
             } catch (IOException e) {
+                LogUtil.e("download", "线程:" + threadId + ":download failed。error=" + e);
+                mSepcDownloadThreadError.set(true);
+                mInternalErrorInterupted.set(true);
                 e.printStackTrace();
             } finally {
                 latch.countDown();
