@@ -91,6 +91,22 @@ public class MainActivity extends AppCompatActivity
 
         mTabLayout = (TabLayout) findViewById(R.id.slidindg_tabs);
         mTabLayout.setupWithViewPager(mMainViewPager);
+        mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

@@ -86,40 +86,42 @@ public class DownloadingTaskList {
         }
     }
 
-    private void downloadVideo(final String taskId,final WebPageStructuredData data) {
+    private void downloadVideo(final String taskId, final WebPageStructuredData data) {
         if (data.futureVideoList != null && data.futureVideoList.size() > 0) {
             String videoUrl = data.futureVideoList.remove(0);
-                mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
-                PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
-                    @Override
-                    public void onStart(String path) {
+            mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
+            PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                @Override
+                public void onStart(String path) {
 
-                    }
+                }
 
-                    @Override
-                    public void onFinish(int code, String path) {
-                        LogUtil.e("download", "code:" + code);
+                @Override
+                public void onFinish(int code, String path) {
+                    LogUtil.e("download", "code:" + code);
+                    if (code == PowerfulDownloader.CODE_OK) {
                         DBHelper.getDefault().finishDownload(path);
                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, path).sendToTarget();
-
-                        downloadImage(taskId,data);
+                    } else {
+                        DBHelper.getDefault().deleteDownloadingVideo(path);
                     }
+                    downloadImage(taskId, data);
+                }
 
-                    @Override
-                    public void onError(int errorCode) {
+                @Override
+                public void onError(int errorCode) {
+                }
 
-                    }
-
-                    @Override
-                    public void onProgress(String path, int progress) {
-                        Message msg = mHandler.obtainMessage();
-                        msg.what = DownloadService.MSG_UPDATE_PROGRESS;
-                        msg.arg1 = progress;
-                        msg.obj = path;
-                        mHandler.sendMessage(msg);
-                    }
-                });
-            }
+                @Override
+                public void onProgress(String path, int progress) {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = DownloadService.MSG_UPDATE_PROGRESS;
+                    msg.arg1 = progress;
+                    msg.obj = path;
+                    mHandler.sendMessage(msg);
+                }
+            });
+        }
     }
 
     private void downloadImage(final String taskId, final WebPageStructuredData data) {

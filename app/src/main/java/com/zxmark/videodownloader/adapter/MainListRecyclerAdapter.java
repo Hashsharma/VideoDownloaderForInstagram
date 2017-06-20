@@ -88,8 +88,14 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             });
 
             holder.titleTv.setText(bean.pageTitle);
-
-            holder.playView.setVisibility(MimeTypeUtil.isVideoType(bean.videoPath) ? View.VISIBLE : View.GONE);
+            final boolean isVideo = MimeTypeUtil.isVideoType(bean.videoPath);
+            if (isVideo) {
+                imageLoader.load(bean.videoPath).into(holder.thumbnailView);
+                holder.playView.setVisibility(View.VISIBLE);
+            } else {
+                imageLoader.load(bean.videoPath).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+                holder.playView.setVisibility(View.GONE);
+            }
             holder.repostView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,16 +103,16 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
 
-            imageLoader.load(bean.videoPath).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+
             holder.moreIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PopWindowUtils.showVideoMoreOptionWindow(v, new IPopWindowClickCallback() {
                         @Override
                         public void onDelete() {
-                            bean.file.delete();
+                            new File(bean.videoPath).delete();
                             mDataList.remove(bean);
-                            DBHelper.getDefault().deleteDownloadingVideo(bean.file.getAbsolutePath());
+                            DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
                             notifyDataSetChanged();
                         }
 

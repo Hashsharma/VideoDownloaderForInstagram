@@ -17,19 +17,21 @@ public class WebPageStructuredData {
 
 
     public void addVideo(String path) {
-        if(futureVideoList == null) {
+        if (futureVideoList == null) {
             futureVideoList = new ArrayList<>();
         }
-
-        futureVideoList.add(path);
+        if (!futureVideoList.contains(path)) {
+            futureVideoList.add(path);
+        }
     }
 
     public void addImage(String path) {
-        if(futureImageList == null) {
+        if (futureImageList == null) {
             futureImageList = new ArrayList<>();
         }
-
-        futureImageList.add(path);
+        if (!futureImageList.contains(path)) {
+            futureImageList.add(path);
+        }
     }
 
 

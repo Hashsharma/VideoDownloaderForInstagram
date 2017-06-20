@@ -139,11 +139,12 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     public void onAddNewDownloadedFile(String path) {
+        LogUtil.v("main","onAddNewDownloadFile:" +path);
         if (mDataList != null) {
             VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(path);
             if (videoBean != null) {
                 mDataList.add(0, videoBean);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemInserted(0);
             }
         }
     }
