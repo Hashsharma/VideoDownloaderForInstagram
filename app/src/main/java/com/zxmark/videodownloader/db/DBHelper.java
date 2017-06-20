@@ -55,10 +55,6 @@ public class DBHelper {
                     + "video_title TEXT, page_url varchar(512),thumbnail_url varchar(512),video_url varchar(512),app_page_url varchar(512),video_path varchar(512),video_status int default 0"
                     + ");");
 
-//            db.execSQL("CREATE TABLE gif_like (" +
-//                    "_ID INTEGER PRIMARY KEY autoincrement,"
-//                    + "gif_title TEXT, gif_url varchar(255),like_info int"
-//                    + ");");
         } catch (Exception e) {
             e.printStackTrace();
         }

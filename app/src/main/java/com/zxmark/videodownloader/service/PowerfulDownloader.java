@@ -23,9 +23,8 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
  * Created by fanlitao on 17/6/9.
  * <p>
  * 支持多线程同时下载同一个文件，加快文件的下载速度
- *
+ * <p>
  * 开启多线程下载之后，会导致下载失败率暴涨，为了保证下载成功率，放弃下载速度
- *
  */
 
 public class PowerfulDownloader {
@@ -34,6 +33,8 @@ public class PowerfulDownloader {
     public static final int CODE_OK = 0;
     public static final int CODE_DOWNLOAD_FAILED = -1;
     public volatile static PowerfulDownloader sInstance;
+
+    public static final int MAX_RETRY_TIMES = 3;
 
     public int THREAD_COUNT = 1;
 
@@ -70,13 +71,13 @@ public class PowerfulDownloader {
         mCallback = callback;
 
         LogUtil.e("download", "startDownload:" + THREAD_COUNT);
-        download(fileUrl, DownloadUtil.getDownloadTargetInfo(fileUrl), THREAD_COUNT);
+        download(fileUrl, DownloadUtil.getDownloadTargetInfo(fileUrl), THREAD_COUNT, 0, true);
     }
 
     /**
      * 下载文件
      */
-    private void download(String fileUrl, String targetPath, int threadNum) {
+    private void download(String fileUrl, String targetPath, int threadNum, int retryTime, boolean notifyCallback) {
         int codeStatus = CODE_OK;
         CountDownLatch latch = null;
         if (threadNum > 1) {
@@ -117,9 +118,13 @@ public class PowerfulDownloader {
                     byte[] temp;
                     while ((byteCount = fis.read(buffer)) != -1) {
                         // 重点注意这样的写法
+                        if (mInternalErrorInterupted.get()) {
+                            break;
+                        }
                         fos.write(buffer, 0, byteCount);
                         fos.flush();
                         mReadBytesCount += byteCount;
+
                         if (mCallback != null) {
                             mCallback.onProgress(targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                         }
@@ -166,23 +171,16 @@ public class PowerfulDownloader {
 
         if (mSepcDownloadThreadError.get()) {
             LogUtil.e("download", "multi task download error");
-            codeStatus = CODE_DOWNLOAD_FAILED;
-            if (threadNum > 1) {
-                LogUtil.e("download", "single thread retry");
-                download(fileUrl, targetPath, 1);
-                if (!mSepcDownloadThreadError.get()) {
-                    codeStatus = CODE_OK;
-                } else {
-                    LogUtil.e("download", "single thread retry failed");
-                }
-            } else {
-                LogUtil.e("download", "single thread retry failed");
+            if (retryTime <= MAX_RETRY_TIMES) {
+                LogUtil.e("download", "download retry " + retryTime);
+                download(fileUrl, targetPath, threadNum, retryTime++, false);
             }
+
         } else {
             LogUtil.e("download", threadNum + " thread download success");
         }
 
-        if (threadNum == THREAD_COUNT) {
+        if (notifyCallback) {
             if (mCallback != null) {
                 mCallback.onFinish(codeStatus, targetPath);
             }
