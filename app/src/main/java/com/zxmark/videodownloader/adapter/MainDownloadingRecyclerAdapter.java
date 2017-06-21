@@ -2,6 +2,7 @@ package com.zxmark.videodownloader.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.FileUtils;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.Utils;
 
@@ -79,7 +81,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder baseHolder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder baseHolder, final int position) {
         final VideoBean bean = mDataList.get(position);
 
         if (baseHolder instanceof ItemViewHolder) {
@@ -103,7 +105,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     } else if (index == 1) {
                         DownloadUtil.downloadThumbnail(bean.thumbnailUrl);
                     } else if (index == 2) {
-                        deleteDownloadingVideo(bean);
+                        deleteDownloadingVideo(bean, position);
                     }
                 }
             });
@@ -114,7 +116,11 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 holder.playView.setVisibility(View.GONE);
             }
             imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
-            holder.titleTv.setText(bean.pageTitle);
+            if (TextUtils.isEmpty(bean.pageTitle)) {
+                holder.titleTv.setText(FileUtils.getFileNameByPath(bean.videoPath));
+            } else {
+                holder.titleTv.setText(bean.pageTitle);
+            }
         } else if (baseHolder instanceof NativeAdItemHolder) {
             final NativeAdItemHolder holder = (NativeAdItemHolder) baseHolder;
             if (bean.facebookNativeAd != null) {
@@ -168,9 +174,9 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     }
 
-    private void deleteDownloadingVideo(VideoBean bean) {
+    private void deleteDownloadingVideo(VideoBean bean, int positoin) {
         mDataList.remove(bean);
-        notifyDataSetChanged();
+        notifyItemRemoved(positoin);
         DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
         DownloadingTaskList.SINGLETON.intrupted(bean.sharedUrl);
         new File(bean.videoPath).delete();

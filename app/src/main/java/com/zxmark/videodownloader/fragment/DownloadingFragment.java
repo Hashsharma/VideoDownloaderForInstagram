@@ -302,8 +302,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         bean.facebookNativeAd = nativeAd;
 
         mDataList.add(bean);
-        mAdapter.notifyDataSetChanged();
-
+        mAdapter.notifyItemInserted(mDataList.size() - 1);
     }
 
     @Override

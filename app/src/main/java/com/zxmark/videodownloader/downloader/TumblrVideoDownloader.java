@@ -93,12 +93,11 @@ public class TumblrVideoDownloader extends BaseDownloader {
 
             JSONObject rootJsonObj = new JSONObject(content);
             String pageTitle = rootJsonObj.getJSONObject("response").getJSONObject("blog").getString("title");
-            LogUtil.v("json", "pageTitle:" + pageTitle);
             data.pageTitle = pageTitle;
             if (rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).has("video_url")) {
                 videoUrl = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("video_url");
                 String videoThumbnailUrl = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("thumbnail_url");
-               data.pageTitle = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("summary");
+                data.pageTitle = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("summary");
                 LogUtil.e("tumblr", "videoUrl:" + videoUrl);
                 data.videoThumbnailUrl = videoThumbnailUrl;
                 data.addVideo(videoUrl);

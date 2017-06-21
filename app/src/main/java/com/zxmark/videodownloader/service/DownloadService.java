@@ -109,7 +109,7 @@ public class DownloadService extends Service {
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
-                        PowerfulDownloader.getDefault().startDownload(url, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                        PowerfulDownloader.getDefault().startDownload(url,url, new PowerfulDownloader.IPowerfulDownloadCallback() {
                             @Override
                             public void onStart(String path) {
 

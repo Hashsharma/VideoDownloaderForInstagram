@@ -119,7 +119,7 @@ public class Utils {
     public static void sendMyApp() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/html");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getResources().getString(R.string.app_name) + " is very easy tool for downloading ins videos \n https://play.google.com/store/apps/details?id=com.zxmark.videodownloader");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getResources().getString(R.string.app_name) + " is very easy tool for downloading ins videos \n https://play.google.com/store/apps/details?id=com.imobapp.videodownloaderforinstagram");
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent sendIntent = Intent.createChooser(sharingIntent, "Share using");
         sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

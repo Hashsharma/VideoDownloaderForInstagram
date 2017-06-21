@@ -15,6 +15,7 @@ import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.widget.IToast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -80,17 +81,21 @@ public class DownloadingTaskList {
 
 
     public void intrupted(String taskId) {
-        PowerfulDownloader.getDefault().interupted();
-        if (!TextUtils.isEmpty(taskId)) {
-            mFuturedTaskList.remove(taskId);
+        if (TextUtils.isEmpty(taskId)) {
+            return;
         }
+
+        if (taskId.equals(PowerfulDownloader.getDefault().getCurrentDownloadingTaskId())) {
+            PowerfulDownloader.getDefault().interupted();
+        }
+        mFuturedTaskList.remove(taskId);
     }
 
     private void downloadVideo(final String taskId, final WebPageStructuredData data) {
         if (data.futureVideoList != null && data.futureVideoList.size() > 0) {
             String videoUrl = data.futureVideoList.remove(0);
             mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
-            PowerfulDownloader.getDefault().startDownload(videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+            PowerfulDownloader.getDefault().startDownload(taskId, videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
                 @Override
                 public void onStart(String path) {
 
@@ -102,8 +107,11 @@ public class DownloadingTaskList {
                     if (code == PowerfulDownloader.CODE_OK) {
                         DBHelper.getDefault().finishDownload(path);
                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, path).sendToTarget();
-                    } else {
+                    } else if (code == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
                         DBHelper.getDefault().deleteDownloadingVideo(path);
+                    } else if (code == PowerfulDownloader.CODE_DOWNLOAD_CANCELED) {
+                        DBHelper.getDefault().deleteDownloadingVideo(path);
+                        new File(path).delete();
                     }
                     downloadImage(taskId, data);
                 }
@@ -129,7 +137,7 @@ public class DownloadingTaskList {
             String imageUrl = data.futureImageList.remove(0);
             mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(imageUrl)).sendToTarget();
             LogUtil.e("download", imageUrl);
-            PowerfulDownloader.getDefault().startDownload(imageUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+            PowerfulDownloader.getDefault().startDownload(taskId, imageUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
                 @Override
                 public void onStart(String path) {
 
@@ -181,7 +189,7 @@ public class DownloadingTaskList {
                         downloadImage(taskId, cacheData);
                     } else {
                         WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(taskId);
-                        if (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null) {
+                        if (webPageStructuredData != null && (webPageStructuredData.futureImageList != null || webPageStructuredData.futureVideoList != null)) {
                             if (needSaveDB) {
                                 if (webPageStructuredData != null) {
                                     if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {

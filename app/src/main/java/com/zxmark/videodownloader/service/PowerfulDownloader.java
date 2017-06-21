@@ -32,6 +32,7 @@ public class PowerfulDownloader {
 
     public static final int CODE_OK = 0;
     public static final int CODE_DOWNLOAD_FAILED = -1;
+    public static final int CODE_DOWNLOAD_CANCELED = 100;
     public volatile static PowerfulDownloader sInstance;
 
     public static final int MAX_RETRY_TIMES = 3;
@@ -44,11 +45,13 @@ public class PowerfulDownloader {
     private AtomicBoolean mInternalErrorInterupted = new AtomicBoolean(false);
     private IPowerfulDownloadCallback mCallback;
 
+    private String mCurrentTaskId;
+
     private PowerfulDownloader() {
-        int cpuCount = CpuUtils.getNumberOfCPUCores() - 1;
-        if (cpuCount < 4) {
-            cpuCount = 4;
-        }
+//        int cpuCount = CpuUtils.getNumberOfCPUCores() - 1;
+//        if (cpuCount < 4) {
+//            cpuCount = 4;
+//        }
         THREAD_COUNT = 1;
     }
 
@@ -67,9 +70,9 @@ public class PowerfulDownloader {
         mInternalErrorInterupted.set(true);
     }
 
-    public void startDownload(String fileUrl, IPowerfulDownloadCallback callback) {
+    public void startDownload(String taskId, String fileUrl, IPowerfulDownloadCallback callback) {
         mCallback = callback;
-
+        mCurrentTaskId = taskId;
         LogUtil.e("download", "startDownload:" + THREAD_COUNT);
         download(fileUrl, DownloadUtil.getDownloadTargetInfo(fileUrl), THREAD_COUNT, 0, true);
     }
@@ -124,7 +127,6 @@ public class PowerfulDownloader {
                         fos.write(buffer, 0, byteCount);
                         fos.flush();
                         mReadBytesCount += byteCount;
-
                         if (mCallback != null) {
                             mCallback.onProgress(targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                         }
@@ -182,12 +184,19 @@ public class PowerfulDownloader {
 
         if (notifyCallback) {
             if (mCallback != null) {
+                if (mInternalErrorInterupted.get()) {
+                    codeStatus = CODE_DOWNLOAD_CANCELED;
+                }
                 mCallback.onFinish(codeStatus, targetPath);
             }
 
         }
-
+        mCurrentTaskId = null;
         LogUtil.e("download", "all thread executed finished");
+    }
+
+    public String getCurrentDownloadingTaskId() {
+        return mCurrentTaskId;
     }
 
 //    class DownloadPartialFileRunnable implements Runnable {
