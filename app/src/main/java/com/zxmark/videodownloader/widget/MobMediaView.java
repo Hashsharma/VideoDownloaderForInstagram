@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.imobapp.videodownloaderforinstagram.R;
+import com.zxmark.videodownloader.component.PinchImageView;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 
@@ -32,7 +33,7 @@ public class MobMediaView extends FrameLayout {
     private View mContentView;
     private String mMediaSource;
 
-    private ImageView mImageView;
+    private PinchImageView mImageView;
     private VideoView mVideoView;
     private View mVideoIcon;
 
@@ -51,7 +52,7 @@ public class MobMediaView extends FrameLayout {
         addView(mContentView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mImageLoader = Glide.with(context);
 
-        mImageView = (ImageView) mContentView.findViewById(R.id.imageView);
+        mImageView = (PinchImageView) mContentView.findViewById(R.id.imageView);
         mVideoIcon = mContentView.findViewById(R.id.video_flag);
         LogUtil.e("view", "mImageView=" + mImageView);
 
@@ -90,6 +91,7 @@ public class MobMediaView extends FrameLayout {
                 mVideoView.setVisibility(View.GONE);
             }
             if (mImageView != null) {
+                mImageView.reset();
                 mImageLoader.load(mMediaSource).diskCacheStrategy(DiskCacheStrategy.RESULT).into(mImageView);
             }
         }
