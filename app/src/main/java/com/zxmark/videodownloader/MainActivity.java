@@ -36,6 +36,7 @@ import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
+import com.zxmark.videodownloader.main.GalleryPagerActivity;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
@@ -176,7 +177,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            Utils.openInstagram();
+          //  Utils.openInstagram();
+            Intent intent = new Intent(this, GalleryPagerActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_gallery) {
             if (mViewPagerAdapter.getDownloadingFragment() != null) {
                 mViewPagerAdapter.getDownloadingFragment().showHotToInfo();

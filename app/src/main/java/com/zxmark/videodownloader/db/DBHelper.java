@@ -220,6 +220,26 @@ public class DBHelper {
         }
     }
 
+    public List<VideoBean> getDownloadedVideoBeanList() {
+        Cursor cursor = db.query("downloading_table", null,null, null, null, null, "_ID desc");
+        try {
+            List<VideoBean> dataList = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                String  videoPath = cursor.getString(6);
+                int status= cursor.getInt(7);
+                VideoBean bean = new VideoBean();
+                bean.videoPath = videoPath;
+                LogUtil.e("pager",status + ":" + videoPath);
+                dataList.add(bean);
+            }
+            return dataList;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public boolean isDownloadingByPath(String path) {
         LogUtil.v("sd", "bean.getVideoInfoByPath=" + path);
         Cursor cursor = db.query("downloading_table", null, "video_path = ?", new String[]{path}, null, null, "_ID desc");
