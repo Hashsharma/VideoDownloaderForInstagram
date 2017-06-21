@@ -28,6 +28,7 @@ import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.Globals;
@@ -105,18 +106,34 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 false);
         mListView.setLayoutManager(mLayoutManager);
 
-        mDataList = DBHelper.getDefault().getDownloadingList();
-        VideoBean headerBean = new VideoBean();
-        headerBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HEAD;
-        mDataList.add(0, headerBean);
-        if (PreferenceUtils.isFirstRunMainFragment()) {
-            isShowHowToPage = true;
-            mHowToBean = new VideoBean();
-            mHowToBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HOW_TO;
-            mDataList.add(mHowToBean);
-        }
-        mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true, this);
-        mListView.setAdapter(mAdapter);
+
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDataList = DBHelper.getDefault().getDownloadingList();
+                VideoBean headerBean = new VideoBean();
+                headerBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HEAD;
+                mDataList.add(0, headerBean);
+                if (PreferenceUtils.isFirstRunMainFragment()) {
+                    isShowHowToPage = true;
+                    mHowToBean = new VideoBean();
+                    mHowToBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_HOW_TO;
+                    mDataList.add(mHowToBean);
+                }
+
+                if(isAdded()) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true, DownloadingFragment.this);
+                            mListView.setAdapter(mAdapter);
+                        }
+                    });
+                }
+            }
+        });
+
+
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
             receiveSendAction(mReceiveUrlParams);
         }
@@ -257,7 +274,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     private void showNativeAd() {
         if (isAdded()) {
-
             nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
             nativeAd.setAdListener(new AdListener() {
                 @Override
@@ -300,7 +316,9 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         VideoBean bean = new VideoBean();
         bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
         bean.facebookNativeAd = nativeAd;
-
+        if(mDataList == null) {
+            return;
+        }
         mDataList.add(bean);
         mAdapter.notifyItemInserted(mDataList.size() - 1);
     }

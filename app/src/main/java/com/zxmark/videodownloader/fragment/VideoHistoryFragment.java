@@ -85,61 +85,76 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void initData() {
-        showNativeAd();
-        File file = DownloadUtil.getHomeDirectory();
-        File[] fileArray = file.listFiles();
-        final DBHelper dbHelper = DBHelper.getDefault();
-        mDataList = new ArrayList<VideoBean>();
 
-        if (fileArray != null && fileArray.length > 0) {
-            for (File item : fileArray) {
-                if (dbHelper.isDownloadingByPath(item.getAbsolutePath())) {
-                    continue;
-                }
-                VideoBean bean = dbHelper.getVideoInfoByPath(item.getAbsolutePath());
-                if (bean == null) {
-                    bean = new VideoBean();
-                    bean.videoPath = item.getAbsolutePath();
-                    bean.pageTitle = item.getName();
-                    bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_NORMAL;
-                }
-                bean.file = item;
-                mDataList.add(bean);
-            }
-            Collections.sort(mDataList, new FileComparator());
-        }
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
 
-        if (mAdVideoBean != null) {
-            if (mDataList.size() > 2) {
-                mDataList.add(2, mAdVideoBean);
-            } else {
-                mDataList.add(mAdVideoBean);
-            }
-        }
-        mAdapter = new MainListRecyclerAdapter(mDataList, false);
-        mListView.setAdapter(mAdapter);
-        if (!mHaveDeletedUselessFiles) {
-            mHaveDeletedUselessFiles = true;
-            DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
-                @Override
-                public void run() {
-                    //TODO:校验所有的下载文件，如果用户已经删除就删掉该文件
+                mDataList = new ArrayList<VideoBean>();
+                File file = DownloadUtil.getHomeDirectory();
+                File[] fileArray = file.listFiles();
+                final DBHelper dbHelper = DBHelper.getDefault();
 
-                    List<String> dataPaths = dbHelper.getDownloadedVideoList();
-                    for (String path : dataPaths) {
-                        if (!new File(path).exists()) {
-                            dbHelper.deleteDownloadingVideo(path);
+                if (fileArray != null && fileArray.length > 0) {
+                    for (File item : fileArray) {
+                        if (dbHelper.isDownloadingByPath(item.getAbsolutePath())) {
+                            continue;
                         }
+                        VideoBean bean = dbHelper.getVideoInfoByPath(item.getAbsolutePath());
+                        if (bean == null) {
+                            bean = new VideoBean();
+                            bean.videoPath = item.getAbsolutePath();
+                            bean.pageTitle = item.getName();
+                            bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_NORMAL;
+                        }
+                        bean.file = item;
+                        mDataList.add(bean);
                     }
-
-                    LogUtil.e("main", "all delete video clear");
+                    Collections.sort(mDataList, new FileComparator());
                 }
-            });
-        }
+
+                if (mAdVideoBean != null) {
+                    if (mDataList.size() > 2) {
+                        mDataList.add(2, mAdVideoBean);
+                    } else {
+                        mDataList.add(mAdVideoBean);
+                    }
+                }
+
+                if (isAdded()) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter = new MainListRecyclerAdapter(mDataList, false);
+                            mListView.setAdapter(mAdapter);
+                            if (!mHaveDeletedUselessFiles) {
+                                mHaveDeletedUselessFiles = true;
+                                DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //TODO:校验所有的下载文件，如果用户已经删除就删掉该文件
+
+                                        List<String> dataPaths = dbHelper.getDownloadedVideoList();
+                                        for (String path : dataPaths) {
+                                            if (!new File(path).exists()) {
+                                                dbHelper.deleteDownloadingVideo(path);
+                                            }
+                                        }
+
+                                        LogUtil.e("main", "all delete video clear");
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
     }
 
     public void onAddNewDownloadedFile(String path) {
-        LogUtil.v("main","onAddNewDownloadFile:" +path);
+        LogUtil.v("main", "onAddNewDownloadFile:" + path);
         if (mDataList != null) {
             VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(path);
             if (videoBean != null) {
@@ -195,13 +210,17 @@ public class VideoHistoryFragment extends Fragment {
             VideoBean bean = new VideoBean();
             bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
             bean.facebookNativeAd = mNativeAd;
-            if (mDataList.size() > 2) {
-                mDataList.add(2, bean);
-            } else {
-                mDataList.add(bean);
-            }
+            if (mDataList != null) {
+                if (mDataList.size() > 2) {
+                    mDataList.add(2, bean);
+                } else {
+                    mDataList.add(bean);
+                }
 
-            mAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
+            } else {
+
+            }
         }
 
     }
