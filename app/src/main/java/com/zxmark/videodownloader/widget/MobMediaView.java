@@ -2,14 +2,11 @@ package com.zxmark.videodownloader.widget;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.VideoView;
 
@@ -21,14 +18,15 @@ import com.zxmark.videodownloader.component.PinchImageView;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 
-import java.io.File;
-
 /**
  * Created by fanlitao on 6/21/17.
  */
 
 public class MobMediaView extends FrameLayout {
 
+
+    public static final String TYPE_AD = "IMobAppAD";
+    public static final String TYPE_RECOMMEND = "IMobAppRecommend";
 
     private View mContentView;
     private String mMediaSource;
