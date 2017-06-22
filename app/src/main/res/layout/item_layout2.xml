@@ -88,7 +88,7 @@
                 android:layout_margin="@dimen/fab_margin"
                 android:background="@drawable/float_action_btn"
                 android:padding="10dip"
-                android:src="@drawable/ic_add_white_48dp" />
+                android:src="@drawable/ic_file_download_black_48dp" />
 
         </FrameLayout>
 

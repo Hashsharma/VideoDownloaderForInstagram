@@ -4,18 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.zxmark.videodownloader.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:titleTextColor="@android:color/black"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:titleTextAppearance="@style/Toolbar.TitleText"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
 
 
@@ -24,7 +28,7 @@
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_gravity="end"
-                android:src="@drawable/instagram_white"
+                android:src="@drawable/ins_icon"
                 android:layout_marginRight="10dip"
                 />
 

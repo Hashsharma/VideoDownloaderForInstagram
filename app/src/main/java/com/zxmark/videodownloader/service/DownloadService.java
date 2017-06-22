@@ -74,7 +74,7 @@ public class DownloadService extends Service {
                 }
             } else if (msg.what == MSG_DOWNLOAD_START) {
 //                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-//                    IToast.makeText(DownloadService.this,R.string.download_result_start, Toast.LENGTH_SHORT).show();
+                      IToast.makeText(DownloadService.this,R.string.download_result_start, Toast.LENGTH_SHORT).show();
 //                }
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
@@ -137,7 +137,7 @@ public class DownloadService extends Service {
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
-                LogUtil.e("main","DownloadService.showFloatView:");
+                LogUtil.e("main","DownloadService.showFloatView:" + showFloatView);
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
