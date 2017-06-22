@@ -155,9 +155,17 @@ public class LearningDownloader {
         LogUtil.e("download", targetLength + ":" + new File(targetPath).length());
 
         if (targetLength != new File(targetPath).length()) {
-            LogUtil.e(TAG,"multi task download file size different");
-           boolean result =  startDownloadBySingleThread(fileUrl, targetPath);
-            if(!result) {
+            LogUtil.e(TAG, "multi task download file size different");
+            int retrySingleTimes = 0;
+            boolean finalResult = false;
+            while (retrySingleTimes < MAX_RETRY_TIMES) {
+                boolean result = startDownloadBySingleThread(fileUrl, targetPath);
+                finalResult = result;
+                if(result) {
+                    break;
+                }
+            }
+            if (!finalResult) {
                 codeStatus = CODE_DOWNLOAD_FAILED;
             }
         }
@@ -252,7 +260,7 @@ public class LearningDownloader {
                 int byteCount;
                 FileOutputStream fos = new FileOutputStream(targetFile);
                 byte[] temp;
-
+                mReadBytesCount = 0;
                 String targetPath = targetFile.getAbsolutePath();
                 while ((byteCount = fis.read(buffer)) != -1) {
                     // 重点注意这样的写法
