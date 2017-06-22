@@ -10,6 +10,7 @@ import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.service.DownloadService;
+import com.zxmark.videodownloader.service.LearningDownloader;
 import com.zxmark.videodownloader.service.PowerfulDownloader;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
@@ -85,8 +86,8 @@ public class DownloadingTaskList {
             return;
         }
 
-        if (taskId.equals(PowerfulDownloader.getDefault().getCurrentDownloadingTaskId())) {
-            PowerfulDownloader.getDefault().interupted();
+        if (taskId.equals(LearningDownloader.getDefault().getCurrentDownloadingTaskId())) {
+            LearningDownloader.getDefault().interupted();
         }
         mFuturedTaskList.remove(taskId);
     }
@@ -95,7 +96,7 @@ public class DownloadingTaskList {
         if (data.futureVideoList != null && data.futureVideoList.size() > 0) {
             String videoUrl = data.futureVideoList.remove(0);
             mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(videoUrl)).sendToTarget();
-            PowerfulDownloader.getDefault().startDownload(taskId, videoUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+            LearningDownloader.getDefault().startDownload(taskId, videoUrl, new LearningDownloader.IPowerfulDownloadCallback() {
                 @Override
                 public void onStart(String path) {
 
@@ -113,7 +114,7 @@ public class DownloadingTaskList {
                         DBHelper.getDefault().deleteDownloadingVideo(path);
                         new File(path).delete();
                     }
-                    downloadImage(taskId, data);
+                    downloadVideo(taskId, data);
                 }
 
                 @Override
@@ -137,7 +138,7 @@ public class DownloadingTaskList {
             String imageUrl = data.futureImageList.remove(0);
             mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, DownloadUtil.getDownloadTargetInfo(imageUrl)).sendToTarget();
             LogUtil.e("download", imageUrl);
-            PowerfulDownloader.getDefault().startDownload(taskId, imageUrl, new PowerfulDownloader.IPowerfulDownloadCallback() {
+            LearningDownloader.getDefault().startDownload(taskId, imageUrl, new LearningDownloader.IPowerfulDownloadCallback() {
                 @Override
                 public void onStart(String path) {
 
