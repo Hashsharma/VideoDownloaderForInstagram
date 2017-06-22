@@ -58,13 +58,13 @@ public class DownloadUtil {
         Intent intent = new Intent();
         if (filePath.endsWith("mp4")) {
             intent.setClass(MainApplication.getInstance().getApplicationContext(), VideoPlayActivity.class);
-            intent.putExtra(Globals.EXTRAS,filePath);
+            intent.putExtra(Globals.EXTRAS, filePath);
             intent.setDataAndType(Uri.fromFile(new File(filePath)), "video/mp4");
         } else {
             intent.setClass(MainApplication.getInstance().getApplicationContext(), ImageGalleryActivity.class);
             intent.setDataAndType(Uri.fromFile(new File(filePath)), "image/*");
         }
-        intent.putExtra(Globals.EXTRAS,filePath);
+        intent.putExtra(Globals.EXTRAS, filePath);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MainApplication.getInstance().startActivity(intent);
     }
@@ -89,10 +89,8 @@ public class DownloadUtil {
     }
 
     public static void showFloatView() {
-        if (!ActivityManagerUtils.isTopActivity(MainApplication.getInstance().getApplicationContext())) {
-            FloatViewManager manager = FloatViewManager.getDefault();
-            manager.showFloatView();
-        }
+        FloatViewManager manager = FloatViewManager.getDefault();
+        manager.showFloatView();
     }
 
 }

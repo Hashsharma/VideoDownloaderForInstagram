@@ -48,10 +48,6 @@ public class TLRequestParserService extends Service {
                 }
                 String handledUrl = URLMatcher.getHttpURL(pasteContent);
                 if (VideoDownloadFactory.getInstance().isSupportWeb(handledUrl)) {
-                    if (DBHelper.getDefault().isDownloadedPage(handledUrl)) {
-                        LogUtil.e("TLS","isDownloadedPageUrl=" + handledUrl);
-                        return;
-                    }
                     DownloadUtil.startRequest(handledUrl);
                 }
             }

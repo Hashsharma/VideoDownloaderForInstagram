@@ -54,6 +54,7 @@ public class DownloadService extends Service {
     public static final int MSG_DOWNLOAD_ERROR = 1;
     public static final int MSG_DOWNLOAD_START = 2;
     public static final int MSG_UPDATE_PROGRESS = 3;
+    public static final int MSG_NOTIFY_DOWNLOADED = 4;
 
 
     final RemoteCallbackList<IDownloadCallback> mCallbacks = new RemoteCallbackList<IDownloadCallback>();
@@ -63,22 +64,20 @@ public class DownloadService extends Service {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
-//                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-//                    IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
-//                }
-                //FloatViewManager.getDefault().dismissFloatView();
                 DownloadService.this.notifyDownloadFinished((String) msg.obj);
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    IToast.makeText(DownloadService.this,R.string.download_failed, Toast.LENGTH_SHORT).show();
+                    IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
                 }
             } else if (msg.what == MSG_DOWNLOAD_START) {
 //                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                      IToast.makeText(DownloadService.this,R.string.download_result_start, Toast.LENGTH_SHORT).show();
+                IToast.makeText(DownloadService.this, R.string.download_result_start, Toast.LENGTH_SHORT).show();
 //                }
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg1);
+            } else if (msg.what == MSG_NOTIFY_DOWNLOADED) {
+                IToast.makeText(DownloadService.this, R.string.toast_downlaoded_video, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -87,10 +86,8 @@ public class DownloadService extends Service {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    FloatViewManager manager = FloatViewManager.getDefault();
-                    manager.showFloatView();
-                }
+                FloatViewManager manager = FloatViewManager.getDefault();
+                manager.showFloatView();
             }
         });
 
@@ -109,7 +106,7 @@ public class DownloadService extends Service {
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
-                        PowerfulDownloader.getDefault().startDownload(url,url, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                        PowerfulDownloader.getDefault().startDownload(url, url, new PowerfulDownloader.IPowerfulDownloadCallback() {
                             @Override
                             public void onStart(String path) {
 
@@ -137,10 +134,15 @@ public class DownloadService extends Service {
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
-                LogUtil.e("main","DownloadService.showFloatView:" + showFloatView);
+                LogUtil.e("main", "DownloadService.showFloatView:" + showFloatView);
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
+                        if (DBHelper.getDefault().isDownloadedPage(url)) {
+                            LogUtil.e("main","isDownloaded");
+                            mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
+                            return;
+                        }
                         WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
                         if (webPageStructuredData != null) {
                             if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
@@ -148,9 +150,9 @@ public class DownloadService extends Service {
                                     showFloatView();
                                 }
 
-                                for(String videoUrl : webPageStructuredData.futureVideoList) {
+                                for (String videoUrl : webPageStructuredData.futureVideoList) {
                                     final String videoPath = DownloadUtil.getDownloadTargetInfo(videoUrl);
-                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.videoThumbnailUrl,videoUrl, webPageStructuredData.appPageUrl,videoPath);
+                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.videoThumbnailUrl, videoUrl, webPageStructuredData.appPageUrl, videoPath);
                                     mHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
@@ -165,9 +167,9 @@ public class DownloadService extends Service {
                                     showFloatView();
                                 }
 
-                                for(String imageUrl : webPageStructuredData.futureImageList) {
-                                    final String imagePath =  DownloadUtil.getDownloadTargetInfo(imageUrl);
-                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, imageUrl, imageUrl, webPageStructuredData.appPageUrl,imagePath);
+                                for (String imageUrl : webPageStructuredData.futureImageList) {
+                                    final String imagePath = DownloadUtil.getDownloadTargetInfo(imageUrl);
+                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, imageUrl, imageUrl, webPageStructuredData.appPageUrl, imagePath);
                                     mHandler.post(new Runnable() {
                                         @Override
                                         public void run() {

@@ -92,6 +92,7 @@ public class LearningDownloader {
         mReadBytesCount = 0;
         HttpURLConnection conn = null;
         boolean firstRequestFailed = false;
+        int targetLength = 0;
         try {
             //通过下载路径获取连接
             URL url = new URL(fileUrl);
@@ -103,6 +104,7 @@ public class LearningDownloader {
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 // 获取文件大小。
                 int fileSize = conn.getContentLength();
+                targetLength = fileSize;
                 if (fileSize <= 0) {
                     if (mCallback != null) {
                         mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetPath);
@@ -125,14 +127,9 @@ public class LearningDownloader {
                     latch.await();
                 }
             }
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-            LogUtil.e("download", "IOException:" + e.getMessage());
             firstRequestFailed = true;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } finally {
             if (conn != null) {
                 conn.disconnect();
@@ -145,7 +142,6 @@ public class LearningDownloader {
                 codeStatus = CODE_DOWNLOAD_CANCELED;
             }
         } else {
-
             if (firstRequestFailed) {
                 codeStatus = CODE_DOWNLOAD_FAILED;
             } else {
@@ -156,11 +152,9 @@ public class LearningDownloader {
             }
         }
 
-
+        LogUtil.e("download",targetLength + ":" + new File(targetPath).length());
         if (notifyCallback) {
             if (mCallback != null) {
-
-
                 mCallback.onFinish(codeStatus, targetPath);
             }
 

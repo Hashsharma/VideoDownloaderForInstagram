@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -106,7 +107,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
                 false);
         mListView.setLayoutManager(mLayoutManager);
-
+        mListView.setItemAnimator(new DefaultItemAnimator());
 
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
