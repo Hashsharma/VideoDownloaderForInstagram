@@ -67,6 +67,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private RequestManager mGlide;
 
 
+
     public static DownloadingFragment newInstance(String params) {
         DownloadingFragment fragment = new DownloadingFragment();
         fragment.mReceiveUrlParams = params;
@@ -232,7 +233,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(path);
             if (videoBean != null) {
                 mDataList.add(1, videoBean);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemInserted(1);
             }
         }
     }
@@ -319,13 +320,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (mDataList == null) {
             return;
         }
-        LogUtil.e("main", "showAd");
-        mDataList.add(bean);
-        if (mDataList.size() >= 2) {
-            mAdapter.notifyItemInserted(mDataList.size() - 2);
-        } else {
-            mAdapter.notifyItemInserted(0);
-        }
+        mDataList.add(1,bean);
+        mAdapter.notifyItemInserted(1);
     }
 
     @Override

@@ -117,9 +117,10 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             }
             imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             if (TextUtils.isEmpty(bean.pageTitle)) {
-                holder.titleTv.setText(FileUtils.getFileNameByPath(bean.videoPath));
+                holder.titleTv.setVisibility(View.GONE);
             } else {
                 holder.titleTv.setText(bean.pageTitle);
+                holder.titleTv.setVisibility(View.VISIBLE);
             }
         } else if (baseHolder instanceof NativeAdItemHolder) {
             final NativeAdItemHolder holder = (NativeAdItemHolder) baseHolder;

@@ -65,7 +65,7 @@ public class LearningDownloader {
 
 
     public void interupted() {
-        LogUtil.e(TAG,"interrupted");
+        LogUtil.e(TAG, "interrupted");
         mInternalErrorInterupted.set(true);
     }
 
@@ -91,6 +91,7 @@ public class LearningDownloader {
         mInternalErrorInterupted.set(false);
         mReadBytesCount = 0;
         HttpURLConnection conn = null;
+        boolean firstRequestFailed = false;
         try {
             //通过下载路径获取连接
             URL url = new URL(fileUrl);
@@ -128,6 +129,8 @@ public class LearningDownloader {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            LogUtil.e("download", "IOException:" + e.getMessage());
+            firstRequestFailed = true;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -136,20 +139,28 @@ public class LearningDownloader {
             }
         }
 
-        LogUtil.e(TAG,"internalErrorIntruppted:" + mInternalErrorInterupted.get());
+        LogUtil.e(TAG, "internalErrorIntruppted:" + mInternalErrorInterupted.get());
         if (mInternalErrorInterupted.get()) {
             if (mInternalErrorInterupted.get()) {
                 codeStatus = CODE_DOWNLOAD_CANCELED;
             }
         } else {
-            retryLearningDownload(1);
-            if (mDownloadingTaskMap.size() > 0) {
+
+            if (firstRequestFailed) {
                 codeStatus = CODE_DOWNLOAD_FAILED;
+            } else {
+                retryLearningDownload(1);
+                if (mDownloadingTaskMap.size() > 0) {
+                    codeStatus = CODE_DOWNLOAD_FAILED;
+                }
             }
         }
 
+
         if (notifyCallback) {
             if (mCallback != null) {
+
+
                 mCallback.onFinish(codeStatus, targetPath);
             }
 

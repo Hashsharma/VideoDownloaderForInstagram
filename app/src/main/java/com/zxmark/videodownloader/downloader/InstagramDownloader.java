@@ -100,21 +100,49 @@ public class InstagramDownloader extends BaseDownloader {
         return null;
     }
 
-    public List<String> getPageHashTags(String content) {
+    public String getDescription(String content) {
+
+        String regex;
+        String pageDesc = "";
+        regex = "\"node\": \\{\"text\": \"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+
+        if (ma.find()) {
+            Log.v("fan2", "" + ma.group());
+            pageDesc = ma.group(1);
+            LogUtil.e("ins", "pageDescritpin:" + pageDesc);
+        }
+
+        if (!TextUtils.isEmpty(pageDesc)) {
+            String array[] = pageDesc.split("Instagram:");
+            if (array != null) {
+                String originTitle = array[array.length - 1];
+                originTitle = originTitle.replace("“", "");
+                originTitle = originTitle.replace("”", "");
+                return originTitle;
+            }
+        }
+        return null;
+    }
+
+    public String getPageHashTags(String content) {
         String regex;
         String hashTags = "";
         regex = "<meta property=\"instapp:hashtags\" content=\"(.*?)\"";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
-        List<String> hashTagsList = new ArrayList<String>();
+        StringBuilder hashTagsBuilder = new StringBuilder();
         while (ma.find()) {
             Log.v("fan2", "" + ma.group());
             hashTags = ma.group(1);
             LogUtil.e("ins", "hashTags=" + hashTags);
-            hashTagsList.add(hashTags);
+            hashTagsBuilder.append("#");
+            hashTagsBuilder.append(hashTags);
+
         }
 
-        return hashTagsList;
+        return hashTagsBuilder.toString();
     }
 
     public void getImageUrlFromJs(String content, WebPageStructuredData data) {
@@ -154,18 +182,18 @@ public class InstagramDownloader extends BaseDownloader {
 
     public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
-        getPageHashTags(content);
         WebPageStructuredData data = new WebPageStructuredData();
         getVideoUrlFromJs(content, data);
-        if(data.futureVideoList !=null) {
+        if (data.futureVideoList != null) {
             data.videoThumbnailUrl = getImageUrl(content);
         }
         getImageUrlFromJs(content, data);
 
         String title = getPageTitle(content);
         data.pageTitle = title;
+        data.pageDesc = getDescription(content);
         data.appPageUrl = getLaunchInstagramUrl(content);
-
+        data.hashTags = getPageHashTags(content);
         if (data.futureImageList == null && data.futureVideoList == null) {
             return null;
         }

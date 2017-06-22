@@ -54,7 +54,7 @@
             android:layout_marginLeft="110dip"
             android:layout_marginRight="15dip"
             android:layout_marginTop="15dip"
-            android:fontFamily=""
+            android:fontFamily="sans-serif-medium"
             android:maxLines="2"
             android:textColor="@android:color/black"
             android:textSize="14dip" />
