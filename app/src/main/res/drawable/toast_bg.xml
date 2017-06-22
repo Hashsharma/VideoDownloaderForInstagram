@@ -9,5 +9,5 @@
         android:topLeftRadius="20dip"
         android:topRightRadius="20dip" />
     <!-- 边框 -->
-    <solid android:color="@color/toast_bg_color" />
+    <solid android:color="@android:color/white" />
 </shape>
