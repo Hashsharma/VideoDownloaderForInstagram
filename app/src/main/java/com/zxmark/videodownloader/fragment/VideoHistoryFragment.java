@@ -89,7 +89,6 @@ public class VideoHistoryFragment extends Fragment {
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
-
                 mDataList = new ArrayList<VideoBean>();
                 File file = DownloadUtil.getHomeDirectory();
                 File[] fileArray = file.listFiles();
@@ -127,6 +126,7 @@ public class VideoHistoryFragment extends Fragment {
                         public void run() {
                             mAdapter = new MainListRecyclerAdapter(mDataList, false);
                             mListView.setAdapter(mAdapter);
+                            showNativeAd();
                             if (!mHaveDeletedUselessFiles) {
                                 mHaveDeletedUselessFiles = true;
                                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
@@ -160,6 +160,7 @@ public class VideoHistoryFragment extends Fragment {
             if (videoBean != null) {
                 mDataList.add(0, videoBean);
                 mAdapter.notifyItemInserted(0);
+                mListView.smoothScrollToPosition(0);
             }
         }
     }

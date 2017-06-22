@@ -117,66 +117,51 @@ public class InstagramDownloader extends BaseDownloader {
         return hashTagsList;
     }
 
-    public List<String> getImageUrlFromJs(String content) {
+    public void getImageUrlFromJs(String content, WebPageStructuredData data) {
         String regex;
         String imageUrl = "";
         regex = "\"display_url\": \"(.*?)\"";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
-        List<String> imageList = new ArrayList<>();
         while (ma.find()) {
             imageUrl = ma.group(1);
             if (!TextUtils.isEmpty(imageUrl)) {
                 if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
                     String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
                     imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
-                    if (!imageList.contains(imageUrl)) {
-                        LogUtil.e("ins","display_url=" + imageUrl);
-                        imageList.add(imageUrl);
-                    }
+                    LogUtil.e("ins", "display_url=" + imageUrl);
+                    data.addImage(imageUrl);
+                } else {
+                    LogUtil.e("ins", "display_url=" + imageUrl);
+                    data.addImage(imageUrl);
                 }
             }
         }
-
-        return imageList;
     }
 
-    public void getVideoUrlFromJs(String content,WebPageStructuredData data) {
+    public void getVideoUrlFromJs(String content, WebPageStructuredData data) {
         String regex;
         String imageUrl = "";
         regex = "\"video_url\": \"(.*?)\"";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
-        List<String> imageList = new ArrayList<>();
         while (ma.find()) {
             imageUrl = ma.group(1);
-            LogUtil.e("ins","video_url=" + imageUrl);
-            if(!imageList.contains(imageUrl)) {
-                imageList.add(imageUrl);
-                data.addVideo(imageUrl);
-            }
+            data.addVideo(imageUrl);
         }
 
     }
 
     public WebPageStructuredData startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
-        String videoUrl = getVideoUrl(content);
         getPageHashTags(content);
         WebPageStructuredData data = new WebPageStructuredData();
-        if (TextUtils.isEmpty(videoUrl)) {
-            List<String> imageList = getImageUrlFromJs(content);
-            if (imageList.size() == 0) {
-                data.addImage(getImageUrl(content));
-            } else {
-                data.futureImageList = imageList;
-            }
-        } else {
-            data.addVideo(videoUrl);
+        getVideoUrlFromJs(content, data);
+        if(data.futureVideoList !=null) {
+            data.videoThumbnailUrl = getImageUrl(content);
         }
+        getImageUrlFromJs(content, data);
 
-        getVideoUrlFromJs(content,data);
-        data.videoThumbnailUrl = getImageUrl(content);
         String title = getPageTitle(content);
         data.pageTitle = title;
         data.appPageUrl = getLaunchInstagramUrl(content);

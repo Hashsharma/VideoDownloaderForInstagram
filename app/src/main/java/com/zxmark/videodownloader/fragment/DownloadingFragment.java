@@ -121,12 +121,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                     mDataList.add(mHowToBean);
                 }
 
-                if(isAdded()) {
+                if (isAdded()) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true, DownloadingFragment.this);
                             mListView.setAdapter(mAdapter);
+                            showNativeAd();
                         }
                     });
                 }
@@ -138,7 +139,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             receiveSendAction(mReceiveUrlParams);
         }
 
-        showNativeAd();
     }
 
     public void receiveSendAction(String url) {
@@ -316,11 +316,16 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         VideoBean bean = new VideoBean();
         bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
         bean.facebookNativeAd = nativeAd;
-        if(mDataList == null) {
+        if (mDataList == null) {
             return;
         }
+        LogUtil.e("main", "showAd");
         mDataList.add(bean);
-        mAdapter.notifyItemInserted(mDataList.size() - 1);
+        if (mDataList.size() >= 2) {
+            mAdapter.notifyItemInserted(mDataList.size() - 2);
+        } else {
+            mAdapter.notifyItemInserted(0);
+        }
     }
 
     @Override

@@ -29,6 +29,10 @@ public class WebPageStructuredData {
         if (futureImageList == null) {
             futureImageList = new ArrayList<>();
         }
+
+        if (videoThumbnailUrl != null && videoThumbnailUrl.equals(path)) {
+            return;
+        }
         if (!futureImageList.contains(path)) {
             futureImageList.add(path);
         }
