@@ -152,7 +152,16 @@ public class LearningDownloader {
             }
         }
 
-        LogUtil.e("download",targetLength + ":" + new File(targetPath).length());
+        LogUtil.e("download", targetLength + ":" + new File(targetPath).length());
+
+        if (targetLength != new File(targetPath).length()) {
+            LogUtil.e(TAG,"multi task download file size different");
+           boolean result =  startDownloadBySingleThread(fileUrl, targetPath);
+            if(!result) {
+                codeStatus = CODE_DOWNLOAD_FAILED;
+            }
+        }
+
         if (notifyCallback) {
             if (mCallback != null) {
                 mCallback.onFinish(codeStatus, targetPath);
@@ -204,8 +213,17 @@ public class LearningDownloader {
         return mCurrentTaskId;
     }
 
+    private boolean startDownloadBySingleThread(String stringUrl, String targetpath) {
+        try {
+            URL requestUrl = new URL(stringUrl);
+            return startDownloadBySingleThread(requestUrl, new File(targetpath));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
-    private void startDownloadBySingleThread(URL requestUrl, File targetFile) {
+    private boolean startDownloadBySingleThread(URL requestUrl, File targetFile) {
         HttpURLConnection conn = null;
         //通过下载路径获取连接
         try {
@@ -222,7 +240,7 @@ public class LearningDownloader {
                     if (mCallback != null) {
                         mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetFile.getAbsolutePath());
                     }
-                    return;
+                    return false;
                 }
                 //得到文件名
                 //根据文件大小及文件名，创建一个同样大小，同样文件名的文件
@@ -251,7 +269,10 @@ public class LearningDownloader {
                 fis.close();
                 fos.close();
 
+                return true;
             }
+
+            return false;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -261,6 +282,8 @@ public class LearningDownloader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return false;
 
     }
 

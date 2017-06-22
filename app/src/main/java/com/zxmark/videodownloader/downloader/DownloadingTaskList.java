@@ -109,7 +109,7 @@ public class DownloadingTaskList {
                         DBHelper.getDefault().finishDownload(path);
                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, path).sendToTarget();
                     } else if (code == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
-                        DBHelper.getDefault().deleteDownloadingVideo(path);
+                       // DBHelper.getDefault().deleteDownloadingVideo(path);
                     } else if (code == PowerfulDownloader.CODE_DOWNLOAD_CANCELED) {
                         DBHelper.getDefault().deleteDownloadingVideo(path);
                         new File(path).delete();
