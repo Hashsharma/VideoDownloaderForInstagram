@@ -144,7 +144,7 @@ public class DownloadContentItem implements BaseColumns {
         cv.put(HASH_TAGS, item.pageTags);
         cv.put(PAGE_MIME_TYPE, item.getMimeType());
         cv.put(PAGE_DOWNLOAD_FILE_COUNT, item.getFileCount());
-        LogUtil.e("item", "pageHome:" +item.getPageHome());
+        LogUtil.e("item", "pageHome:" + item.getPageHome());
         cv.put(PAGE_STATUS, item.pageStatus);
         return cv;
     }
@@ -233,17 +233,20 @@ public class DownloadContentItem implements BaseColumns {
     public boolean equals(Object obj) {
         if (obj instanceof DownloadContentItem) {
             DownloadContentItem bean = (DownloadContentItem) obj;
-            if (itemType == TYPE_NORMAL_ITEM) {
-                return pageURL.equals(bean.pageURL);
-            } else {
-                if (itemType == DownloadContentItem.TYPE_FACEBOOK_AD) {
-                    return false;
-                }
-                if (itemType == DownloadContentItem.TYPE_HOWTO_ITEM) {
-                    if (itemType == bean.itemType) {
-                        return true;
-                    } else {
+
+            if (itemType == bean.itemType) {
+                if (itemType == TYPE_NORMAL_ITEM) {
+                    return pageURL.equals(bean.pageURL);
+                } else {
+                    if (itemType == DownloadContentItem.TYPE_FACEBOOK_AD) {
                         return false;
+                    }
+                    if (itemType == DownloadContentItem.TYPE_HOWTO_ITEM) {
+                        if (itemType == bean.itemType) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 }
             }

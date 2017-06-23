@@ -103,7 +103,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     if (index == 0) {
                         holder.progressBar.setProgress(0);
                         holder.progressBar.setVisibility(View.VISIBLE);
-                        DownloadUtil.startDownload(bean.pageURL);
+                        DownloadUtil.startResumeDownload(bean.pageURL);
                     } else if (index == 1) {
                         DownloadUtil.downloadThumbnail(bean.pageURL, bean.pageThumb);
                     } else if (index == 2) {
@@ -112,7 +112,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 }
             });
 
-            holder.playView.setVisibility(bean.getMimeType() == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
+            holder.playView.setVisibility(bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
             imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             if (TextUtils.isEmpty(bean.pageTitle)) {
                 holder.titleTv.setVisibility(View.GONE);

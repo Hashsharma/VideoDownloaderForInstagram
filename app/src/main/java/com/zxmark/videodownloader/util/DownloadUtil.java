@@ -31,10 +31,19 @@ public class DownloadUtil {
         context.startService(intent);
     }
 
+    public static void startResumeDownload(String url) {
+        final Context context = MainApplication.getInstance().getApplicationContext();
+        Intent intent = new Intent(context, DownloadService.class);
+        intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
+        intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW,false);
+        intent.putExtra(Globals.EXTRAS, url);
+        context.startService(intent);
+    }
+
     public static void startRequest(String pageUrl) {
         final Context context = MainApplication.getInstance().getApplicationContext();
         Intent intent = new Intent(context, DownloadService.class);
-        intent.setAction(DownloadService.REQUEST_DOWNLOAD_VIDEO_ACTION);
+        intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
         intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
         intent.putExtra(Globals.EXTRAS, pageUrl);
         context.startService(intent);

@@ -82,8 +82,8 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
 
         convertView.setTag(position);
         convertView.setMediaSource(bean);
-        container.addView(convertView);
 
+        container.addView(convertView);
         return convertView;
     }
 }

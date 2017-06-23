@@ -35,8 +35,13 @@ public class DownloaderDBHelper {
 
 
     public void saveNewDownloadTask(DownloadContentItem item) {
-        Uri id = mContentResolver.insert(DownloadContentItem.CONTENT_URI, DownloadContentItem.from(item));
-        LogUtil.e("db", "saveNewDownloadTask:" + id + ":" + item.pageURL);
+        if (item != null && !TextUtils.isEmpty(item.pageURL)) {
+            if(getPageIdByPageURL(item.pageURL) > -1) {
+                return;
+            }
+            Uri id = mContentResolver.insert(DownloadContentItem.CONTENT_URI, DownloadContentItem.from(item));
+            LogUtil.e("db", "saveNewDownloadTask:" + id + ":" + item.pageURL);
+        }
     }
 
     public List<DownloadContentItem> getDownloadingTask() {
@@ -97,7 +102,31 @@ public class DownloaderDBHelper {
     }
 
     public int getPageIdByPageURL(String pageURL) {
+        LogUtil.v("db", "getPageIdByPageURL=" + pageURL);
+        if (TextUtils.isEmpty(pageURL)) {
+            return -1;
+        }
         Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL}, null);
+        try {
+            if (cursor != null) {
+                if (cursor.moveToNext()) {
+                    return cursor.getInt(cursor.getColumnIndexOrThrow(DownloadContentItem._ID));
+                }
+            }
+            return -1;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public int getDownloadedPageIdByURL(String pageURL) {
+        LogUtil.v("db", "getDownloadedPageIdByURL=" + pageURL);
+        if (TextUtils.isEmpty(pageURL)) {
+            return -1;
+        }
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? and " + DownloadContentItem.PAGE_STATUS + " = ?", new String[]{pageURL,String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED)}, null);
         try {
             if (cursor != null) {
                 if (cursor.moveToNext()) {
@@ -151,7 +180,7 @@ public class DownloaderDBHelper {
     }
 
     public boolean isExistDownloadedPageURL(String pageURL) {
-        return getPageIdByPageURL(pageURL) > -1;
+        return getDownloadedPageIdByURL(pageURL) > -1;
     }
 
     public void deleteDownloadTaskAsync(final String pageURL) {

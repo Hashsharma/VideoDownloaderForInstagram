@@ -53,17 +53,19 @@ public class GalleryPagerActivity extends BaseActivity {
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                LogUtil.v("view", "onPageScrolled:" + position);
-                MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
-                LogUtil.e("view", "itemView=" + itemView);
-                if (itemView != null) {
-                    itemView.stop();
+                LogUtil.v("view", "onPageScrolled:" + position + ":" + positionOffset);
+                if (positionOffset > 1.0f) {
+                    MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
+                    if (itemView != null) {
+                        itemView.stop();
+                    }
                 }
             }
 
             @Override
             public void onPageSelected(int position) {
-                mMainViewPager.findViewWithTag(position);
+                MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
+                itemView.play();
             }
 
             @Override

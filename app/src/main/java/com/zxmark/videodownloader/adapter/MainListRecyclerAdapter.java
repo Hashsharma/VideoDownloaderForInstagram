@@ -90,12 +90,15 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             });
 
             holder.titleTv.setText(bean.pageTitle);
-            final boolean isVideo = bean.getMimeType() == bean.PAGE_MIME_TYPE_VIDEO;
+            final boolean isVideo = bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO;
+            LogUtil.v("download","bean.getMimeType=" + bean.mimeType);
             if (isVideo) {
                 holder.playView.setVisibility(View.VISIBLE);
             } else {
                 holder.playView.setVisibility(View.GONE);
             }
+
+            holder.albumView.setVisibility(bean.fileCount > 1 ? View.VISIBLE : View.GONE);
             imageLoader.load(bean.pageThumb).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             holder.repostView.setOnClickListener(new View.OnClickListener() {
                 @Override

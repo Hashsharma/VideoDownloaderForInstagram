@@ -163,25 +163,26 @@ public class LearningDownloader {
                     }
                 }
             }
-        }
 
-        LogUtil.e("download", targetLength + ":" + new File(targetPath).length());
+            LogUtil.e("download", targetLength + ":" + new File(targetPath).length());
 
-        if (targetLength != new File(targetPath).length()) {
-            LogUtil.e(TAG, "multi task download file size different");
-            int retrySingleTimes = 0;
-            boolean finalResult = false;
-            while (retrySingleTimes < MAX_RETRY_TIMES) {
-                boolean result = startDownloadBySingleThread(fileUrl, targetPath, mFilePos);
-                finalResult = result;
-                if (result) {
-                    break;
+            if (targetLength != new File(targetPath).length()) {
+                LogUtil.e(TAG, "multi task download file size different");
+                int retrySingleTimes = 0;
+                boolean finalResult = false;
+                while (retrySingleTimes < MAX_RETRY_TIMES) {
+                    boolean result = startDownloadBySingleThread(fileUrl, targetPath, mFilePos);
+                    finalResult = result;
+                    if (result) {
+                        break;
+                    }
+                }
+                if (!finalResult) {
+                    codeStatus = CODE_DOWNLOAD_FAILED;
                 }
             }
-            if (!finalResult) {
-                codeStatus = CODE_DOWNLOAD_FAILED;
-            }
         }
+
 
         LogUtil.e(TAG, "codeStatus:" + codeStatus);
         if (notifyCallback) {

@@ -58,6 +58,7 @@ public class DownloadService extends Service {
     public static final int MSG_DOWNLOAD_START = 2;
     public static final int MSG_UPDATE_PROGRESS = 3;
     public static final int MSG_NOTIFY_DOWNLOADED = 4;
+    public static final int MSG_HANDLE_SEND_ACTION = 5;
 
 
     final RemoteCallbackList<IDownloadCallback> mCallbacks = new RemoteCallbackList<IDownloadCallback>();
@@ -75,15 +76,14 @@ public class DownloadService extends Service {
                     IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
                 }
             } else if (msg.what == MSG_DOWNLOAD_START) {
-//                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                showFloatView();
                 IToast.makeText(DownloadService.this, R.string.download_result_start, Toast.LENGTH_SHORT).show();
-//                }
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg2, msg.arg1);
             } else if (msg.what == MSG_NOTIFY_DOWNLOADED) {
                 IToast.makeText(DownloadService.this, R.string.toast_downlaoded_video, Toast.LENGTH_SHORT).show();
+            } else if (msg.what == MSG_HANDLE_SEND_ACTION) {
+                DownloadService.this.notifyReceiveNewTask((String) msg.obj);
             }
         }
     };
@@ -143,6 +143,27 @@ public class DownloadService extends Service {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
                 LogUtil.e("main", "DownloadService.showFloatView:" + url);
+                if (DownloaderDBHelper.SINGLETON.isExistDownloadedPageURL(url)) {
+                    mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
+                    return super.onStartCommand(intent, flags, startId);
+                }
+
+                if(showFloatView) {
+                    showFloatView();
+                }
+                DownloadingTaskList.SINGLETON.setHandler(mHandler);
+                DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final DownloadContentItem downloadContentItem = VideoDownloadFactory.getInstance().request(url);
+                        if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
+                            DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
+                            mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
+                            DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);
+                        }
+                    }
+                });
+
 
             } else if (REQUEST_DOWNLOAD_VIDEO_ACTION.equals(intent.getAction())) {
                 String url = intent.getStringExtra(Globals.EXTRAS);
@@ -228,13 +249,13 @@ public class DownloadService extends Service {
         }
     }
 
-    private void notifyReceiveNewTask(String filePath) {
+    private void notifyReceiveNewTask(String pageURL) {
         synchronized (sCallbackLock) {
             if (mCallbacks.getRegisteredCallbackCount() > 0) {
                 final int N = mCallbacks.beginBroadcast();
                 for (int i = 0; i < N; i++) {
                     try {
-                        mCallbacks.getBroadcastItem(i).onReceiveNewTask(filePath);
+                        mCallbacks.getBroadcastItem(i).onReceiveNewTask(pageURL);
                     } catch (RemoteException e) {
                         // The RemoteCallbackList will take care of removing
                         // the dead object for us.

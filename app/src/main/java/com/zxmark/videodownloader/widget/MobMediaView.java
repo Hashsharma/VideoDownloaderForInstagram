@@ -83,6 +83,10 @@ public class MobMediaView extends FrameLayout {
                     playVideo(videoPath);
                 }
             });
+            LogUtil.v("view","getTag=" + getTag() + ":" + getTag().equals(0));
+            if(getTag().equals(0)) {
+                playVideo(videoPath);
+            }
         } else {
             mVideoIcon.setVisibility(View.GONE);
             if (mVideoView != null && mVideoView.getVisibility() == View.VISIBLE) {
@@ -116,8 +120,15 @@ public class MobMediaView extends FrameLayout {
         });
     }
 
+
+    public void play() {
+        if (mIsVideoMimeType) {
+            playVideo(mMediaSource);
+        }
+    }
+
     public void stop() {
-        LogUtil.e("view","stop:" + mMediaSource);
+        LogUtil.e("view", "stop:" + mMediaSource);
         if (mIsVideoMimeType) {
             if (mVideoView != null && mVideoView.isPlaying()) {
                 mVideoView.stopPlayback();
@@ -135,7 +146,7 @@ public class MobMediaView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(mVideoView != null && mVideoView.isPlaying()) {
+        if (mVideoView != null && mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }
     }

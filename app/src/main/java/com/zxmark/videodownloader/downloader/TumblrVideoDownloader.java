@@ -95,6 +95,7 @@ public class TumblrVideoDownloader extends BaseDownloader {
 
             JSONObject rootJsonObj = new JSONObject(content);
             String pageTitle = rootJsonObj.getJSONObject("response").getJSONObject("blog").getString("title");
+            data.pageURL = htmlUrl;
             data.pageTitle = pageTitle;
             data.pageDesc = rootJsonObj.getJSONObject("response").getJSONObject("blog").getString("description");
             int fileCount = 0;

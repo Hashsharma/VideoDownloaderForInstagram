@@ -199,13 +199,11 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                                 ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
                                 itemHolder.progressBar.setVisibility(View.VISIBLE);
                                 int count = downloadContentItem.fileCount * 100;
-                                LogUtil.e("main", "cout:" + count);
                                 int position = filePosition;
                                 int totalProgress = position * 100 + progress;
                                 int newProgrees = totalProgress * 100 / count;
-                                LogUtil.e("main", "newProgress:" + newProgrees);
                                 itemHolder.progressBar.setProgress(newProgrees);
-                                if (progress >= 99) {
+                                if (newProgrees >= 99) {
                                     itemHolder.progressBar.setVisibility(View.GONE);
                                 }
                             }
@@ -239,16 +237,30 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     public void onStartDownload(String pageURL) {
-        DownloadContentItem bean = new DownloadContentItem();
-        bean.pageURL = pageURL;
-        if (!mDataList.contains(bean)) {
-            DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
-            if (videoBean != null) {
-                mDataList.add(1, videoBean);
-                mAdapter.notifyItemInserted(1);
+        LogUtil.e("main", "onStartDownload111=" + pageURL);
+        if (isAdded()) {
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+            if (TextUtils.isEmpty(pageURL)) {
+                IToast.makeText(getActivity(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            showNativeAd();
+            DownloadContentItem bean = new DownloadContentItem();
+            bean.pageURL = pageURL;
+            LogUtil.v("main", "contains:" + mDataList.contains(bean));
+            if (!mDataList.contains(bean)) {
+                DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
+                LogUtil.v("main", "videoBean=" + videoBean);
+                if (videoBean != null) {
+                    mDataList.add(1, videoBean);
+                    mAdapter.notifyItemInserted(1);
+                }
+
+                showNativeAd();
+            }
         }
     }
 

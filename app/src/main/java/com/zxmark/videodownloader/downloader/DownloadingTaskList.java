@@ -61,6 +61,7 @@ public class DownloadingTaskList {
     }
 
     public void addNewDownloadTask(String taskId, DownloadContentItem data) {
+        LogUtil.v("download","addNewDownloadTask:" + taskId + ":" + mFuturedTaskList.size());
         if (mFuturedTaskList.size() > 0) {
             if (mFuturedTaskList.contains(taskId)) {
                 return;
@@ -220,9 +221,9 @@ public class DownloadingTaskList {
                 @Override
                 public void run() {
                     DownloadContentItem cacheData = mFutureTaskDetailMap.get(taskId);
+                    LogUtil.e("download","cacheData=" + cacheData);
                     if (cacheData != null) {
                         //TODO:之前已经请求过网络，合理直接诶进行下载
-                        mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_START, 0, 0, cacheData.pageURL).sendToTarget();
                         downloadItemContent(cacheData);
                     } else {
                         DownloadContentItem downloadContentItem = VideoDownloadFactory.getInstance().request(taskId);

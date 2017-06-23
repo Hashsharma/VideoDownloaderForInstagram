@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onReceiveNewTask(final String pageURL) throws RemoteException {
-            LogUtil.v("start", "onReceiveNewTask:" + pageURL);
+            LogUtil.v("main", "onReceiveNewTask:" + pageURL);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

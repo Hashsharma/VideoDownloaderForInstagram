@@ -26,6 +26,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public FanMenuButtons fanMenuButtons;
     public View repostView;
     public View playView;
+    public View albumView;
 
     public ItemViewHolder(View itemView) {
         super(itemView);
@@ -38,5 +39,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         repostView = itemView.findViewById(R.id.repost);
         playView = itemView.findViewById(R.id.play_view);
+        albumView = itemView.findViewById(R.id.album_icon);
     }
 }

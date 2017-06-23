@@ -32,6 +32,16 @@
                 android:layout_gravity="center"
                 android:scaleType="center"
                 android:src="@drawable/icon_video" />
+
+            <ImageView
+                android:id="@+id/album_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:src="@drawable/feed_album_icon"
+                android:layout_gravity="right|top"
+                android:visibility="gone"
+                />
         </FrameLayout>
 
 
