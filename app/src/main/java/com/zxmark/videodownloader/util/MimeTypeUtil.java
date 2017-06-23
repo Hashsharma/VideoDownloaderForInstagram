@@ -1,6 +1,7 @@
 package com.zxmark.videodownloader.util;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by fanlitao on 17/6/15.
@@ -10,14 +11,22 @@ public class MimeTypeUtil {
 
     public static HashMap<String, String> mimeTypeCache;
 
+    public static HashSet<String> mVideoFormat;
+
     static {
 
         mimeTypeCache = new HashMap<>();
         mimeTypeCache.put("mp4", "video/mp4");
+        mimeTypeCache.put("mov","video/mov");
         mimeTypeCache.put("jpg", "image/*");
         mimeTypeCache.put("png", "image/*");
         mimeTypeCache.put("jpeg", "image/*");
         mimeTypeCache.put("gif", "image/*");
+
+        mVideoFormat = new HashSet<>();
+        mVideoFormat.add("mp4");
+        mVideoFormat.add("mov");
+
     }
 
     public static String getMimeTypeBySuffixName(String fileName) {
@@ -37,6 +46,6 @@ public class MimeTypeUtil {
     public static boolean isVideoType(String fileName) {
         String array[] = fileName.split("\\.");
         String suffixName = array[array.length - 1];
-        return suffixName.equals("mp4");
+        return mVideoFormat.contains(suffixName);
     }
 }

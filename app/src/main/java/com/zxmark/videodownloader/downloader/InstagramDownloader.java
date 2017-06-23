@@ -59,8 +59,8 @@ public class InstagramDownloader extends BaseDownloader {
         Matcher ma = pa.matcher(content);
 
         if (ma.find()) {
-            Log.v("fan2", "" + ma.group());
             imageUrl = ma.group(1);
+            LogUtil.e("image","origin_imageUrl=" + imageUrl);
         }
 
 

@@ -66,7 +66,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     private View mFacebookAdViewContainer;
     private RequestManager mGlide;
-
+    private VideoBean mFirstAdBean;
 
 
     public static DownloadingFragment newInstance(String params) {
@@ -321,8 +321,15 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (mDataList == null) {
             return;
         }
-        mDataList.add(1,bean);
-        mAdapter.notifyItemInserted(1);
+        if (mDataList.size() == 1) {
+            mDataList.add(bean);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            int position = mDataList.size() / 2;
+            mDataList.add(position, bean);
+            mAdapter.notifyItemInserted(position);
+        }
+
     }
 
     @Override

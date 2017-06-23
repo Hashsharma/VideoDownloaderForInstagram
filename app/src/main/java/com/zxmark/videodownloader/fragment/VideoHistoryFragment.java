@@ -3,6 +3,7 @@ package com.zxmark.videodownloader.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -77,6 +78,7 @@ public class VideoHistoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mListView = (RecyclerView) findViewById(R.id.video_history_list);
         mListView.setHasFixedSize(true);
+        mListView.setItemAnimator(new DefaultItemAnimator());
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
                 false);
 

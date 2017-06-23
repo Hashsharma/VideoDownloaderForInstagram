@@ -50,7 +50,7 @@ public class ImageGalleryActivity extends Activity implements View.OnClickListen
         mImageUri = getIntent().getData();
         mImagePath = getIntent().getStringExtra(Globals.EXTRAS);
 
-        Glide.with(this).load(mImageUri).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImageView);
+        Glide.with(this).load(mImageUri).into(mImageView);
 
         findViewById(R.id.more_vert).setOnClickListener(this);
     }

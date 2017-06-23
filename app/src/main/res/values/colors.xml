@@ -38,4 +38,8 @@
 
     <color name="black">#000000</color>
     <color name="light_black">#070000</color>
+
+    <color name="instagram_left_color">#E45755</color>
+    <color name="instagram_right_color">#A8319F</color>
+    <color name="instagram_center_color">#D14B65</color>
 </resources>

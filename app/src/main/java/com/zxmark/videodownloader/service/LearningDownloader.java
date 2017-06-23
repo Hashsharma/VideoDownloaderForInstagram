@@ -1,5 +1,7 @@
 package com.zxmark.videodownloader.service;
 
+import android.text.TextUtils;
+
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 import com.zxmark.videodownloader.util.CpuUtils;
 import com.zxmark.videodownloader.util.DownloadUtil;
@@ -100,32 +102,39 @@ public class LearningDownloader {
             //设置连接的相关属性
             conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
             conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
-            //判断连接是否正确。
-            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                // 获取文件大小。
-                int fileSize = conn.getContentLength();
-                targetLength = fileSize;
-                if (fileSize <= 0) {
-                    if (mCallback != null) {
-                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetPath);
+            conn.setRequestProperty("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+            String acceptRanges = conn.getHeaderField("Accept-Ranges");
+            LogUtil.e(TAG,"acceptRangs=" + acceptRanges);
+            if(!TextUtils.isEmpty(acceptRanges) && "bytes".equals(acceptRanges)) {
+                //判断连接是否正确。
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    // 获取文件大小。
+                    int fileSize = conn.getContentLength();
+                    targetLength = fileSize;
+                    if (fileSize <= 0) {
+                        if (mCallback != null) {
+                            mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetPath);
+                        }
+                        return;
                     }
-                    return;
-                }
-                File file = new File(targetPath);
-                RandomAccessFile raf = new RandomAccessFile(file, "rw");
-                raf.setLength(fileSize);
-                raf.close();
-                // 将文件分成threadNum = 5份。
-                int block = fileSize % threadNum == 0 ? fileSize / threadNum
-                        : fileSize / threadNum + 1;
-                for (int threadId = 0; threadId < threadNum; threadId++) {
-                    new DownloadThread(threadId, fileSize, block, file, url, latch).start();
+                    File file = new File(targetPath);
+                    RandomAccessFile raf = new RandomAccessFile(file, "rw");
+                    raf.setLength(fileSize);
+                    raf.close();
+                    // 将文件分成threadNum = 5份。
+                    int block = fileSize % threadNum == 0 ? fileSize / threadNum
+                            : fileSize / threadNum + 1;
+                    for (int threadId = 0; threadId < threadNum; threadId++) {
+                        new DownloadThread(threadId, fileSize, block, file, url, latch).start();
 
+                    }
+                    LogUtil.e(TAG, "wait all downloading thread");
+                    if (latch != null) {
+                        latch.await();
+                    }
                 }
-                LogUtil.e(TAG, "wait all downloading thread");
-                if (latch != null) {
-                    latch.await();
-                }
+            } else {
+                LogUtil.e(TAG,"dont support paratition download file");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,9 +154,11 @@ public class LearningDownloader {
             if (firstRequestFailed) {
                 codeStatus = CODE_DOWNLOAD_FAILED;
             } else {
-                retryLearningDownload(1);
-                if (mDownloadingTaskMap.size() > 0) {
-                    codeStatus = CODE_DOWNLOAD_FAILED;
+                if (threadNum > 1) {
+                    retryLearningDownload(1);
+                    if (mDownloadingTaskMap.size() > 0) {
+                        codeStatus = CODE_DOWNLOAD_FAILED;
+                    }
                 }
             }
         }
@@ -161,7 +172,7 @@ public class LearningDownloader {
             while (retrySingleTimes < MAX_RETRY_TIMES) {
                 boolean result = startDownloadBySingleThread(fileUrl, targetPath);
                 finalResult = result;
-                if(result) {
+                if (result) {
                     break;
                 }
             }
@@ -170,6 +181,7 @@ public class LearningDownloader {
             }
         }
 
+        LogUtil.e(TAG, "codeStatus:" + codeStatus);
         if (notifyCallback) {
             if (mCallback != null) {
                 mCallback.onFinish(codeStatus, targetPath);
@@ -232,6 +244,7 @@ public class LearningDownloader {
     }
 
     private boolean startDownloadBySingleThread(URL requestUrl, File targetFile) {
+        LogUtil.e(TAG, "startDownloadBySingleThread");
         HttpURLConnection conn = null;
         //通过下载路径获取连接
         try {
@@ -344,9 +357,11 @@ public class LearningDownloader {
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
                 conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
+                conn.setRequestProperty("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
                 //此步骤是关键。
                 conn.setRequestProperty("Range", "bytes=" + start + "-" + end);
                 int responseCode = conn.getResponseCode();
+                LogUtil.e(TAG,threadId +": responseCode=" + responseCode);
                 if (responseCode == HttpURLConnection.HTTP_PARTIAL) {
                     RandomAccessFile raf = new RandomAccessFile(file, "rw");
                     //移动指针至该线程负责写入数据的位置。
@@ -375,7 +390,9 @@ public class LearningDownloader {
                 e.printStackTrace();
                 mReadBytesCount -= partiionLength;
             } finally {
-                latch.countDown();
+                if (latch != null) {
+                    latch.countDown();
+                }
                 if (conn != null) {
                     conn.disconnect();
                 }
