@@ -61,7 +61,7 @@ public class DownloadingTaskList {
     }
 
     public void addNewDownloadTask(String taskId, DownloadContentItem data) {
-        LogUtil.v("download","addNewDownloadTask:" + taskId + ":" + mFuturedTaskList.size());
+        LogUtil.e("download","addNewDownloadTask:" + taskId + ":" + mFuturedTaskList.size());
         if (mFuturedTaskList.size() > 0) {
             if (mFuturedTaskList.contains(taskId)) {
                 return;
@@ -109,7 +109,6 @@ public class DownloadingTaskList {
         if (item != null) {
             List<String> futureDownloadedList = item.getDownloadContentList();
             downloadItem(futureDownloadedList, item);
-            LogUtil.e("download", item.pageURL + ":下载完成");
             DownloaderDBHelper.SINGLETON.finishDownloadTask(item.pageURL);
             mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS,0,0,item.pageURL).sendToTarget();
         }
@@ -169,14 +168,12 @@ public class DownloadingTaskList {
 
                 @Override
                 public void onFinish(int statusCode, String pageURL, int filePosition, String path) {
-                    LogUtil.e("download", "PowerfulDownloaderonFinish=" + statusCode + ":" + pageURL);
                     Message msg = mHandler.obtainMessage();
                     msg.what = DownloadService.MSG_UPDATE_PROGRESS;
                     msg.arg1 = 100;
                     msg.arg2 = filePosition;
                     msg.obj = pageURL;
                     mHandler.sendMessage(msg);
-
                     downloadItem(totalDownloadedList, item);
                 }
 

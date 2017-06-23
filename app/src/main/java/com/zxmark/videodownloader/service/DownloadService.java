@@ -76,7 +76,6 @@ public class DownloadService extends Service {
                     IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
                 }
             } else if (msg.what == MSG_DOWNLOAD_START) {
-                IToast.makeText(DownloadService.this, R.string.download_result_start, Toast.LENGTH_SHORT).show();
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg2, msg.arg1);
@@ -142,7 +141,6 @@ public class DownloadService extends Service {
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
-                LogUtil.e("main", "DownloadService.showFloatView:" + url);
                 if (DownloaderDBHelper.SINGLETON.isExistDownloadedPageURL(url)) {
                     mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
                     return super.onStartCommand(intent, flags, startId);
@@ -155,9 +153,14 @@ public class DownloadService extends Service {
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
-                        final DownloadContentItem downloadContentItem = VideoDownloadFactory.getInstance().request(url);
+                        DownloadContentItem downloadContentItem = null;
+                        if(DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(url) != null) {
+                            downloadContentItem = VideoDownloadFactory.getInstance().request(url);
+                        } else {
+                            downloadContentItem = VideoDownloadFactory.getInstance().request(url);
+                        }
+
                         if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
-                            LogUtil.e("main","downloadContentItem:" + downloadContentItem.getFileCount());
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
                             mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
                             DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);

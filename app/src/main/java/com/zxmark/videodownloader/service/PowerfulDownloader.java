@@ -74,7 +74,7 @@ public class PowerfulDownloader {
     public void startDownload(String taskId, final int filePosition, String fileUrl, String targetPath, IPowerfulDownloadCallback callback) {
         mCallback = callback;
         mCurrentTaskId = taskId;
-        LogUtil.e("download", "startDownload:" + targetPath);
+        LogUtil.e("download", "power.startDownload:" + targetPath);
         mFilePosition = filePosition;
         download(fileUrl, targetPath, THREAD_COUNT, 0, true);
     }

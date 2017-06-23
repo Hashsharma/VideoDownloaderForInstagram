@@ -4,26 +4,27 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.BaseActivity;
 import com.zxmark.videodownloader.adapter.ImageGalleryPagerAdapter;
-import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.db.DownloadContentItem;
+import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
-import com.zxmark.videodownloader.downloader.KuaiVideoDownloader;
-import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
-import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.PopWindowUtils;
+import com.zxmark.videodownloader.util.Utils;
 import com.zxmark.videodownloader.widget.MobMediaView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,14 +32,17 @@ import java.util.List;
  * Created by fanlitao on 6/21/17.
  */
 
-public class GalleryPagerActivity extends BaseActivity {
+public class GalleryPagerActivity extends BaseActivity implements View.OnClickListener {
 
 
     private ViewPager mMainViewPager;
+    private TextView mCountInfoView;
 
     private ImageGalleryPagerAdapter mAdapter;
     private List<File> mDataList;
     private MobMediaView mSelectedMobView;
+
+    private String mPageHome;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +56,10 @@ public class GalleryPagerActivity extends BaseActivity {
 
         final String baseHome = getIntent().getStringExtra(Globals.EXTRAS);
 
+        mPageHome = baseHome;
+        findViewById(R.id.back).setOnClickListener(this);
+        findViewById(R.id.more_vert).setOnClickListener(this);
+        mCountInfoView = (TextView) findViewById(R.id.count_info);
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
         mMainViewPager.setOffscreenPageLimit(2);
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -63,7 +71,9 @@ public class GalleryPagerActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
                 mSelectedMobView = itemView;
+                mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1 + position, mDataList.size()));
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
                 switch (state) {
@@ -93,14 +103,50 @@ public class GalleryPagerActivity extends BaseActivity {
                             mDataList.add(file);
                         }
 
-                        Collections.sort(mDataList,new FileComparator());
+                        Collections.sort(mDataList, new FileComparator());
 
                         mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
                         mMainViewPager.setAdapter(mAdapter);
+                        if (mDataList.size() == 1) {
+                            mCountInfoView.setVisibility(View.GONE);
+                        }
+                        mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
                     }
                 });
             }
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.back) {
+            finish();
+        } else if (v.getId() == R.id.more_vert) {
+            PopWindowUtils.showPlayVideoMorePopWindow(v, new PopWindowUtils.IPopWindowCallback() {
+                @Override
+                public void onShare() {
+                    if (mSelectedMobView != null) {
+                        Utils.startShareIntent(mSelectedMobView.getMediaSource());
+                    }
+                }
+
+                @Override
+                public void launchInstagram() {
+                    DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageHome(mPageHome);
+                    if (videoBean != null) {
+                        Utils.openInstagramByUrl(videoBean.pageURL);
+                    }
+
+                }
+
+                @Override
+                public void onPastePageUrl() {
+                    DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageHome(mPageHome);
+                    if (videoBean != null) {
+                        Utils.copyText2Clipboard(videoBean.pageHOME);
+                    }
+                }
+            });
+        }
+    }
 }

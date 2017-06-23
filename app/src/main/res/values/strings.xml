@@ -52,7 +52,7 @@
     <string name="nav_rate_us">Rate Us</string>
     <string name="nav_send">Send</string>
     <string name="nav_change_language">Switch language</string>
-
+    <string name="file_count_format" formatted="false">%1d/%2d</string>
 
     <!-- -->
 

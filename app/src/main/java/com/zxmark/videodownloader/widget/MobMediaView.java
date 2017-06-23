@@ -139,6 +139,10 @@ public class MobMediaView extends FrameLayout {
         }
     }
 
+    public String getMediaSource() {
+        return mMediaSource;
+    }
+
     public void destory() {
 
     }

@@ -101,6 +101,23 @@ public class DownloaderDBHelper {
         }
     }
 
+    public DownloadContentItem getDownloadItemByPageHome(String pageHome) {
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_HOME + " = ? ", new String[]{pageHome}, null);
+        try {
+            if (cursor != null) {
+                if (cursor.moveToNext()) {
+                    DownloadContentItem item = DownloadContentItem.fromCusor(cursor);
+                    return item;
+                }
+            }
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public int getPageIdByPageURL(String pageURL) {
         LogUtil.v("db", "getPageIdByPageURL=" + pageURL);
         if (TextUtils.isEmpty(pageURL)) {
