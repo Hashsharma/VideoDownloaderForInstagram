@@ -127,7 +127,7 @@ public class DownloadingTaskList {
 
                 @Override
                 public void onFinish(int code, String pageURL, int filePosition, String path) {
-                    LogUtil.e("download", "code:" + code);
+                    LogUtil.e("download", "LearningDownloadercode:" + code + ":" + pageURL);
                     if (code == PowerfulDownloader.CODE_OK) {
                         // mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, filePosition, 0, pageURL).sendToTarget();
                         Message msg = mHandler.obtainMessage();
@@ -168,7 +168,7 @@ public class DownloadingTaskList {
 
                 @Override
                 public void onFinish(int statusCode, String pageURL, int filePosition, String path) {
-                    LogUtil.e("download", "onFinish=" + statusCode + ":" + path);
+                    LogUtil.e("download", "PowerfulDownloaderonFinish=" + statusCode + ":" + pageURL);
                     Message msg = mHandler.obtainMessage();
                     msg.what = DownloadService.MSG_UPDATE_PROGRESS;
                     msg.arg1 = 100;

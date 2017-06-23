@@ -203,7 +203,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                                 int position = filePosition;
                                 int totalProgress = position * 100 + progress;
                                 int newProgrees = totalProgress * 100 / count;
-                                LogUtil.e("main","newProgress:" + newProgrees);
+                                LogUtil.e("main", "newProgress:" + newProgrees);
                                 itemHolder.progressBar.setProgress(newProgrees);
                                 if (progress >= 99) {
                                     itemHolder.progressBar.setVisibility(View.GONE);
@@ -252,14 +252,16 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    public void deleteVideoByPath(String path) {
-        if (TextUtils.isEmpty(path)) {
+    public void deleteVideoByPath(String pageURL) {
+        if (TextUtils.isEmpty(pageURL)) {
             return;
         }
-        VideoBean bean = new VideoBean();
-        bean.videoPath = path;
-        mDataList.remove(bean);
-        mAdapter.notifyDataSetChanged();
+        DownloadContentItem bean = new DownloadContentItem();
+        bean.pageURL = pageURL;
+        if (mDataList.contains(bean)) {
+            mAdapter.notifyItemInserted(mDataList.indexOf(bean));
+            mDataList.remove(bean);
+        }
     }
 
     @Override
