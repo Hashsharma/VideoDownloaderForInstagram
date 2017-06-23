@@ -47,9 +47,13 @@
                 android:visibility="gone"
                 app:progress_current="0"
                 app:progress_max="100"
-                app:progress_text_color="#3498DB"
+                app:progress_reached_bar_height="10dip"
+                app:progress_reached_color="@color/download_progress_reach_color"
+                app:progress_unreached_bar_height="10dip"
+                app:progress_unreached_color="@color/download_progress_unreach_color"
+                app:progress_text_color="@android:color/white"
                 app:progress_text_offset="1dp"
-                app:progress_text_size="10sp"
+                app:progress_text_size="16dip"
                 app:progress_text_visibility="visible" />
 
 

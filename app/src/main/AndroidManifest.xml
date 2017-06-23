@@ -75,6 +75,11 @@
             android:name="com.zxmark.videodownloader.service.DownloadService"
             android:exported="true" />
         <service android:name="com.zxmark.videodownloader.service.TLRequestParserService" />
+        
+        <provider
+            android:authorities="com.imobapp.videodownloaderforinstagram"
+            android:name="com.zxmark.videodownloader.db.DownloaderContentProvider"  />
+
 
         <meta-data android:value="5941ea6f310c9331ee0004a1" android:name="UMENG_APPKEY"/>
         <meta-data android:value="GP" android:name="UMENG_CHANNEL"/>

@@ -236,6 +236,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 mDataList.add(1, videoBean);
                 mAdapter.notifyItemInserted(1);
             }
+
+                showNativeAd();
         }
     }
 
@@ -276,30 +278,35 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     private void showNativeAd() {
         if (isAdded()) {
-            nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
-            nativeAd.setAdListener(new AdListener() {
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    LogUtil.v("facebook", "onError:" + adError);
-                }
+            if(mFirstAdBean != null) {
+                return;
+            }
+            if (mDataList != null && (mDataList.size() == 1 || mDataList.size() > 3)) {
+                nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
+                nativeAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onError(Ad ad, AdError adError) {
+                        LogUtil.v("facebook", "onError:" + adError);
+                    }
 
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    onFacebookAdLoaded(ad);
-                }
+                    @Override
+                    public void onAdLoaded(Ad ad) {
+                        onFacebookAdLoaded(ad);
+                    }
 
-                @Override
-                public void onAdClicked(Ad ad) {
+                    @Override
+                    public void onAdClicked(Ad ad) {
 
-                }
+                    }
 
-                @Override
-                public void onLoggingImpression(Ad ad) {
+                    @Override
+                    public void onLoggingImpression(Ad ad) {
 
-                }
-            });
+                    }
+                });
 
-            nativeAd.loadAd();
+                nativeAd.loadAd();
+            }
         }
     }
 
@@ -315,18 +322,18 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
 
 
-        VideoBean bean = new VideoBean();
-        bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
-        bean.facebookNativeAd = nativeAd;
+        mFirstAdBean  = new VideoBean();
+        mFirstAdBean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
+        mFirstAdBean.facebookNativeAd = nativeAd;
         if (mDataList == null) {
             return;
         }
         if (mDataList.size() == 1) {
-            mDataList.add(bean);
+            mDataList.add(mFirstAdBean);
             mAdapter.notifyDataSetChanged();
         } else {
             int position = mDataList.size() / 2;
-            mDataList.add(position, bean);
+            mDataList.add(position, mFirstAdBean);
             mAdapter.notifyItemInserted(position);
         }
 

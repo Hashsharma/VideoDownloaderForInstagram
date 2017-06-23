@@ -174,7 +174,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
         }
 
     }
-
+    //TODO:最后一个位置有问题
     private void deleteDownloadingVideo(VideoBean bean, int positoin) {
         mDataList.remove(bean);
         notifyItemRemoved(positoin);
