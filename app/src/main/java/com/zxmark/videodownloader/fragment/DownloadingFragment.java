@@ -198,6 +198,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                             if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
                                 ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
                                 itemHolder.progressBar.setVisibility(View.VISIBLE);
+                                itemHolder.taskCountView.setText(getResources().getString(R.string.downloading_left_task_count, downloadContentItem.fileCount - filePosition));
                                 int count = downloadContentItem.fileCount * 100;
                                 int position = filePosition;
                                 int totalProgress = position * 100 + progress;

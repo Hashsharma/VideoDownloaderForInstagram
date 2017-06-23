@@ -6,6 +6,7 @@ import android.util.Log;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
+import com.zxmark.videodownloader.util.CharsetUtil;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
@@ -117,13 +118,7 @@ public class InstagramDownloader extends BaseDownloader {
         }
 
         if (!TextUtils.isEmpty(pageDesc)) {
-            String array[] = pageDesc.split("Instagram:");
-            if (array != null) {
-                String originTitle = array[array.length - 1];
-                originTitle = originTitle.replace("“", "");
-                originTitle = originTitle.replace("”", "");
-                return originTitle;
-            }
+            return pageDesc;
         }
         return null;
     }

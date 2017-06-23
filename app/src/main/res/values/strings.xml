@@ -57,6 +57,8 @@
     <!-- -->
 
     <string name="toast_downlaoded_video">Already Downloaded</string>
+    <string name="downloading_left_task_count">%d File Left</string>
+
 
     <string name="locale_english" translatable="false">English</string>
     <string name="locale_chinese_china" translatable="false">简体中文</string>

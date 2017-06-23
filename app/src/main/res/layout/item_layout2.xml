@@ -17,12 +17,12 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="190dip">
 
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="190dip"
+                android:layout_height="match_parent"
                 android:layout_gravity="top"
                 android:background="@color/image_bg_color"
                 android:scaleType="centerCrop" />
@@ -56,6 +56,20 @@
                 app:progress_text_size="16dip"
                 app:progress_text_visibility="visible" />
 
+            <TextView
+                android:id="@+id/download_task_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:background="#80000000"
+                android:textColor="@color/red_2"
+                android:textSize="15dip"
+                android:layout_marginLeft="5dip"
+                android:paddingLeft="5dip"
+                android:paddingRight="5dip"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="15dip"
+                />
 
             <com.bcgdv.asia.lib.fanmenu.FanMenuButtons
                 android:id="@+id/myFABSubmenu"
@@ -108,7 +122,6 @@
              android:gravity="bottom|center_vertical"
              android:singleLine="true"
              android:textColor="@color/black"
-             android:text="#9tag#kaka#hehe"
              />
 
     </LinearLayout>

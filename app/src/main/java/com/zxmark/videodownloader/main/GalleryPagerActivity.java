@@ -15,6 +15,7 @@ import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.widget.MobMediaView;
@@ -22,6 +23,7 @@ import com.zxmark.videodownloader.widget.MobMediaView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,7 +36,8 @@ public class GalleryPagerActivity extends BaseActivity {
     private ViewPager mMainViewPager;
 
     private ImageGalleryPagerAdapter mAdapter;
-    private List<String> mDataList;
+    private List<File> mDataList;
+    private MobMediaView mSelectedMobView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,23 +56,24 @@ public class GalleryPagerActivity extends BaseActivity {
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                LogUtil.v("view", "onPageScrolled:" + position + ":" + positionOffset);
-                if (positionOffset > 1.0f) {
-                    MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
-                    if (itemView != null) {
-                        itemView.stop();
-                    }
-                }
             }
 
             @Override
             public void onPageSelected(int position) {
                 MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
-                itemView.play();
+                mSelectedMobView = itemView;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                switch (state) {
+                    case ViewPager.SCROLL_STATE_DRAGGING:
+                    case ViewPager.SCROLL_STATE_SETTLING:
+                        if (mSelectedMobView != null) {
+                            mSelectedMobView.stop();
+                        }
+                        break;
+                }
             }
         });
 
@@ -84,10 +88,13 @@ public class GalleryPagerActivity extends BaseActivity {
                         if (targetFile == null) {
                             return;
                         }
-                        mDataList = new ArrayList<String>();
+                        mDataList = new ArrayList<File>();
                         for (File file : targetFile.listFiles()) {
-                            mDataList.add(file.getAbsolutePath());
+                            mDataList.add(file);
                         }
+
+                        Collections.sort(mDataList,new FileComparator());
+
                         mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
                         mMainViewPager.setAdapter(mAdapter);
                     }

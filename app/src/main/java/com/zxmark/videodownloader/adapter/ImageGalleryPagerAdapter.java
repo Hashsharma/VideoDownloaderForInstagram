@@ -20,6 +20,7 @@ import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.widget.MobMediaView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,13 +33,13 @@ import java.util.List;
 public class ImageGalleryPagerAdapter extends PagerAdapter {
 
 
-    private List<String> mDataList;
+    private List<File> mDataList;
     private LinkedList<MobMediaView> mPageViewList;
     private RequestManager mImageLoader;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
 
-    public ImageGalleryPagerAdapter(Context context, List<String> dataList) {
+    public ImageGalleryPagerAdapter(Context context, List<File> dataList) {
         mDataList = dataList;
         mImageLoader = Glide.with(context);
         mPageViewList = new LinkedList<>();
@@ -72,7 +73,7 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        String bean = mDataList.get(position);
+        File bean = mDataList.get(position);
         MobMediaView convertView = null;
         if (mPageViewList.size() > 0) {
             convertView = mPageViewList.removeFirst();
@@ -81,7 +82,7 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
         }
 
         convertView.setTag(position);
-        convertView.setMediaSource(bean);
+        convertView.setMediaSource(bean.getAbsolutePath());
 
         container.addView(convertView);
         return convertView;

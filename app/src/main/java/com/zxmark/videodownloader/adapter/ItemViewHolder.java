@@ -11,7 +11,7 @@ import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.imobapp.videodownloaderforinstagram.R;
 
-/**
+/*
  * Created by fanlitao on 17/6/7.
  */
 
@@ -27,6 +27,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public View repostView;
     public View playView;
     public View albumView;
+    public TextView taskCountView;
+    public TextView hashTagView;
 
     public ItemViewHolder(View itemView) {
         super(itemView);
@@ -40,5 +42,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         repostView = itemView.findViewById(R.id.repost);
         playView = itemView.findViewById(R.id.play_view);
         albumView = itemView.findViewById(R.id.album_icon);
+        taskCountView = (TextView) itemView.findViewById(R.id.download_task_info);
+        hashTagView = (TextView) itemView.findViewById(R.id.hash_tag);
     }
 }

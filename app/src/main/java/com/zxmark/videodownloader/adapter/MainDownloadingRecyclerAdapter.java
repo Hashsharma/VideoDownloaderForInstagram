@@ -1,6 +1,7 @@
 package com.zxmark.videodownloader.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     private Context mContext;
     private IBtnCallback callback;
     private boolean mClickedPasteBtn = false;
+    private Resources mResources;
 
     public MainDownloadingRecyclerAdapter(List<DownloadContentItem> dataList, boolean isFullImage, IBtnCallback callback) {
         mDataList = dataList;
@@ -56,6 +58,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
         mContext = MainApplication.getInstance().getApplicationContext();
         this.callback = callback;
         mClickedPasteBtn = false;
+        mResources = mContext.getResources();
     }
 
     @Override
@@ -112,6 +115,8 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 }
             });
 
+            holder.hashTagView.setText(bean.pageTags);
+            holder.taskCountView.setText(mResources.getString(R.string.downloading_left_task_count, bean.fileCount));
             holder.playView.setVisibility(bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
             imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             if (TextUtils.isEmpty(bean.pageTitle)) {
