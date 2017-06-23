@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 
 import com.facebook.ads.NativeAd;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
@@ -154,7 +155,10 @@ public class DownloadContentItem implements BaseColumns {
     public List<String> futureImageList;
 
     public String getPageHome() {
-        return DownloadUtil.getDownloadItemDirectory(pageURL);
+        if (TextUtils.isEmpty(pageHOME)) {
+            pageHOME = DownloadUtil.getDownloadItemDirectory(pageURL);
+        }
+        return pageHOME;
     }
 
 

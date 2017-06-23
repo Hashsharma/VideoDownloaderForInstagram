@@ -114,8 +114,8 @@ public class DownloadUtil {
         if(!homeDirectory.exists()) {
             homeDirectory.mkdir();
         }
-        String name = getFileNameByUrl(pageURL);
-        File itemDirectory = new File(homeDirectory, name);
+       // String name = getFileNameByUrl(pageURL);
+        File itemDirectory = new File(homeDirectory, String.valueOf(System.currentTimeMillis()));
         if (!itemDirectory.exists()) {
             itemDirectory.mkdir();
         }

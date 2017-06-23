@@ -77,6 +77,7 @@ public class LearningDownloader {
         mCurrentTaskId = pageURL;
         mFilePos = filePos;
         LogUtil.e(TAG, "startDownload:" + pageURL);
+        LogUtil.v(TAG, "targetPath=" + tagetPath);
         long start = System.currentTimeMillis();
         download(filePos, fileUrl, tagetPath, THREAD_COUNT, 0, true);
         LogUtil.e(TAG, "time = " + (System.currentTimeMillis() - start));
@@ -97,6 +98,7 @@ public class LearningDownloader {
         HttpURLConnection conn = null;
         boolean firstRequestFailed = false;
         int targetLength = 0;
+        boolean acceptRange = false;
         try {
             //通过下载路径获取连接
             URL url = new URL(fileUrl);
@@ -109,6 +111,7 @@ public class LearningDownloader {
             LogUtil.e(TAG, "acceptRangs=" + acceptRanges);
             if (!TextUtils.isEmpty(acceptRanges) && "bytes".equals(acceptRanges)) {
                 //判断连接是否正确。
+                acceptRange = true;
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     // 获取文件大小。
                     int fileSize = conn.getContentLength();
@@ -156,18 +159,20 @@ public class LearningDownloader {
             if (firstRequestFailed) {
                 codeStatus = CODE_DOWNLOAD_FAILED;
             } else {
-                if (threadNum > 1) {
-                    retryLearningDownload(1);
-                    if (mDownloadingTaskMap.size() > 0) {
-                        codeStatus = CODE_DOWNLOAD_FAILED;
+                if (acceptRange) {
+                    if (threadNum > 1) {
+                        retryLearningDownload(1);
+                        if (mDownloadingTaskMap.size() > 0) {
+                            codeStatus = CODE_DOWNLOAD_FAILED;
+                        }
                     }
                 }
             }
 
             LogUtil.e("download", targetLength + ":" + new File(targetPath).length());
 
-            if (targetLength != new File(targetPath).length()) {
-                LogUtil.e(TAG, "multi task download file size different");
+            if (targetLength != new File(targetPath).length() || !acceptRange) {
+                LogUtil.e(TAG, "multi task download file size different:" + targetPath);
                 int retrySingleTimes = 0;
                 boolean finalResult = false;
                 while (retrySingleTimes < MAX_RETRY_TIMES) {

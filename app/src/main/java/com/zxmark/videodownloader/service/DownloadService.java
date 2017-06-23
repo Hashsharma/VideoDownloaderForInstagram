@@ -157,6 +157,7 @@ public class DownloadService extends Service {
                     public void run() {
                         final DownloadContentItem downloadContentItem = VideoDownloadFactory.getInstance().request(url);
                         if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
+                            LogUtil.e("main","downloadContentItem:" + downloadContentItem.getFileCount());
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
                             mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
                             DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);

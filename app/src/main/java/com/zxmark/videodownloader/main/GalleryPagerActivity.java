@@ -14,6 +14,7 @@ import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
+import com.zxmark.videodownloader.downloader.KuaiVideoDownloader;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
@@ -63,7 +64,6 @@ public class GalleryPagerActivity extends BaseActivity {
                 MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
                 mSelectedMobView = itemView;
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
                 switch (state) {
