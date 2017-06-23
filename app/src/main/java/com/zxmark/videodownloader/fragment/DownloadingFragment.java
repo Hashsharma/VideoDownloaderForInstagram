@@ -259,8 +259,9 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         DownloadContentItem bean = new DownloadContentItem();
         bean.pageURL = pageURL;
         if (mDataList.contains(bean)) {
-            mAdapter.notifyItemInserted(mDataList.indexOf(bean));
+            mAdapter.notifyItemRemoved(mDataList.indexOf(bean));
             mDataList.remove(bean);
+
         }
     }
 
