@@ -172,7 +172,7 @@ public class DownloadContentItem implements BaseColumns {
             futureImageList = new ArrayList<>();
         }
 
-        if (mimeType == PAGE_MIME_TYPE_VIDEO) {
+        if (getMimeType() == PAGE_MIME_TYPE_VIDEO) {
             if (pageThumb != null && pageThumb.equals(path)) {
                 return;
             }
