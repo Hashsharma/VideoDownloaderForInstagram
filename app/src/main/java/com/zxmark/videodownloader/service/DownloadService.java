@@ -19,6 +19,8 @@ import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.db.DownloadContentItem;
+import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
@@ -45,6 +47,7 @@ public class DownloadService extends Service {
 
     public static final String DIR = "mob_ins_downloader";
     public static final String DOWNLOAD_ACTION = "download_action";
+    public static final String DOWNLOAD_PAGE_URL = "page_url";
     public static final String REQUEST_VIDEO_URL_ACTION = "request_video_url_action";
     public static final String REQUEST_DOWNLOAD_VIDEO_ACTION = "request_download_video_action";
     public static final String EXTRAS_FLOAT_VIEW = "extras_float_view";
@@ -64,18 +67,21 @@ public class DownloadService extends Service {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
-                DownloadService.this.notifyDownloadFinished((String) msg.obj);
+                if (msg.obj != null) {
+                    DownloadService.this.notifyDownloadFinished((String) msg.obj);
+                }
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
                     IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
                 }
             } else if (msg.what == MSG_DOWNLOAD_START) {
 //                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
+                showFloatView();
                 IToast.makeText(DownloadService.this, R.string.download_result_start, Toast.LENGTH_SHORT).show();
 //                }
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
-                DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg1);
+                DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg2, msg.arg1);
             } else if (msg.what == MSG_NOTIFY_DOWNLOADED) {
                 IToast.makeText(DownloadService.this, R.string.toast_downlaoded_video, Toast.LENGTH_SHORT).show();
             }
@@ -99,22 +105,25 @@ public class DownloadService extends Service {
             LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
             if (DOWNLOAD_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
+                final String pageURL = intent.getStringExtra(DOWNLOAD_PAGE_URL);
+
                 if (TextUtils.isEmpty(url)) {
                     return super.onStartCommand(intent, flags, startId);
                 }
-
+                DownloadContentItem item = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
+                final String homeDir = item.getTargetDirectory(url);
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
-                        PowerfulDownloader.getDefault().startDownload(url, url, new PowerfulDownloader.IPowerfulDownloadCallback() {
+                        PowerfulDownloader.getDefault().startDownload(pageURL, 0, url, homeDir, new PowerfulDownloader.IPowerfulDownloadCallback() {
                             @Override
                             public void onStart(String path) {
 
                             }
 
                             @Override
-                            public void onFinish(int statusCode, String path) {
-                                mHandler.obtainMessage(MSG_DOWNLOAD_SUCCESS).sendToTarget();
+                            public void onFinish(int statusCode, String pageURL, int filePositon, String path) {
+                                mHandler.sendEmptyMessage(MSG_DOWNLOAD_SUCCESS);
                             }
 
                             @Override
@@ -123,9 +132,8 @@ public class DownloadService extends Service {
                             }
 
                             @Override
-                            public void onProgress(String path, int progress) {
-//                        mHandler.obtainMessage(MSG_UPDATE_PROGRESS, progress, 0).sendToTarget();
-//                        DownloadService.this.notifyDownloadProgress(path, progress);
+                            public void onProgress(String pageURL, int filePositon, String path, int progress) {
+
                             }
                         });
                     }
@@ -134,76 +142,21 @@ public class DownloadService extends Service {
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
-                LogUtil.e("main", "DownloadService.showFloatView:" + showFloatView);
-                DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (DBHelper.getDefault().isDownloadedPage(url)) {
-                            LogUtil.e("main","isDownloaded");
-                            mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
-                            return;
-                        }
-                        WebPageStructuredData webPageStructuredData = VideoDownloadFactory.getInstance().request(url);
-                        if (webPageStructuredData != null) {
-                            if (webPageStructuredData.futureVideoList != null && webPageStructuredData.futureVideoList.size() > 0) {
-                                if (showFloatView) {
-                                    showFloatView();
-                                }
+                LogUtil.e("main", "DownloadService.showFloatView:" + url);
 
-                                for (String videoUrl : webPageStructuredData.futureVideoList) {
-                                    final String videoPath = DownloadUtil.getDownloadTargetInfo(videoUrl);
-                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, webPageStructuredData.videoThumbnailUrl, videoUrl, webPageStructuredData.appPageUrl, videoPath);
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            notifyReceiveNewTask(videoPath);
-                                        }
-                                    });
-                                }
-                            }
-
-                            if (webPageStructuredData.futureImageList != null && webPageStructuredData.futureImageList.size() > 0) {
-                                if (showFloatView) {
-                                    showFloatView();
-                                }
-
-                                for (String imageUrl : webPageStructuredData.futureImageList) {
-                                    final String imagePath = DownloadUtil.getDownloadTargetInfo(imageUrl);
-                                    DBHelper.getDefault().insertNewTask(webPageStructuredData.pageTitle, url, imageUrl, imageUrl, webPageStructuredData.appPageUrl, imagePath);
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            notifyReceiveNewTask(imagePath);
-                                        }
-                                    });
-                                }
-                            }
-
-                            //TODO:如果当前是WIFI连接，自动下载该资源
-                            if (NetWorkUtil.isWifi(DownloadService.this)) {
-                                DownloadingTaskList.SINGLETON.setHandler(mHandler);
-                                DownloadingTaskList.SINGLETON.addNewDownloadTask(url, webPageStructuredData);
-                            }
-                        } else {
-                            //TODO:解析失败
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    notifyReceiveNewTask(null);
-                                }
-                            });
-
-                        }
-                    }
-                });
             } else if (REQUEST_DOWNLOAD_VIDEO_ACTION.equals(intent.getAction())) {
                 String url = intent.getStringExtra(Globals.EXTRAS);
+                if (DownloaderDBHelper.SINGLETON.isExistDownloadedPageURL(url)) {
+                    mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
+                    return super.onStartCommand(intent, flags, startId);
+                }
                 DownloadingTaskList.SINGLETON.setHandler(mHandler);
-                DownloadingTaskList.SINGLETON.addNewDownloadTask(url, false);
+                DownloadingTaskList.SINGLETON.addNewDownloadTask(url);
             }
         }
 
         return super.onStartCommand(intent, flags, startId);
+
     }
 
     /**
@@ -251,84 +204,19 @@ public class DownloadService extends Service {
 //            downloadImage(webPageStructuredData);
 //        }
 //    }
-    private boolean startDownload(String fileUrl) {
-        if (TextUtils.isEmpty(fileUrl)) {
-            return false;
-        }
-        Log.v("download", "startDownload:" + fileUrl);
-        InputStream input = null;
-        OutputStream output = null;
-        HttpURLConnection connection = null;
-        String targetPath = null;
-        try {
-            URL url = new URL(fileUrl);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-            // expect HTTP 200 OK, so we don't mistakenly save error report
-            // instead of the file
-            LogUtil.e("TL", "connection.getResponseCode:" + connection.getResponseCode());
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.v("download", "request.responseCode is not ok");
-                return false;
-            }
-
-            // this will be useful to display download percentage
-            // might be -1: server did not report the length
-            int fileLength = connection.getContentLength();
-            LogUtil.e("TL", "fileLength=" + fileLength);
-            // download the file
-            input = connection.getInputStream();
-            targetPath = DownloadUtil.getDownloadTargetInfo(fileUrl);
-            output = new FileOutputStream(targetPath);
-            notifyStartDownload(targetPath);
-            byte data[] = new byte[4096];
-            long total = 0;
-            int count;
-            while ((count = input.read(data)) != -1) {
-                // allow canceling with back button
-                total += count;
-                // publishing the progress....
-                if (fileLength > 0) // only if total length is known
-                    publishProgress(targetPath, (int) (total * 100 / fileLength));
-                output.write(data, 0, count);
-            }
-
-            LogUtil.e("TL", "total.byte=" + total);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.e("TL", "exception:" + e.getMessage());
-            return false;
-        } finally {
-            try {
-                if (output != null)
-                    output.close();
-                if (input != null)
-                    input.close();
-            } catch (IOException ignored) {
-                LogUtil.e("TL", "exception:" + ignored.getMessage());
-                return false;
-            }
-
-            if (connection != null)
-                connection.disconnect();
-        }
-
-        return true;
-    }
-
-    public void publishProgress(String filePath, int progress) {
-        notifyDownloadProgress(filePath, progress);
+    public void publishProgress(String pageURL, int filePosition, int progress) {
+        notifyDownloadProgress(pageURL, filePosition, progress);
     }
 
     private Object sCallbackLock = new Object();
 
-    private void notifyDownloadProgress(String filePath, int progress) {
+    private void notifyDownloadProgress(String pageUrl, int filePosition, int progress) {
         synchronized (sCallbackLock) {
             if (mCallbacks.getRegisteredCallbackCount() > 0) {
                 final int N = mCallbacks.beginBroadcast();
                 for (int i = 0; i < N; i++) {
                     try {
-                        mCallbacks.getBroadcastItem(i).onPublishProgress(filePath, progress);
+                        mCallbacks.getBroadcastItem(i).onPublishProgress(pageUrl, filePosition, progress);
                     } catch (RemoteException e) {
                         // The RemoteCallbackList will take care of removing
                         // the dead object for us.

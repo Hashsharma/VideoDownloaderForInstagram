@@ -27,6 +27,8 @@ import com.zxmark.videodownloader.MainApplication;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.db.DownloadContentItem;
+import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
@@ -43,13 +45,13 @@ import java.util.List;
 
 public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<VideoBean> mDataList;
+    private List<DownloadContentItem> mDataList;
     private RequestManager imageLoader;
     private boolean mFullImageState = false;
     private Context mContext;
     private DBHelper mDBHelper;
 
-    public MainListRecyclerAdapter(List<VideoBean> dataList, boolean isFullImage) {
+    public MainListRecyclerAdapter(List<DownloadContentItem> dataList, boolean isFullImage) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
         mFullImageState = isFullImage;
@@ -60,7 +62,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (viewType == MainDownloadingRecyclerAdapter.VIEW_TYPE_AD) {
+        if (viewType == DownloadContentItem.TYPE_FACEBOOK_AD) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.facebook_native_item_2,
                             parent, false);
@@ -76,30 +78,29 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
-        final VideoBean bean = mDataList.get(position);
+        final DownloadContentItem bean = mDataList.get(position);
 
         if (baseHolder instanceof ItemViewHolder) {
             ItemViewHolder holder = (ItemViewHolder) baseHolder;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DownloadUtil.openVideo(bean.videoPath);
+                    DownloadUtil.openFileList(bean.pageHOME);
                 }
             });
 
             holder.titleTv.setText(bean.pageTitle);
-            final boolean isVideo = MimeTypeUtil.isVideoType(bean.videoPath);
+            final boolean isVideo = bean.getMimeType() == bean.PAGE_MIME_TYPE_VIDEO;
             if (isVideo) {
-                imageLoader.load(bean.videoPath).into(holder.thumbnailView);
                 holder.playView.setVisibility(View.VISIBLE);
             } else {
-                imageLoader.load(bean.videoPath).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
                 holder.playView.setVisibility(View.GONE);
             }
+            imageLoader.load(bean.pageThumb).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             holder.repostView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), bean.videoPath);
+                //    ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), bean.videoPath);
                 }
             });
 
@@ -110,29 +111,30 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     PopWindowUtils.showVideoMoreOptionWindow(v, new IPopWindowClickCallback() {
                         @Override
                         public void onDelete() {
-                            new File(bean.videoPath).delete();
-                            mDataList.remove(bean);
-                            DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
-                            notifyDataSetChanged();
+                            int index = mDataList.indexOf(bean);
+                            notifyItemRemoved(index);
+                            mDataList.remove(index);
+
+                            DownloaderDBHelper.SINGLETON.deleteDownloadTaskAsync(bean.pageURL);
                         }
 
                         @Override
                         public void launchAppByUrl() {
-                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
-                                Utils.openInstagramByUrl(bean.appPageUrl);
-                            }
+//                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
+//                              //  Utils.openInstagramByUrl(bean.appPageUrl);
+//                            }
                         }
 
                         @Override
                         public void onPasteSharedUrl() {
-                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
-                                Utils.copyText2Clipboard(bean.sharedUrl);
-                            }
+//                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
+//                                Utils.copyText2Clipboard(bean.sharedUrl);
+//                            }
                         }
 
                         @Override
                         public void onShare() {
-                            Utils.startShareIntent(bean.file.getAbsolutePath());
+                           // Utils.startShareIntent(bean.file.getAbsolutePath());
                         }
                     });
                 }
@@ -181,6 +183,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemViewType(int position) {
-        return mDataList.get(position).type;
+        return mDataList.get(position).itemType;
     }
 }

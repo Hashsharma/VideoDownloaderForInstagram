@@ -179,9 +179,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-          //  Utils.openInstagram();
-            Intent intent = new Intent(this, GalleryPagerActivity.class);
-            startActivity(intent);
+            Utils.openInstagram();
         } else if (id == R.id.nav_gallery) {
             if (mViewPagerAdapter.getDownloadingFragment() != null) {
                 mViewPagerAdapter.getDownloadingFragment().showHotToInfo();
@@ -257,20 +255,20 @@ public class MainActivity extends AppCompatActivity
 
     private IDownloadCallback.Stub mRemoteCallback = new IDownloadCallback.Stub() {
         @Override
-        public void onPublishProgress(final String key, final int progress) throws RemoteException {
+        public void onPublishProgress(final String pageURL, final int filePostion, final int progress) throws RemoteException {
             if (mViewPagerAdapter != null && mViewPagerAdapter.getDownloadingFragment() != null) {
-                mViewPagerAdapter.getDownloadingFragment().publishProgress(key, progress);
+                mViewPagerAdapter.getDownloadingFragment().publishProgress(pageURL, filePostion, progress);
             }
         }
 
         @Override
-        public void onReceiveNewTask(final String filePath) throws RemoteException {
-            LogUtil.v("start", "onReceiveNewTask:" + filePath);
+        public void onReceiveNewTask(final String pageURL) throws RemoteException {
+            LogUtil.v("start", "onReceiveNewTask:" + pageURL);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (mViewPagerAdapter.getDownloadingFragment() != null) {
-                        mViewPagerAdapter.getDownloadingFragment().onReceiveNewTask(filePath);
+                        mViewPagerAdapter.getDownloadingFragment().onReceiveNewTask(pageURL);
                     }
                 }
             });
@@ -348,7 +346,7 @@ public class MainActivity extends AppCompatActivity
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setTitle(R.string.nav_change_language)
-                                .setSingleChoiceItems(supportLanguages,PreferenceUtils.getCurrentLanguagePos(), new DialogInterface.OnClickListener() {
+                                .setSingleChoiceItems(supportLanguages, PreferenceUtils.getCurrentLanguagePos(), new DialogInterface.OnClickListener() {
 
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

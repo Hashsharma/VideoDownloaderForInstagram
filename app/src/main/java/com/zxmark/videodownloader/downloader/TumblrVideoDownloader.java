@@ -3,7 +3,9 @@ package com.zxmark.videodownloader.downloader;
 import android.util.Log;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
+import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
+import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import org.json.JSONArray;
@@ -82,24 +84,26 @@ public class TumblrVideoDownloader extends BaseDownloader {
     }
 
     @Override
-    public WebPageStructuredData startSpideThePage(String htmlUrl) {
+    public DownloadContentItem startSpideThePage(String htmlUrl) {
         String targetUrl = String.format(URL_FORMAT, getTumblrBlogId(htmlUrl), getTumblrPostId(htmlUrl));
         LogUtil.e("fan2", "tumblr.blog.api:" + targetUrl);
         String content = startRequest(targetUrl);
         String videoUrl = null;
         LogUtil.e("tumblr", "content:" + content);
-        WebPageStructuredData data = new WebPageStructuredData();
+        DownloadContentItem data = new DownloadContentItem();
         try {
 
             JSONObject rootJsonObj = new JSONObject(content);
             String pageTitle = rootJsonObj.getJSONObject("response").getJSONObject("blog").getString("title");
             data.pageTitle = pageTitle;
+            data.pageDesc = rootJsonObj.getJSONObject("response").getJSONObject("blog").getString("description");
+            int fileCount = 0;
             if (rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).has("video_url")) {
                 videoUrl = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("video_url");
                 String videoThumbnailUrl = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("thumbnail_url");
                 data.pageTitle = rootJsonObj.getJSONObject("response").getJSONArray("posts").getJSONObject(0).getString("summary");
                 LogUtil.e("tumblr", "videoUrl:" + videoUrl);
-                data.videoThumbnailUrl = videoThumbnailUrl;
+                data.pageThumb = videoThumbnailUrl;
                 data.addVideo(videoUrl);
             }
 
@@ -112,8 +116,12 @@ public class TumblrVideoDownloader extends BaseDownloader {
                     LogUtil.v("json", "imageUrl:" + url);
                     data.addImage(url);
                 }
-            }
 
+                if (data.futureImageList != null && data.futureImageList.size() > 0) {
+                    data.pageThumb = data.futureImageList.get(0);
+                }
+            }
+            data.pageHOME = DownloadUtil.getDownloadItemDirectory(htmlUrl);
         } catch (JSONException ex) {
             ex.printStackTrace();
             data.futureVideoList = null;

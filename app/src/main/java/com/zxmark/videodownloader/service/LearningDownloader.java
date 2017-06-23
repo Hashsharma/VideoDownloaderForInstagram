@@ -49,6 +49,7 @@ public class LearningDownloader {
     private ConcurrentHashMap<Integer, DownloadingThread> mDownloadingTaskMap = new ConcurrentHashMap<>();
 
     private String mCurrentTaskId;
+    private int mFilePos;
 
     private LearningDownloader() {
         int cpuCount = CpuUtils.getNumberOfCPUCores() + 1;
@@ -71,19 +72,20 @@ public class LearningDownloader {
         mInternalErrorInterupted.set(true);
     }
 
-    public void startDownload(String taskId, String fileUrl, IPowerfulDownloadCallback callback) {
+    public void startDownload(int filePos, String pageURL, String fileUrl, String tagetPath, IPowerfulDownloadCallback callback) {
         mCallback = callback;
-        mCurrentTaskId = taskId;
-        LogUtil.e(TAG, "startDownload:" + taskId);
+        mCurrentTaskId = pageURL;
+        mFilePos = filePos;
+        LogUtil.e(TAG, "startDownload:" + pageURL);
         long start = System.currentTimeMillis();
-        download(fileUrl, DownloadUtil.getDownloadTargetInfo(fileUrl), THREAD_COUNT, 0, true);
+        download(filePos, fileUrl, tagetPath, THREAD_COUNT, 0, true);
         LogUtil.e(TAG, "time = " + (System.currentTimeMillis() - start));
     }
 
     /**
      * 下载文件
      */
-    private void download(String fileUrl, String targetPath, int threadNum, int retryTime, boolean notifyCallback) {
+    private void download(final int filePos, String fileUrl, String targetPath, int threadNum, int retryTime, boolean notifyCallback) {
         int codeStatus = CODE_OK;
         CountDownLatch latch = null;
         if (threadNum > 1) {
@@ -102,10 +104,10 @@ public class LearningDownloader {
             //设置连接的相关属性
             conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
             conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
-            conn.setRequestProperty("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
             String acceptRanges = conn.getHeaderField("Accept-Ranges");
-            LogUtil.e(TAG,"acceptRangs=" + acceptRanges);
-            if(!TextUtils.isEmpty(acceptRanges) && "bytes".equals(acceptRanges)) {
+            LogUtil.e(TAG, "acceptRangs=" + acceptRanges);
+            if (!TextUtils.isEmpty(acceptRanges) && "bytes".equals(acceptRanges)) {
                 //判断连接是否正确。
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     // 获取文件大小。
@@ -113,7 +115,7 @@ public class LearningDownloader {
                     targetLength = fileSize;
                     if (fileSize <= 0) {
                         if (mCallback != null) {
-                            mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetPath);
+                            mCallback.onFinish(CODE_DOWNLOAD_FAILED, mCurrentTaskId, filePos, targetPath);
                         }
                         return;
                     }
@@ -125,7 +127,7 @@ public class LearningDownloader {
                     int block = fileSize % threadNum == 0 ? fileSize / threadNum
                             : fileSize / threadNum + 1;
                     for (int threadId = 0; threadId < threadNum; threadId++) {
-                        new DownloadThread(threadId, fileSize, block, file, url, latch).start();
+                        new DownloadThread(threadId, fileSize, block, file, mFilePos, url, latch).start();
 
                     }
                     LogUtil.e(TAG, "wait all downloading thread");
@@ -134,7 +136,7 @@ public class LearningDownloader {
                     }
                 }
             } else {
-                LogUtil.e(TAG,"dont support paratition download file");
+                LogUtil.e(TAG, "dont support paratition download file");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,7 +172,7 @@ public class LearningDownloader {
             int retrySingleTimes = 0;
             boolean finalResult = false;
             while (retrySingleTimes < MAX_RETRY_TIMES) {
-                boolean result = startDownloadBySingleThread(fileUrl, targetPath);
+                boolean result = startDownloadBySingleThread(fileUrl, targetPath, mFilePos);
                 finalResult = result;
                 if (result) {
                     break;
@@ -184,7 +186,7 @@ public class LearningDownloader {
         LogUtil.e(TAG, "codeStatus:" + codeStatus);
         if (notifyCallback) {
             if (mCallback != null) {
-                mCallback.onFinish(codeStatus, targetPath);
+                mCallback.onFinish(codeStatus, mCurrentTaskId, filePos, targetPath);
             }
 
         }
@@ -201,7 +203,7 @@ public class LearningDownloader {
                     //TODO:开启多线程下载是失败的策略，在这里选择单线程下载
                     LogUtil.e(TAG, "start single thread");
                     DownloadingThread thread = mDownloadingTaskMap.get(0);
-                    startDownloadBySingleThread(thread.url, thread.file);
+                    startDownloadBySingleThread(thread.url, thread.file, mFilePos);
                 } else {
                     LogUtil.e(TAG, "multi task download error:" + mDownloadingTaskMap.size());
                     CountDownLatch retryLatch = new CountDownLatch(mDownloadingTaskMap.size());
@@ -211,7 +213,7 @@ public class LearningDownloader {
                         DownloadingThread futureTask = tempTaskMap.get(threadId);
                         if (futureTask != null) {
                             LogUtil.e(TAG, "futureTask:" + futureTask.threadId + ":" + mReadBytesCount);
-                            new DownloadThread(futureTask, retryLatch).start();
+                            new DownloadThread(futureTask, mFilePos, retryLatch).start();
                         }
                     }
                     tempTaskMap.clear();
@@ -233,17 +235,17 @@ public class LearningDownloader {
         return mCurrentTaskId;
     }
 
-    private boolean startDownloadBySingleThread(String stringUrl, String targetpath) {
+    private boolean startDownloadBySingleThread(String stringUrl, String targetpath, final int filePos) {
         try {
             URL requestUrl = new URL(stringUrl);
-            return startDownloadBySingleThread(requestUrl, new File(targetpath));
+            return startDownloadBySingleThread(requestUrl, new File(targetpath), filePos);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    private boolean startDownloadBySingleThread(URL requestUrl, File targetFile) {
+    private boolean startDownloadBySingleThread(URL requestUrl, File targetFile, final int filePos) {
         LogUtil.e(TAG, "startDownloadBySingleThread");
         HttpURLConnection conn = null;
         //通过下载路径获取连接
@@ -259,7 +261,7 @@ public class LearningDownloader {
                 int fileSize = conn.getContentLength();
                 if (fileSize <= 0) {
                     if (mCallback != null) {
-                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetFile.getAbsolutePath());
+                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, mCurrentTaskId, filePos, targetFile.getAbsolutePath());
                     }
                     return false;
                 }
@@ -284,7 +286,7 @@ public class LearningDownloader {
                     fos.flush();
                     mReadBytesCount += byteCount;
                     if (mCallback != null) {
-                        mCallback.onProgress(targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
+                        mCallback.onProgress(mCurrentTaskId, filePos, targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                     }
                 }
                 fis.close();
@@ -316,8 +318,9 @@ public class LearningDownloader {
         CountDownLatch latch;
         String filePath;
         int fileSize;
+        int filePositon;
 
-        public DownloadThread(int threadId, int fileSize, int block, File file, URL url, CountDownLatch latch) {
+        public DownloadThread(int threadId, int fileSize, int block, File file, final int filePos, URL url, CountDownLatch latch) {
             this.threadId = threadId;
             start = block * threadId;
             end = block * (threadId + 1) - 1;
@@ -333,9 +336,10 @@ public class LearningDownloader {
             thread.file = file;
             thread.url = url;
             mDownloadingTaskMap.put(threadId, thread);
+            filePositon = filePos;
         }
 
-        public DownloadThread(DownloadingThread downloadingThread, CountDownLatch latch) {
+        public DownloadThread(DownloadingThread downloadingThread, final int filePos, CountDownLatch latch) {
             this.threadId = downloadingThread.threadId;
             start = downloadingThread.block * threadId;
             end = downloadingThread.block * (threadId + 1) - 1;
@@ -346,6 +350,7 @@ public class LearningDownloader {
             this.fileSize = downloadingThread.fileSize;
             mDownloadingTaskMap.put(threadId, downloadingThread);
             this.latch = latch;
+            filePositon = filePos;
         }
 
         public void run() {
@@ -357,11 +362,11 @@ public class LearningDownloader {
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
                 conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
-                conn.setRequestProperty("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
                 //此步骤是关键。
                 conn.setRequestProperty("Range", "bytes=" + start + "-" + end);
                 int responseCode = conn.getResponseCode();
-                LogUtil.e(TAG,threadId +": responseCode=" + responseCode);
+                LogUtil.e(TAG, threadId + ": responseCode=" + responseCode);
                 if (responseCode == HttpURLConnection.HTTP_PARTIAL) {
                     RandomAccessFile raf = new RandomAccessFile(file, "rw");
                     //移动指针至该线程负责写入数据的位置。
@@ -378,7 +383,7 @@ public class LearningDownloader {
                         partiionLength += len;
                         mReadBytesCount += len;
                         if (mCallback != null) {
-                            mCallback.onProgress(filePath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
+                            mCallback.onProgress(mCurrentTaskId, filePositon, filePath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                         }
                         raf.write(b, 0, len);
                     }
@@ -411,11 +416,11 @@ public class LearningDownloader {
     public interface IPowerfulDownloadCallback {
         void onStart(String path);
 
-        void onFinish(int statusCode, String path);
+        void onFinish(int statusCode, String pageURL, int filePositon, String path);
 
         void onError(int errorCode);
 
-        void onProgress(String path, final int progress);
+        void onProgress(String pageURL, int filePositon, String path, final int progress);
     }
 
 

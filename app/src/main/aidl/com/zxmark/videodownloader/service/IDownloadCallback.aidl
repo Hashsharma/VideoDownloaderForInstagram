@@ -6,12 +6,12 @@ interface IDownloadCallback {
 
 
     void onReceiveNewTask(String pageUrl);
-    void onStartDownload(String path);
+    void onStartDownload(String pageURL);
     /**
      * Demonstrates some basic types that you can use as parameters
      * and return values in AIDL.
      */
-    void onPublishProgress(String key,int progress);
-    void onDownloadSuccess(String path);
-    void onDownloadFailed(String path);
+    void onPublishProgress(String pageURL,int filePositon,int progress);
+    void onDownloadSuccess(String pageURL);
+    void onDownloadFailed(String pageURL);
 }

@@ -4,7 +4,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
+import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
+import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.util.regex.Matcher;
@@ -76,25 +78,27 @@ public class KuaiVideoDownloader extends BaseDownloader {
 
     /**
      * =null就是解析失败
+     *
      * @param htmlUrl
      * @return
      */
     @Override
-    public WebPageStructuredData startSpideThePage(String htmlUrl) {
+    public DownloadContentItem startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
         String videoUrl = getVideoUrl(content);
         String imageUrl = getImageUrl(content);
         String pageTitle = getPageTitle(content);
-        WebPageStructuredData data = new WebPageStructuredData();
+        DownloadContentItem data = new DownloadContentItem();
 
         if (!TextUtils.isEmpty(videoUrl)) {
             data.addVideo(videoUrl);
-            data.videoThumbnailUrl = imageUrl;
+            data.pageThumb = imageUrl;
             data.pageTitle = pageTitle;
-            data.appPageUrl = htmlUrl;
+            data.pageURL = htmlUrl;
+            data.pageHOME = DownloadUtil.getDownloadItemDirectory(htmlUrl);
         }
 
-        if(data.futureVideoList == null && data.futureImageList == null) {
+        if (data.futureVideoList == null && data.futureImageList == null) {
             return null;
         }
         return data;

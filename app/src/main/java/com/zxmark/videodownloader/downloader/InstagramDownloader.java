@@ -4,7 +4,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
+import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
+import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.IOException;
@@ -60,7 +62,7 @@ public class InstagramDownloader extends BaseDownloader {
 
         if (ma.find()) {
             imageUrl = ma.group(1);
-            LogUtil.e("image","origin_imageUrl=" + imageUrl);
+            LogUtil.e("image", "origin_imageUrl=" + imageUrl);
         }
 
 
@@ -145,7 +147,7 @@ public class InstagramDownloader extends BaseDownloader {
         return hashTagsBuilder.toString();
     }
 
-    public void getImageUrlFromJs(String content, WebPageStructuredData data) {
+    public void getImageUrlFromJs(String content, DownloadContentItem data) {
         String regex;
         String imageUrl = "";
         regex = "\"display_url\": \"(.*?)\"";
@@ -167,7 +169,7 @@ public class InstagramDownloader extends BaseDownloader {
         }
     }
 
-    public void getVideoUrlFromJs(String content, WebPageStructuredData data) {
+    public void getVideoUrlFromJs(String content, DownloadContentItem data) {
         String regex;
         String imageUrl = "";
         regex = "\"video_url\": \"(.*?)\"";
@@ -180,23 +182,23 @@ public class InstagramDownloader extends BaseDownloader {
 
     }
 
-    public WebPageStructuredData startSpideThePage(String htmlUrl) {
+    public DownloadContentItem startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
-        WebPageStructuredData data = new WebPageStructuredData();
+        DownloadContentItem data = new DownloadContentItem();
         getVideoUrlFromJs(content, data);
-        if (data.futureVideoList != null) {
-            data.videoThumbnailUrl = getImageUrl(content);
-        }
+        data.pageThumb = getImageUrl(content);
         getImageUrlFromJs(content, data);
 
-        String title = getPageTitle(content);
-        data.pageTitle = title;
+        data.pageTitle = getPageTitle(content);
         data.pageDesc = getDescription(content);
-        data.appPageUrl = getLaunchInstagramUrl(content);
-        data.hashTags = getPageHashTags(content);
+        data.pageURL = htmlUrl;
+        data.pageTags = getPageHashTags(content);
+        data.pageHOME = DownloadUtil.getDownloadItemDirectory(htmlUrl);
         if (data.futureImageList == null && data.futureVideoList == null) {
             return null;
         }
+
+        LogUtil.e("ins","data.futerImageList.size:" + (data.futureImageList == null ? 0 : data.futureImageList.size()));
         return data;
     }
 

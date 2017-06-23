@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 public class DownloaderContentProvider extends ContentProvider {
     public static final String TAG = "download";
-    public static final String DATABASE_NAME = "downloader.db";
+    public static final String DATABASE_NAME = "imob_downloader.db";
     public static final int DATABASE_VERSION = 1;
     public static String AUTHORITY = "com.imobapp.videodownloaderforinstagram";
 
@@ -48,6 +48,7 @@ public class DownloaderContentProvider extends ContentProvider {
         sDownloaderProjectioNMap.put(DownloadContentItem.PAGE_DESCRIPTION, DownloadContentItem.PAGE_DESCRIPTION);
         sDownloaderProjectioNMap.put(DownloadContentItem.HASH_TAGS, DownloadContentItem.HASH_TAGS);
         sDownloaderProjectioNMap.put(DownloadContentItem.PAGE_DOWNLOAD_FILE_COUNT, DownloadContentItem.PAGE_DOWNLOAD_FILE_COUNT);
+        sDownloaderProjectioNMap.put(DownloadContentItem.PAGE_MIME_TYPE, DownloadContentItem.PAGE_MIME_TYPE);
         sDownloaderProjectioNMap.put(DownloadContentItem.PAGE_STATUS, DownloadContentItem.PAGE_STATUS);
 
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -179,7 +180,7 @@ public class DownloaderContentProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            LogUtil.v(TAG, "DatabaseHelper.onCreate");
+            LogUtil.e(TAG, "DatabaseHelper.onCreate");
             db.execSQL(DownloadContentItem.SQL_CREATE_TABLE);
         }
 

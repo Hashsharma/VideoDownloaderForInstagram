@@ -15,6 +15,7 @@ import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.widget.MobMediaView;
 
@@ -45,6 +46,7 @@ public class GalleryPagerActivity extends BaseActivity {
 
         setContentView(R.layout.gallery_pager);
 
+        final String baseHome = getIntent().getStringExtra(Globals.EXTRAS);
 
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
         mMainViewPager.setOffscreenPageLimit(2);
@@ -53,7 +55,7 @@ public class GalleryPagerActivity extends BaseActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 LogUtil.v("view", "onPageScrolled:" + position);
                 MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
-                LogUtil.e("view","itemView=" + itemView);
+                LogUtil.e("view", "itemView=" + itemView);
                 if (itemView != null) {
                     itemView.stop();
                 }
@@ -76,7 +78,10 @@ public class GalleryPagerActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        File targetFile = DownloadUtil.getHomeDirectory();
+                        File targetFile = new File(baseHome);
+                        if (targetFile == null) {
+                            return;
+                        }
                         mDataList = new ArrayList<String>();
                         for (File file : targetFile.listFiles()) {
                             mDataList.add(file.getAbsolutePath());

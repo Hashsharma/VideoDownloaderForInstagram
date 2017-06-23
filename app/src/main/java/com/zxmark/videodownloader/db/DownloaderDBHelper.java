@@ -6,9 +6,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.zxmark.videodownloader.MainApplication;
+import com.zxmark.videodownloader.downloader.DownloadingTaskList;
+import com.zxmark.videodownloader.util.LogUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +35,15 @@ public class DownloaderDBHelper {
 
 
     public void saveNewDownloadTask(DownloadContentItem item) {
-        mContentResolver.insert(DownloadContentItem.CONTENT_URI, DownloadContentItem.from(item));
+        Uri id = mContentResolver.insert(DownloadContentItem.CONTENT_URI, DownloadContentItem.from(item));
+        LogUtil.e("db", "saveNewDownloadTask:" + id + ":" + item.pageURL);
     }
 
     public List<DownloadContentItem> getDownloadingTask() {
         Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_STATUS + " = ?", new String[]{String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOADING)}, null);
+        List<DownloadContentItem> itemList = new ArrayList<>();
         try {
             if (cursor != null) {
-                List<DownloadContentItem> itemList = new ArrayList<>();
                 while (cursor.moveToNext()) {
                     DownloadContentItem item = DownloadContentItem.fromCusor(cursor);
                     itemList.add(item);
@@ -46,7 +51,7 @@ public class DownloaderDBHelper {
                 return itemList;
             }
 
-            return null;
+            return itemList;
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -91,13 +96,70 @@ public class DownloaderDBHelper {
         }
     }
 
+    public int getPageIdByPageURL(String pageURL) {
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL}, null);
+        try {
+            if (cursor != null) {
+                if (cursor.moveToNext()) {
+                    return cursor.getInt(cursor.getColumnIndexOrThrow(DownloadContentItem._ID));
+                }
+            }
+            return -1;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
-    public int updateDownloadTaskStatus(DownloadContentItem item, int status) {
+
+    public void finishDownloadTask(String pageURL) {
+        if (TextUtils.isEmpty(pageURL)) {
+            return;
+        }
+        int pageId = getPageIdByPageURL(pageURL);
+        LogUtil.e("db", "finishDownloadTask:" + pageURL + ":" + pageId);
+        if (pageId > -1) {
+            updateDownloadTaskStatus(pageId, DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED);
+        }
+    }
+
+    public int updateDownloadTaskStatus(int pageId, int status) {
         ContentValues values = new ContentValues();
         values.put(DownloadContentItem.PAGE_STATUS, status);
-        Uri uri = ContentUris.withAppendedId(DownloadContentItem.CONTENT_URI, item.pageId);
+        Uri uri = ContentUris.withAppendedId(DownloadContentItem.CONTENT_URI, pageId);
         int count = mContentResolver.update(uri, values, null, null);
         return count;
+    }
 
+    public int deleteDownloadTask(String pageURL) {
+        DownloadContentItem item = getDownloadItemByPageURL(pageURL);
+        if (item != null) {
+            String dir = item.pageHOME;
+            File dirFile = new File(dir);
+            if (dirFile.isDirectory()) {
+                for (File meidaFile : dirFile.listFiles()) {
+                    meidaFile.delete();
+                }
+                dirFile.delete();
+            } else {
+                dirFile.delete();
+            }
+        }
+
+        return mContentResolver.delete(DownloadContentItem.CONTENT_URI, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL});
+    }
+
+    public boolean isExistDownloadedPageURL(String pageURL) {
+        return getPageIdByPageURL(pageURL) > -1;
+    }
+
+    public void deleteDownloadTaskAsync(final String pageURL) {
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                deleteDownloadTask(pageURL);
+            }
+        });
     }
 }

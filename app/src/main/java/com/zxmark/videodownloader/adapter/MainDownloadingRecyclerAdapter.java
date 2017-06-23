@@ -19,6 +19,8 @@ import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.db.DownloadContentItem;
+import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.util.DownloadUtil;
@@ -40,14 +42,14 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     public static final int VIEW_TYPE_HEAD = 1;
     public static final int VIEW_TYPE_AD = 2;
     public static final int VIEW_TYPE_HOW_TO = 3;
-    private List<VideoBean> mDataList;
+    private List<DownloadContentItem> mDataList;
     private RequestManager imageLoader;
     private boolean mFullImageState = false;
     private Context mContext;
     private IBtnCallback callback;
     private boolean mClickedPasteBtn = false;
 
-    public MainDownloadingRecyclerAdapter(List<VideoBean> dataList, boolean isFullImage, IBtnCallback callback) {
+    public MainDownloadingRecyclerAdapter(List<DownloadContentItem> dataList, boolean isFullImage, IBtnCallback callback) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
         mFullImageState = isFullImage;
@@ -59,16 +61,16 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
-        if (viewType == VIEW_TYPE_AD) {
+        if (viewType == DownloadContentItem.TYPE_FACEBOOK_AD) {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.facebook_native_item, parent, false);
 
             return new NativeAdItemHolder(itemView);
-        } else if (viewType == VIEW_TYPE_HEAD) {
+        } else if (viewType == DownloadContentItem.TYPE_HEADER_ITEM) {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_header, parent, false);
             return new ItemHeaderHolder(itemView);
-        } else if (viewType == VIEW_TYPE_HOW_TO) {
+        } else if (viewType == DownloadContentItem.TYPE_HOWTO_ITEM) {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_how_to, parent, false);
             return new ItemHowToHolder(itemView);
@@ -82,7 +84,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder baseHolder, final int position) {
-        final VideoBean bean = mDataList.get(position);
+        final DownloadContentItem bean = mDataList.get(position);
 
         if (baseHolder instanceof ItemViewHolder) {
             final ItemViewHolder holder = (ItemViewHolder) baseHolder;
@@ -101,21 +103,17 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     if (index == 0) {
                         holder.progressBar.setProgress(0);
                         holder.progressBar.setVisibility(View.VISIBLE);
-                        DownloadUtil.startDownload(bean.sharedUrl);
+                        DownloadUtil.startDownload(bean.pageURL);
                     } else if (index == 1) {
-                        DownloadUtil.downloadThumbnail(bean.thumbnailUrl);
+                        DownloadUtil.downloadThumbnail(bean.pageURL, bean.pageThumb);
                     } else if (index == 2) {
                         deleteDownloadingVideo(bean, position);
                     }
                 }
             });
 
-            if (MimeTypeUtil.isVideoType(bean.downloadVideoUrl)) {
-                holder.playView.setVisibility(View.VISIBLE);
-            } else {
-                holder.playView.setVisibility(View.GONE);
-            }
-            imageLoader.load(bean.thumbnailUrl).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+            holder.playView.setVisibility(bean.getMimeType() == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
+            imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             if (TextUtils.isEmpty(bean.pageTitle)) {
                 holder.titleTv.setVisibility(View.GONE);
             } else {
@@ -174,14 +172,18 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
         }
 
     }
+
     //TODO:最后一个位置有问题
-    private void deleteDownloadingVideo(VideoBean bean, int positoin) {
+    private void deleteDownloadingVideo(final DownloadContentItem bean, int positoin) {
         mDataList.remove(bean);
         notifyItemRemoved(positoin);
-        DBHelper.getDefault().deleteDownloadingVideo(bean.videoPath);
-        DownloadingTaskList.SINGLETON.intrupted(bean.sharedUrl);
-        new File(bean.videoPath).delete();
-
+        DownloadingTaskList.SINGLETON.intrupted(bean.pageURL);
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                DownloaderDBHelper.SINGLETON.deleteDownloadTask(bean.pageURL);
+            }
+        });
     }
 
     @Override
@@ -192,7 +194,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     @Override
     public int getItemViewType(int position) {
-        return mDataList.get(position).type;
+        return mDataList.get(position).itemType;
     }
 
 

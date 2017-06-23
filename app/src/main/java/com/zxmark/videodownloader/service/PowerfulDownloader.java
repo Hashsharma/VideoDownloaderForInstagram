@@ -46,6 +46,7 @@ public class PowerfulDownloader {
     private IPowerfulDownloadCallback mCallback;
 
     private String mCurrentTaskId;
+    private int mFilePosition;
 
     private PowerfulDownloader() {
 //        int cpuCount = CpuUtils.getNumberOfCPUCores() - 1;
@@ -70,11 +71,12 @@ public class PowerfulDownloader {
         mInternalErrorInterupted.set(true);
     }
 
-    public void startDownload(String taskId, String fileUrl, IPowerfulDownloadCallback callback) {
+    public void startDownload(String taskId, final int filePosition, String fileUrl, String targetPath, IPowerfulDownloadCallback callback) {
         mCallback = callback;
         mCurrentTaskId = taskId;
-        LogUtil.e("download", "startDownload:" + THREAD_COUNT);
-        download(fileUrl, DownloadUtil.getDownloadTargetInfo(fileUrl), THREAD_COUNT, 0, true);
+        LogUtil.e("download", "startDownload:" + targetPath);
+        mFilePosition = filePosition;
+        download(fileUrl, targetPath, THREAD_COUNT, 0, true);
     }
 
     /**
@@ -103,7 +105,7 @@ public class PowerfulDownloader {
                 int fileSize = conn.getContentLength();
                 if (fileSize <= 0) {
                     if (mCallback != null) {
-                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, targetPath);
+                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, mCurrentTaskId,mFilePosition,targetPath);
                     }
                     return;
                 }
@@ -128,7 +130,7 @@ public class PowerfulDownloader {
                         fos.flush();
                         mReadBytesCount += byteCount;
                         if (mCallback != null) {
-                            mCallback.onProgress(targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
+                            mCallback.onProgress( mCurrentTaskId, mFilePosition,targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                         }
                     }
                     fis.close();
@@ -187,7 +189,7 @@ public class PowerfulDownloader {
                 if (mInternalErrorInterupted.get()) {
                     codeStatus = CODE_DOWNLOAD_CANCELED;
                 }
-                mCallback.onFinish(codeStatus, targetPath);
+                mCallback.onFinish(codeStatus, mCurrentTaskId, mFilePosition, targetPath);
             }
 
         }
@@ -319,7 +321,7 @@ public class PowerfulDownloader {
                         lengthPlus += len;
                         mReadBytesCount += len;
                         if (mCallback != null) {
-                            mCallback.onProgress(filePath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
+                            mCallback.onProgress(mCurrentTaskId, mFilePosition, filePath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                         }
                         raf.write(b, 0, len);
                     }
@@ -346,14 +348,14 @@ public class PowerfulDownloader {
         }
     }
 
-
     public interface IPowerfulDownloadCallback {
         void onStart(String path);
 
-        void onFinish(int statusCode, String path);
+        void onFinish(int statusCode, String pageURL, int filePositon, String path);
 
         void onError(int errorCode);
 
-        void onProgress(String path, final int progress);
+        void onProgress(String pageURL, int filePositon, String path, final int progress);
     }
+
 }

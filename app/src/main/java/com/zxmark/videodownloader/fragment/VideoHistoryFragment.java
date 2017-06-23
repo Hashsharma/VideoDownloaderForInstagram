@@ -22,6 +22,8 @@ import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.db.DownloadContentItem;
+import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
@@ -43,11 +45,11 @@ public class VideoHistoryFragment extends Fragment {
     private Button mDownloadBtn;
     private RecyclerView mListView;
     private LinearLayoutManager mLayoutManager;
-    private List<VideoBean> mDataList;
+    private List<DownloadContentItem> mDataList;
     private MainListRecyclerAdapter mAdapter;
     private NativeAd mNativeAd;
     private boolean mHaveDeletedUselessFiles = false;
-    private VideoBean mAdVideoBean;
+    private DownloadContentItem mAdVideoBean;
 
     public static VideoHistoryFragment newInstance() {
         VideoHistoryFragment fragment = new VideoHistoryFragment();
@@ -91,29 +93,7 @@ public class VideoHistoryFragment extends Fragment {
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
-                mDataList = new ArrayList<VideoBean>();
-                File file = DownloadUtil.getHomeDirectory();
-                File[] fileArray = file.listFiles();
-                final DBHelper dbHelper = DBHelper.getDefault();
-
-                if (fileArray != null && fileArray.length > 0) {
-                    for (File item : fileArray) {
-                        if (dbHelper.isDownloadingByPath(item.getAbsolutePath())) {
-                            continue;
-                        }
-                        VideoBean bean = dbHelper.getVideoInfoByPath(item.getAbsolutePath());
-                        if (bean == null) {
-                            bean = new VideoBean();
-                            bean.videoPath = item.getAbsolutePath();
-                            bean.pageTitle = item.getName();
-                            bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_NORMAL;
-                        }
-                        bean.file = item;
-                        mDataList.add(bean);
-                    }
-                    Collections.sort(mDataList, new FileComparator());
-                }
-
+                mDataList = DownloaderDBHelper.SINGLETON.getDownloadedTask();
                 if (mAdVideoBean != null) {
                     if (mDataList.size() > 2) {
                         mDataList.add(2, mAdVideoBean);
@@ -129,24 +109,6 @@ public class VideoHistoryFragment extends Fragment {
                             mAdapter = new MainListRecyclerAdapter(mDataList, false);
                             mListView.setAdapter(mAdapter);
                             showNativeAd();
-                            if (!mHaveDeletedUselessFiles) {
-                                mHaveDeletedUselessFiles = true;
-                                DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //TODO:校验所有的下载文件，如果用户已经删除就删掉该文件
-
-                                        List<String> dataPaths = dbHelper.getDownloadedVideoList();
-                                        for (String path : dataPaths) {
-                                            if (!new File(path).exists()) {
-                                                dbHelper.deleteDownloadingVideo(path);
-                                            }
-                                        }
-
-                                        LogUtil.e("main", "all delete video clear");
-                                    }
-                                });
-                            }
                         }
                     });
                 }
@@ -155,10 +117,10 @@ public class VideoHistoryFragment extends Fragment {
 
     }
 
-    public void onAddNewDownloadedFile(String path) {
-        LogUtil.v("main", "onAddNewDownloadFile:" + path);
+    public void onAddNewDownloadedFile(String pageURL) {
+        LogUtil.v("main", "onAddNewDownloadFile:" + pageURL);
         if (mDataList != null) {
-            VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(path);
+            DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
             if (videoBean != null) {
                 mDataList.add(0, videoBean);
                 mAdapter.notifyItemInserted(0);
@@ -210,16 +172,15 @@ public class VideoHistoryFragment extends Fragment {
         }
 
         if (mAdVideoBean == null) {
-            VideoBean bean = new VideoBean();
-            bean.type = MainDownloadingRecyclerAdapter.VIEW_TYPE_AD;
-            bean.facebookNativeAd = mNativeAd;
+            mAdVideoBean = new DownloadContentItem();
+            mAdVideoBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
+            mAdVideoBean.facebookNativeAd = mNativeAd;
             if (mDataList != null) {
                 if (mDataList.size() > 2) {
-                    mDataList.add(2, bean);
+                    mDataList.add(2, mAdVideoBean);
                 } else {
-                    mDataList.add(bean);
+                    mDataList.add(mAdVideoBean);
                 }
-
                 mAdapter.notifyDataSetChanged();
             } else {
 

@@ -5,6 +5,7 @@ import android.provider.MediaStore;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
+import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.util.Utils;
@@ -31,7 +32,7 @@ public final class VideoDownloadFactory {
      *
      * @param url
      */
-    public WebPageStructuredData request(String url) {
+    public DownloadContentItem request(String url) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw new RuntimeException("video download cannt start from main thread");
         }
