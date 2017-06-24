@@ -203,9 +203,11 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                                 int position = filePosition;
                                 int totalProgress = position * 100 + progress;
                                 int newProgrees = totalProgress * 100 / count;
-                                itemHolder.progressBar.setProgress(newProgrees);
-                                if (newProgrees >= 100) {
-                                    itemHolder.progressBar.setVisibility(View.GONE);
+                                if (newProgrees >= itemHolder.progressBar.getProgress() && newProgrees <= 100) {
+                                    itemHolder.progressBar.setProgress(newProgrees);
+                                    //if (newProgrees >= 100) {
+                                    //  itemHolder.progressBar.setVisibility(View.GONE);
+                                    //}
                                 }
                             }
                         }
@@ -228,7 +230,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 return;
             }
 
-            if(pageURL.equals(getString(R.string.toast_downlaoded_video))) {
+            if (pageURL.equals(getString(R.string.toast_downlaoded_video))) {
                 return;
             }
             DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
@@ -266,6 +268,11 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     * deleteVideoByPageURL
+     *
+     * @param pageURL
+     */
     public void deleteVideoByPath(String pageURL) {
         if (TextUtils.isEmpty(pageURL)) {
             return;
