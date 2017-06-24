@@ -114,8 +114,12 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
             });
-
-            holder.hashTagView.setText(bean.pageTags);
+            if(TextUtils.isEmpty(bean.pageTags)) {
+                holder.hashTagView.setVisibility(View.GONE);
+            } else {
+                holder.hashTagView.setVisibility(View.VISIBLE);
+                holder.hashTagView.setText(bean.pageTags);
+            }
             holder.taskCountView.setText(mResources.getString(R.string.downloading_left_task_count, bean.fileCount));
             holder.playView.setVisibility(bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
             imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);

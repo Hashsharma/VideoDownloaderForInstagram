@@ -178,10 +178,10 @@ public class VideoHistoryFragment extends Fragment {
             if (mDataList != null) {
                 if (mDataList.size() > 2) {
                     mDataList.add(2, mAdVideoBean);
+                    mAdapter.notifyItemInserted(2);
                 } else {
-                    mDataList.add(mAdVideoBean);
+                   // mDataList.add(mAdVideoBean);
                 }
-                mAdapter.notifyDataSetChanged();
             } else {
 
             }

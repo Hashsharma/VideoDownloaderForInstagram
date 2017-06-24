@@ -204,7 +204,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                                 int totalProgress = position * 100 + progress;
                                 int newProgrees = totalProgress * 100 / count;
                                 itemHolder.progressBar.setProgress(newProgrees);
-                                if (newProgrees >= 99) {
+                                if (newProgrees >= 100) {
                                     itemHolder.progressBar.setVisibility(View.GONE);
                                 }
                             }
@@ -226,6 +226,10 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             }
             if (TextUtils.isEmpty(pageURL)) {
                 IToast.makeText(getActivity(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if(pageURL.equals(getString(R.string.toast_downlaoded_video))) {
                 return;
             }
             DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);

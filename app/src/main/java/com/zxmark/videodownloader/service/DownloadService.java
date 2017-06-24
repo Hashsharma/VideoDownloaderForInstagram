@@ -59,6 +59,7 @@ public class DownloadService extends Service {
     public static final int MSG_UPDATE_PROGRESS = 3;
     public static final int MSG_NOTIFY_DOWNLOADED = 4;
     public static final int MSG_HANDLE_SEND_ACTION = 5;
+    public static final int MSG_REQUSET_URL_ERROR= 6;
 
 
     final RemoteCallbackList<IDownloadCallback> mCallbacks = new RemoteCallbackList<IDownloadCallback>();
@@ -81,6 +82,7 @@ public class DownloadService extends Service {
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg2, msg.arg1);
             } else if (msg.what == MSG_NOTIFY_DOWNLOADED) {
                 IToast.makeText(DownloadService.this, R.string.toast_downlaoded_video, Toast.LENGTH_SHORT).show();
+                DownloadService.this.notifyReceiveNewTask(getString(R.string.toast_downlaoded_video));
             } else if (msg.what == MSG_HANDLE_SEND_ACTION) {
                 DownloadService.this.notifyReceiveNewTask((String) msg.obj);
             }
@@ -164,6 +166,8 @@ public class DownloadService extends Service {
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
                             mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
                             DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);
+                        } else {
+                            mHandler.sendEmptyMessage(MSG_HANDLE_SEND_ACTION);
                         }
                     }
                 });

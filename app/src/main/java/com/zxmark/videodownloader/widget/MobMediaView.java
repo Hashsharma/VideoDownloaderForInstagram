@@ -6,13 +6,18 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.ads.AdChoicesView;
+import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.component.PinchImageView;
 import com.zxmark.videodownloader.util.LogUtil;
@@ -34,10 +39,12 @@ public class MobMediaView extends FrameLayout {
     private PinchImageView mImageView;
     private VideoView mVideoView;
     private View mVideoIcon;
+    private View mAdContainer;
 
     private RequestManager mImageLoader;
 
     private boolean mIsVideoMimeType = false;
+    private NativeAd mAd;
 
     public MobMediaView(@NonNull Context context) {
         super(context);
@@ -52,14 +59,49 @@ public class MobMediaView extends FrameLayout {
 
         mImageView = (PinchImageView) mContentView.findViewById(R.id.imageView);
         mVideoIcon = mContentView.findViewById(R.id.video_flag);
+        mAdContainer = findViewById(R.id.MainContainer);
         LogUtil.e("view", "mImageView=" + mImageView);
 
     }
 
     public void setMediaSource(String source) {
+        mAdContainer.setVisibility(View.GONE);
         mMediaSource = source;
         LogUtil.e("view", "source=" + source);
         initSelfByMimeType();
+    }
+
+    public void setAdSource(NativeAd nativeAd) {
+        if (nativeAd != null) {
+            mAdContainer.setVisibility(View.VISIBLE);
+            mImageView.setVisibility(View.GONE);
+            if (mVideoView != null) {
+                mVideoView.setVisibility(View.GONE);
+            }
+            if (mVideoIcon != null) {
+                mVideoIcon.setVisibility(View.GONE);
+            }
+            // mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(mImageView);
+            AdChoicesView adChoicesView = new AdChoicesView(getContext(), nativeAd, true);
+            LinearLayout adChoiceView = (LinearLayout) findViewById(R.id.ad_choices_container);
+            if (adChoiceView.getChildCount() == 0) {
+                adChoiceView.addView(adChoicesView);
+            }
+            ImageView adCoverView = (ImageView) findViewById(R.id.ad_cover);
+            ImageView adIconView = (ImageView) findViewById(R.id.ad_icon);
+            mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(adCoverView);
+            mImageLoader.load(nativeAd.getAdIcon().getUrl()).into(adIconView);
+
+            TextView adBodyView = (TextView) findViewById(R.id.ad_body);
+            TextView adTitleView = (TextView) findViewById(R.id.ad_title);
+            adBodyView.setText(nativeAd.getAdBody());
+            adTitleView.setText(nativeAd.getAdTitle());
+            // Register the native ad view with the native ad instance
+
+            Button adButton = (Button) findViewById(R.id.facebook_ad_btn);
+            adButton.setText(nativeAd.getAdCallToAction());
+            nativeAd.registerViewForInteraction(mAdContainer);
+        }
     }
 
     private void initSelfByMimeType() {
@@ -83,8 +125,8 @@ public class MobMediaView extends FrameLayout {
                     playVideo(videoPath);
                 }
             });
-            LogUtil.v("view","getTag=" + getTag() + ":" + getTag().equals(0));
-            if(getTag().equals(0)) {
+            LogUtil.v("view", "getTag=" + getTag() + ":" + getTag().equals(0));
+            if (getTag().equals(0)) {
                 playVideo(videoPath);
             }
         } else {

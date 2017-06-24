@@ -1,6 +1,7 @@
 package com.zxmark.videodownloader.adapter;
 
 import android.content.Context;
+import android.graphics.pdf.PdfDocument;
 import android.media.Image;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.VideoBean;
+import com.zxmark.videodownloader.main.GalleryPagerActivity;
 import com.zxmark.videodownloader.main.ImageGalleryActivity;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
@@ -33,13 +35,13 @@ import java.util.List;
 public class ImageGalleryPagerAdapter extends PagerAdapter {
 
 
-    private List<File> mDataList;
+    private List<GalleryPagerActivity.PagerBean> mDataList;
     private LinkedList<MobMediaView> mPageViewList;
     private RequestManager mImageLoader;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
 
-    public ImageGalleryPagerAdapter(Context context, List<File> dataList) {
+    public ImageGalleryPagerAdapter(Context context, List<GalleryPagerActivity.PagerBean> dataList) {
         mDataList = dataList;
         mImageLoader = Glide.with(context);
         mPageViewList = new LinkedList<>();
@@ -73,7 +75,7 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        File bean = mDataList.get(position);
+        GalleryPagerActivity.PagerBean bean = mDataList.get(position);
         MobMediaView convertView = null;
         if (mPageViewList.size() > 0) {
             convertView = mPageViewList.removeFirst();
@@ -82,8 +84,11 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
         }
 
         convertView.setTag(position);
-        convertView.setMediaSource(bean.getAbsolutePath());
-
+        if (bean.file != null) {
+            convertView.setMediaSource(bean.file.getAbsolutePath());
+        } else {
+            convertView.setAdSource(bean.facebookNativeAd);
+        }
         container.addView(convertView);
         return convertView;
     }

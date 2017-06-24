@@ -65,7 +65,7 @@
                 android:textColor="@color/red_2"
                 android:textSize="15dip"
                 android:layout_marginLeft="5dip"
-                android:paddingLeft="5dip"
+                android:paddingLeft="10dip"
                 android:paddingRight="5dip"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="15dip"

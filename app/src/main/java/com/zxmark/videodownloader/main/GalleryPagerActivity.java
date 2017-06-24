@@ -9,6 +9,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.BaseActivity;
 import com.zxmark.videodownloader.adapter.ImageGalleryPagerAdapter;
@@ -19,6 +23,7 @@ import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
+import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
 import com.zxmark.videodownloader.util.Utils;
 import com.zxmark.videodownloader.widget.MobMediaView;
@@ -26,6 +31,7 @@ import com.zxmark.videodownloader.widget.MobMediaView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -34,15 +40,18 @@ import java.util.List;
 
 public class GalleryPagerActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final int MAX_COUNT_THREHOLD = 4;
 
     private ViewPager mMainViewPager;
     private TextView mCountInfoView;
 
     private ImageGalleryPagerAdapter mAdapter;
-    private List<File> mDataList;
+    private List<PagerBean> mDataList;
     private MobMediaView mSelectedMobView;
 
     private String mPageHome;
+
+    private NativeAd nativeAd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +70,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.more_vert).setOnClickListener(this);
         mCountInfoView = (TextView) findViewById(R.id.count_info);
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mMainViewPager.setOffscreenPageLimit(2);
+        mMainViewPager.setOffscreenPageLimit(4);
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -98,13 +107,17 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                         if (targetFile == null) {
                             return;
                         }
-                        mDataList = new ArrayList<File>();
+                        mDataList = new ArrayList<PagerBean>();
                         for (File file : targetFile.listFiles()) {
-                            mDataList.add(file);
+                            PagerBean bean = new PagerBean();
+                            bean.file = file;
+                            mDataList.add(bean);
                         }
 
-                        Collections.sort(mDataList, new FileComparator());
-
+                        Collections.sort(mDataList, new PagerBeanComparator());
+                        if (mDataList.size() > MAX_COUNT_THREHOLD) {
+                            showNativeAd();
+                        }
                         mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
                         mMainViewPager.setAdapter(mAdapter);
                         if (mDataList.size() == 1) {
@@ -115,6 +128,71 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                 });
             }
         });
+    }
+
+    private void showNativeAd() {
+        if (mDataList != null && (mDataList.size() == 1 || mDataList.size() > 3)) {
+            nativeAd = new NativeAd(this, "2099565523604162_2099565860270795");
+            nativeAd.setAdListener(new AdListener() {
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    LogUtil.v("facebook", "onError:" + adError);
+                }
+
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    onFacebookAdLoaded(ad);
+                }
+
+                @Override
+                public void onAdClicked(Ad ad) {
+
+                }
+
+                @Override
+                public void onLoggingImpression(Ad ad) {
+
+                }
+            });
+
+            nativeAd.loadAd();
+        }
+    }
+
+    // The next step is to extract the ad metadata and use its properties
+// to build your customized native UI. Modify the onAdLoaded function
+// above to retrieve the ad properties. For example:
+    public void onFacebookAdLoaded(Ad ad) {
+        if (ad != nativeAd) {
+            return;
+        }
+
+
+        PagerBean adBean = new PagerBean();
+        adBean.facebookNativeAd = nativeAd;
+        if (mDataList == null) {
+            return;
+        }
+        int count = mDataList.size();
+        if (mDataList.size() > MAX_COUNT_THREHOLD) {
+            mDataList.add(count - 2, adBean);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public static class PagerBean {
+        public File file;
+        public NativeAd facebookNativeAd;
+    }
+
+    public class PagerBeanComparator implements Comparator<PagerBean> {
+
+
+        @Override
+        public int compare(PagerBean o1, PagerBean o2) {
+
+            return (int) (o2.file.lastModified() - o1.file.lastModified());
+        }
     }
 
     @Override

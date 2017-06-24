@@ -91,7 +91,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             holder.titleTv.setText(bean.pageTitle);
             final boolean isVideo = bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO;
-            LogUtil.v("download","bean.getMimeType=" + bean.mimeType);
             if (isVideo) {
                 holder.playView.setVisibility(View.VISIBLE);
             } else {
