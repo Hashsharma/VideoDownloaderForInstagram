@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.imobapp.videodownloaderforinstagram.R;
 import com.nineoldandroids.view.ViewHelper;
@@ -39,6 +42,7 @@ import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.main.GalleryPagerActivity;
+import com.zxmark.videodownloader.main.RatingAppActivity;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
@@ -179,13 +183,16 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            Utils.openInstagram();
+            // Utils.openInstagram();
+            showRatingDialog();
         } else if (id == R.id.nav_gallery) {
             if (mViewPagerAdapter.getDownloadingFragment() != null) {
                 mViewPagerAdapter.getDownloadingFragment().showHotToInfo();
             }
         } else if (id == R.id.nav_send) {
-            Utils.sendMyApp();
+            // Utils.sendMyApp();
+            Intent intent = new Intent(this, RatingAppActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_rate) {
             Utils.rateUs5Star();
         } else if (id == R.id.nav_change_language) {
@@ -196,6 +203,60 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    private void showRatingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+        View convertView = getLayoutInflater().inflate(R.layout.rating_app, null);
+        builder.setView(convertView);
+        final TextView ragingInfo = (TextView) convertView.findViewById(R.id.rating_info);
+        final View ragingInfo2 = convertView.findViewById(R.id.rating_info_2);
+        final RatingBar ratingBar = (RatingBar) convertView.findViewById(R.id.rating_us);
+        final TextView ratingDetail = (TextView) convertView.findViewById(R.id.rate_detail);
+        final int deepOrangeColor = getResources().getColor(R.color.deep_orange_color);
+        final int greenColor = getResources().getColor(R.color.rating_bar_color);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                ragingInfo.setVisibility(View.GONE);
+                ragingInfo2.setVisibility(View.GONE);
+                if (rating == 1.0f) {
+                    ratingDetail.setText(R.string.ratingstar_1);
+                } else if (rating > 1.0f && rating <= 2.0f) {
+                    ratingDetail.setText(R.string.ratingstar_2);
+                } else if (rating > 2.0f && rating <= 3.0f) {
+                    ratingDetail.setText(R.string.ratingstar_3);
+                } else if (rating > 3.0f && rating <= 4.0f) {
+                    ratingDetail.setText(R.string.ratingstar_4);
+                } else if (rating > 4.0f && rating <= 5.0f) {
+                    ratingDetail.setText(R.string.ratingstar_5);
+                }
+
+                if (rating < 3.0f) {
+                    ratingDetail.setTextColor(deepOrangeColor);
+                } else {
+                    ratingDetail.setTextColor(greenColor);
+                }
+                ratingDetail.setVisibility(View.VISIBLE);
+
+            }
+        });
+        builder.setCancelable(false);
+        builder.setNegativeButton("CLOSE", null);
+        builder.setPositiveButton("RATE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                float rating = ratingBar.getRating();
+                if (rating  >= 3.0f) {
+                    Utils.rateUs5Star();
+                } else {
+                    Utils.sendMeEmail();
+                }
+            }
+        });
+        builder.show();
+    }
+
 
     @Override
     public void onClick(View v) {

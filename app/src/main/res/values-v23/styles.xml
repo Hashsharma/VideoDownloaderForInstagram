@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -14,6 +14,7 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+        <item name="colorAccent">@color/rating_bar_color</item>
     </style>
 
     <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">

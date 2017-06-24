@@ -138,6 +138,26 @@ public class DownloaderDBHelper {
         }
     }
 
+    public String getPageHomeByPageURL(String pageURL) {
+        LogUtil.v("db", "getPageIdByPageURL=" + pageURL);
+        if (TextUtils.isEmpty(pageURL)) {
+            return "";
+        }
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL}, null);
+        try {
+            if (cursor != null) {
+                if (cursor.moveToNext()) {
+                    return cursor.getString(cursor.getColumnIndexOrThrow(DownloadContentItem.PAGE_HOME));
+                }
+            }
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public int getDownloadedPageIdByURL(String pageURL) {
         LogUtil.v("db", "getDownloadedPageIdByURL=" + pageURL);
         if (TextUtils.isEmpty(pageURL)) {

@@ -51,5 +51,9 @@
     <string name="nav_send">分享</string>
     <string name="nav_change_language">切换语言</string>
 
-
+    <string name="ratingstar_1">讨厌</string>
+    <string name="ratingstar_2">不喜欢</string>
+    <string name="ratingstar_3">还行</string>
+    <string name="ratingstar_4">喜欢</string>
+    <string name="ratingstar_5">超喜欢</string>
 </resources>

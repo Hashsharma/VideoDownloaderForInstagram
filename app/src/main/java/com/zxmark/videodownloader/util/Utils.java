@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -61,8 +63,8 @@ public class Utils {
     public static void openInstagram() {
 
         boolean result = openAppByPackageName("com.instagram.android");
-        if(!result) {
-            goToGpByPackageName(MainApplication.getInstance().getApplicationContext(),"com.instagram.android");
+        if (!result) {
+            goToGpByPackageName(MainApplication.getInstance().getApplicationContext(), "com.instagram.android");
         }
     }
 
@@ -86,7 +88,7 @@ public class Utils {
     public static void launchMySelf() {
         Intent intent = new Intent(MainApplication.getInstance().getApplicationContext(), MainActivity.class);
         try {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             MainApplication.getInstance().getApplicationContext().startActivity(intent);
         } catch (ActivityNotFoundException e) {
 //            startActivity(new Intent(Intent.ACTION_VIEW,
@@ -150,6 +152,13 @@ public class Utils {
         goToGpByPackageName(context, context.getPackageName());
     }
 
+    public static void sendMeEmail() {
+        Uri uri = Uri.parse("mailto:litton.van@gmail.com");
+        Intent intent_eamil = new Intent(Intent.ACTION_SENDTO, uri);
+        intent_eamil.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MainApplication.getInstance().getApplicationContext().startActivity(intent_eamil);
+    }
+
     public static void startShareIntent(VideoBean videoBean) {
         if (videoBean != null) {
             Intent shareIntent = new Intent(
@@ -200,7 +209,19 @@ public class Utils {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Globals.ACTION_CHANGE_LOCALE);
         context.startActivity(intent);
+    }
 
+
+    public static long getMyAppInstallTime() {
+        final Context context = MainApplication.getInstance().getApplicationContext();
+        try {
+            PackageInfo pif = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+            return pif.firstInstallTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return System.currentTimeMillis();
     }
 
 

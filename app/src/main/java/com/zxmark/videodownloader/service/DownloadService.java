@@ -59,7 +59,7 @@ public class DownloadService extends Service {
     public static final int MSG_UPDATE_PROGRESS = 3;
     public static final int MSG_NOTIFY_DOWNLOADED = 4;
     public static final int MSG_HANDLE_SEND_ACTION = 5;
-    public static final int MSG_REQUSET_URL_ERROR= 6;
+    public static final int MSG_REQUSET_URL_ERROR = 6;
 
 
     final RemoteCallbackList<IDownloadCallback> mCallbacks = new RemoteCallbackList<IDownloadCallback>();
@@ -148,7 +148,7 @@ public class DownloadService extends Service {
                     return super.onStartCommand(intent, flags, startId);
                 }
 
-                if(showFloatView) {
+                if (showFloatView) {
                     showFloatView();
                 }
                 DownloadingTaskList.SINGLETON.setHandler(mHandler);
@@ -156,13 +156,12 @@ public class DownloadService extends Service {
                     @Override
                     public void run() {
                         DownloadContentItem downloadContentItem = null;
-                        if(DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(url) != null) {
-                            downloadContentItem = VideoDownloadFactory.getInstance().request(url);
-                        } else {
-                            downloadContentItem = VideoDownloadFactory.getInstance().request(url);
-                        }
-
+                        downloadContentItem = VideoDownloadFactory.getInstance().request(url);
                         if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
+                            String pageHome = DownloaderDBHelper.SINGLETON.getPageHomeByPageURL(url);
+                            if(!TextUtils.isEmpty(pageHome)) {
+                                downloadContentItem.pageHOME = pageHome;
+                            }
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
                             mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
                             DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);
