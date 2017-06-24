@@ -15,6 +15,7 @@ import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.LearningDownloader;
 import com.zxmark.videodownloader.service.PowerfulDownloader;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.widget.IToast;
@@ -61,7 +62,7 @@ public class DownloadingTaskList {
     }
 
     public void addNewDownloadTask(String taskId, DownloadContentItem data) {
-        LogUtil.e("download","addNewDownloadTask:" + taskId + ":" + mFuturedTaskList.size());
+        LogUtil.e("download", "addNewDownloadTask:" + taskId + ":" + mFuturedTaskList.size());
         if (mFuturedTaskList.size() > 0) {
             if (mFuturedTaskList.contains(taskId)) {
                 return;
@@ -110,7 +111,7 @@ public class DownloadingTaskList {
             List<String> futureDownloadedList = item.getDownloadContentList();
             downloadItem(futureDownloadedList, item);
             DownloaderDBHelper.SINGLETON.finishDownloadTask(item.pageURL);
-            mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS,0,0,item.pageURL).sendToTarget();
+            mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, item.pageURL).sendToTarget();
         }
     }
 
@@ -137,6 +138,8 @@ public class DownloadingTaskList {
                         msg.obj = pageURL;
                         mHandler.sendMessage(msg);
                     } else if (code == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
+                        EventUtil.getDefault().onEvent("download", "failed=" + pageURL);
+
                     } else if (code == PowerfulDownloader.CODE_DOWNLOAD_CANCELED) {
                         DownloaderDBHelper.SINGLETON.deleteDownloadTask(pageURL);
                     }
@@ -168,12 +171,18 @@ public class DownloadingTaskList {
 
                 @Override
                 public void onFinish(int statusCode, String pageURL, int filePosition, String path) {
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = DownloadService.MSG_UPDATE_PROGRESS;
-                    msg.arg1 = 100;
-                    msg.arg2 = filePosition;
-                    msg.obj = pageURL;
-                    mHandler.sendMessage(msg);
+                    if (statusCode == PowerfulDownloader.CODE_OK) {
+                        Message msg = mHandler.obtainMessage();
+                        msg.what = DownloadService.MSG_UPDATE_PROGRESS;
+                        msg.arg1 = 100;
+                        msg.arg2 = filePosition;
+                        msg.obj = pageURL;
+                        mHandler.sendMessage(msg);
+                    } else if (statusCode == PowerfulDownloader.CODE_DOWNLOAD_CANCELED) {
+                        DownloaderDBHelper.SINGLETON.deleteDownloadTask(pageURL);
+                    } else if(statusCode == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
+                        EventUtil.getDefault().onEvent("download", "failed=" + pageURL);
+                    }
                     downloadItem(totalDownloadedList, item);
                 }
 
@@ -183,7 +192,8 @@ public class DownloadingTaskList {
                 }
 
                 @Override
-                public void onProgress(String pageURL, int filePosition, String path, int progress) {
+                public void onProgress(String pageURL, int filePosition, String path,
+                                       int progress) {
                     Message msg = mHandler.obtainMessage();
                     msg.what = DownloadService.MSG_UPDATE_PROGRESS;
                     msg.arg1 = progress;
@@ -218,7 +228,7 @@ public class DownloadingTaskList {
                 @Override
                 public void run() {
                     DownloadContentItem cacheData = mFutureTaskDetailMap.get(taskId);
-                    LogUtil.e("download","cacheData=" + cacheData);
+                    LogUtil.e("download", "cacheData=" + cacheData);
                     if (cacheData != null) {
                         //TODO:之前已经请求过网络，合理直接诶进行下载
                         downloadItemContent(cacheData);

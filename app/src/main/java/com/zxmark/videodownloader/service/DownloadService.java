@@ -26,6 +26,7 @@ import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.util.ActivityManagerUtils;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.NetWorkUtil;
@@ -159,6 +160,8 @@ public class DownloadService extends Service {
                         DownloadContentItem downloadContentItem = null;
                         downloadContentItem = VideoDownloadFactory.getInstance().request(url);
                         if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
+
+                            EventUtil.getDefault().onEvent("download","DownloadService.StartDownload:" + url);
                             if (showFloatView) {
                                 showFloatView();
                             }
