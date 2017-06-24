@@ -91,6 +91,9 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                 mSelectedPosition = position;
                 MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
                 mSelectedMobView = itemView;
+                if(itemView != null) {
+                    itemView.play();
+                }
                 mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1 + position, mDataList.size()));
             }
 
