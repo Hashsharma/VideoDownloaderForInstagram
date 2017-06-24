@@ -73,6 +73,7 @@ public class MobMediaView extends FrameLayout {
 
     public void setAdSource(NativeAd nativeAd) {
         if (nativeAd != null) {
+            LogUtil.v("view","setAdSource=" + nativeAd);
             mAdContainer.setVisibility(View.VISIBLE);
             mImageView.setVisibility(View.GONE);
             if (mVideoView != null) {

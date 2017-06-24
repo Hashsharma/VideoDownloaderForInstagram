@@ -87,6 +87,7 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
         if (bean.file != null) {
             convertView.setMediaSource(bean.file.getAbsolutePath());
         } else {
+            LogUtil.e("view","facebookNativeAd:" + bean.facebookNativeAd);
             convertView.setAdSource(bean.facebookNativeAd);
         }
         container.addView(convertView);

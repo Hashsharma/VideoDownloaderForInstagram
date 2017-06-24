@@ -40,7 +40,7 @@ import java.util.List;
 
 public class GalleryPagerActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final int MAX_COUNT_THREHOLD = 4;
+    public static final int MAX_COUNT_THREHOLD = 3;
 
     private ViewPager mMainViewPager;
     private TextView mCountInfoView;
@@ -70,7 +70,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.more_vert).setOnClickListener(this);
         mCountInfoView = (TextView) findViewById(R.id.count_info);
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mMainViewPager.setOffscreenPageLimit(4);
+        mMainViewPager.setOffscreenPageLimit(3);
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -115,15 +115,15 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                         }
 
                         Collections.sort(mDataList, new PagerBeanComparator());
-                        if (mDataList.size() > MAX_COUNT_THREHOLD) {
-                            showNativeAd();
-                        }
                         mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
                         mMainViewPager.setAdapter(mAdapter);
                         if (mDataList.size() == 1) {
                             mCountInfoView.setVisibility(View.GONE);
                         }
                         mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
+                        if (mDataList.size() > MAX_COUNT_THREHOLD) {
+                            showNativeAd();
+                        }
                     }
                 });
             }
@@ -131,32 +131,30 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void showNativeAd() {
-        if (mDataList != null && (mDataList.size() == 1 || mDataList.size() > 3)) {
-            nativeAd = new NativeAd(this, "2099565523604162_2099565860270795");
-            nativeAd.setAdListener(new AdListener() {
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    LogUtil.v("facebook", "onError:" + adError);
-                }
+        nativeAd = new NativeAd(this, "2099565523604162_2099565860270795");
+        nativeAd.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                LogUtil.v("facebook", "onError:" + adError);
+            }
 
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    onFacebookAdLoaded(ad);
-                }
+            @Override
+            public void onAdLoaded(Ad ad) {
+                onFacebookAdLoaded(ad);
+            }
 
-                @Override
-                public void onAdClicked(Ad ad) {
+            @Override
+            public void onAdClicked(Ad ad) {
 
-                }
+            }
 
-                @Override
-                public void onLoggingImpression(Ad ad) {
+            @Override
+            public void onLoggingImpression(Ad ad) {
 
-                }
-            });
+            }
+        });
 
-            nativeAd.loadAd();
-        }
+        nativeAd.loadAd();
     }
 
     // The next step is to extract the ad metadata and use its properties
@@ -170,14 +168,10 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
         PagerBean adBean = new PagerBean();
         adBean.facebookNativeAd = nativeAd;
-        if (mDataList == null) {
-            return;
-        }
         int count = mDataList.size();
-        if (mDataList.size() > MAX_COUNT_THREHOLD) {
-            mDataList.add(count - 2, adBean);
-            mAdapter.notifyDataSetChanged();
-        }
+        LogUtil.v("view","onFacebookAdLoaded:" + nativeAd);
+        mDataList.add(count - 1, adBean);
+        mAdapter.notifyDataSetChanged();
     }
 
     public static class PagerBean {
