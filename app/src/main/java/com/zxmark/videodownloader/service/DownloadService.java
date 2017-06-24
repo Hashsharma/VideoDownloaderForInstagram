@@ -151,9 +151,7 @@ public class DownloadService extends Service {
                     return super.onStartCommand(intent, flags, startId);
                 }
 
-                if (showFloatView) {
-                    showFloatView();
-                }
+
                 DownloadingTaskList.SINGLETON.setHandler(mHandler);
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
@@ -161,6 +159,9 @@ public class DownloadService extends Service {
                         DownloadContentItem downloadContentItem = null;
                         downloadContentItem = VideoDownloadFactory.getInstance().request(url);
                         if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
+                            if (showFloatView) {
+                                showFloatView();
+                            }
                             String pageHome = DownloaderDBHelper.SINGLETON.getPageHomeByPageURL(url);
                             if(!TextUtils.isEmpty(pageHome)) {
                                downloadContentItem.pageHOME = pageHome;
