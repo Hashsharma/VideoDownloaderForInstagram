@@ -22,7 +22,7 @@
                 android:id="@+id/thumbnail"
                 android:layout_width="100dip"
                 android:layout_height="match_parent"
-                android:background="@color/image_bg_color"
+                android:background="@mipmap/image_placeholder"
                 android:scaleType="centerCrop" />
 
             <ImageView

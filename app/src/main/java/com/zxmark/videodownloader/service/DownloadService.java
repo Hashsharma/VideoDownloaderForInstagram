@@ -84,6 +84,9 @@ public class DownloadService extends Service {
                 IToast.makeText(DownloadService.this, R.string.toast_downlaoded_video, Toast.LENGTH_SHORT).show();
                 DownloadService.this.notifyReceiveNewTask(getString(R.string.toast_downlaoded_video));
             } else if (msg.what == MSG_HANDLE_SEND_ACTION) {
+                if(msg.obj == null) {
+                    IToast.makeText(DownloadService.this, R.string.spider_request_error, Toast.LENGTH_SHORT).show();
+                }
                 DownloadService.this.notifyReceiveNewTask((String) msg.obj);
             }
         }
@@ -160,7 +163,7 @@ public class DownloadService extends Service {
                         if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
                             String pageHome = DownloaderDBHelper.SINGLETON.getPageHomeByPageURL(url);
                             if(!TextUtils.isEmpty(pageHome)) {
-                                downloadContentItem.pageHOME = pageHome;
+                               downloadContentItem.pageHOME = pageHome;
                             }
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
                             mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();

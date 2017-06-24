@@ -220,6 +220,10 @@ public class DownloaderDBHelper {
         return getDownloadedPageIdByURL(pageURL) > -1;
     }
 
+    public boolean isExistPageURL(String pageURL) {
+        return getPageIdByPageURL(pageURL) > -1;
+    }
+
     public void deleteDownloadTaskAsync(final String pageURL) {
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override

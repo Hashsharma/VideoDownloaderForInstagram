@@ -109,6 +109,7 @@ public class Utils {
         final Context context = MainApplication.getInstance().getApplicationContext();
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         String pastContent = cmb.getText().toString();
+        LogUtil.e("main","getTextFromClipboard:" + pastContent);
         if (!TextUtils.isEmpty(pastContent)) {
             String handledUrl = URLMatcher.getHttpURL(pastContent);
             return handledUrl;

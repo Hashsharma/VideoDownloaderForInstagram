@@ -27,6 +27,7 @@ import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
+import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.File;
@@ -130,6 +131,9 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void showNativeAd() {
+        if(Globals.TEST_FOR_GP) {
+            return;
+        }
         if (mAdVideoBean == null) {
             if (isAdded()) {
                 mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");

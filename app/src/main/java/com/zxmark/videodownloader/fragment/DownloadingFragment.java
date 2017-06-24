@@ -225,7 +225,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 mProgressDialog = null;
             }
             if (TextUtils.isEmpty(pageURL)) {
-                IToast.makeText(getActivity(), R.string.spider_request_error, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -255,10 +254,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
             DownloadContentItem bean = new DownloadContentItem();
             bean.pageURL = pageURL;
-            LogUtil.v("main", "contains:" + mDataList.contains(bean));
             if (!mDataList.contains(bean)) {
                 DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
-                LogUtil.v("main", "videoBean=" + videoBean);
                 if (videoBean != null) {
                     mDataList.add(1, videoBean);
                     mAdapter.notifyItemInserted(1);

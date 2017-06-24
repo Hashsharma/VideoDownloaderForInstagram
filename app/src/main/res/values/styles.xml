@@ -20,6 +20,7 @@
 
     <style name="GalleryWindowStyle" parent="AppTheme.NoActionBar">
         <item name="colorAccent">@android:color/white</item>
+        <item name="colorPrimary">@color/black</item>
     </style>
 
     <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">

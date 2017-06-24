@@ -6,6 +6,7 @@ import android.provider.MediaStore;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
+import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.util.Utils;
@@ -88,9 +89,10 @@ public final class VideoDownloadFactory {
         return false;
     }
 
-    public boolean needShowPasteBtn(String url) {
-        String normalURL = URLMatcher.getHttpURL(Utils.getTextFromClipboard());
-        if (DBHelper.getDefault().isDownloadedPage(normalURL)) {
+    public boolean needShowPasteBtn() {
+        String normalURL = Utils.getTextFromClipboard();
+        LogUtil.e("main","needShowPasteBtn====" + normalURL);
+        if (DownloaderDBHelper.SINGLETON.isExistPageURL(normalURL)) {
             return false;
         }
         return VideoDownloadFactory.getInstance().isSupportWeb(normalURL);

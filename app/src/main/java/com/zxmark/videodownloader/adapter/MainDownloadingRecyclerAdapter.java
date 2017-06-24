@@ -26,6 +26,7 @@ import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileUtils;
+import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.Utils;
 
@@ -172,7 +173,8 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             if (mClickedPasteBtn) {
                 holder.downloadBtn.setVisibility(View.GONE);
             } else {
-                if (VideoDownloadFactory.getInstance().needShowPasteBtn(Utils.getTextFromClipboard())) {
+                LogUtil.e("main","showPasteBtn_" + VideoDownloadFactory.getInstance().needShowPasteBtn());
+                if (VideoDownloadFactory.getInstance().needShowPasteBtn()) {
                     holder.downloadBtn.setVisibility(View.VISIBLE);
                 } else {
                     holder.downloadBtn.setVisibility(View.GONE);

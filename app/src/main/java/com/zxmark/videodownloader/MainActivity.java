@@ -48,6 +48,7 @@ import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
 import com.zxmark.videodownloader.util.DeviceUtil;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.GPDataGenerator;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
@@ -183,16 +184,17 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            // Utils.openInstagram();
-            showRatingDialog();
+            if(Globals.TEST_FOR_GP) {
+                showRatingDialog();
+                GPDataGenerator.saveGPTask();
+            }
+            Utils.openInstagram();
         } else if (id == R.id.nav_gallery) {
             if (mViewPagerAdapter.getDownloadingFragment() != null) {
                 mViewPagerAdapter.getDownloadingFragment().showHotToInfo();
             }
         } else if (id == R.id.nav_send) {
-            // Utils.sendMyApp();
-            Intent intent = new Intent(this, RatingAppActivity.class);
-            startActivity(intent);
+            Utils.sendMyApp();
         } else if (id == R.id.nav_rate) {
             Utils.rateUs5Star();
         } else if (id == R.id.nav_change_language) {
@@ -247,7 +249,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 float rating = ratingBar.getRating();
-                if (rating  >= 3.0f) {
+                if (rating >= 3.0f) {
                     Utils.rateUs5Star();
                 } else {
                     Utils.sendMeEmail();
@@ -361,6 +363,10 @@ public class MainActivity extends AppCompatActivity
 
                         if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
                             mViewPagerAdapter.getVideoHistoryFragment().onAddNewDownloadedFile(path);
+                        }
+                        //TODO:安装第三天后引导用户给评分
+                        if (System.currentTimeMillis() - Utils.getMyAppInstallTime() > 2 * 24 * 60 * 60 * 1000) {
+                            showRatingDialog();
                         }
                     }
 
