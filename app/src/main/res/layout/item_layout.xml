@@ -96,7 +96,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:fontFamily="sans-serif-medium"
-            android:padding="15dip"
+            android:paddingBottom="10dip"
+            android:paddingRight="15dip"
+            android:paddingLeft="10dip"
+
             android:text="@string/option_delete"
             android:textColor="@color/repost_background"
             android:textSize="15dip" />

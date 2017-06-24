@@ -140,9 +140,9 @@ public class DownloadContentItem implements BaseColumns {
         cv.put(HASH_TAGS, item.pageTags);
         cv.put(PAGE_MIME_TYPE, item.getMimeType());
         cv.put(PAGE_DOWNLOAD_FILE_COUNT, item.getFileCount());
-        LogUtil.e("download","page_before_home:" + item.pageHOME);
+        LogUtil.e("download", "page_before_home:" + item.pageHOME);
         cv.put(PAGE_HOME, item.getPageHomeAndCreateHome());
-        LogUtil.e("download","page_Hoem=" + new File(item.pageHOME).exists() + ":" + item.pageHOME);
+        LogUtil.e("download", "page_Hoem=" + new File(item.pageHOME).exists() + ":" + item.pageHOME);
         cv.put(PAGE_STATUS, item.pageStatus);
         return cv;
     }
@@ -245,6 +245,9 @@ public class DownloadContentItem implements BaseColumns {
             if (itemType == bean.itemType) {
                 if (itemType == TYPE_NORMAL_ITEM) {
                     if (bean.itemType == TYPE_NORMAL_ITEM) {
+                        if (TextUtils.isEmpty(pageURL)) {
+                            return false;
+                        }
                         return pageURL.equals(bean.pageURL);
                     } else {
                         return false;

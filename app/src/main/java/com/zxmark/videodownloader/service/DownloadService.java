@@ -85,7 +85,7 @@ public class DownloadService extends Service {
                 IToast.makeText(DownloadService.this, R.string.toast_downlaoded_video, Toast.LENGTH_SHORT).show();
                 DownloadService.this.notifyReceiveNewTask(getString(R.string.toast_downlaoded_video));
             } else if (msg.what == MSG_HANDLE_SEND_ACTION) {
-                if(msg.obj == null) {
+                if (msg.obj == null) {
                     IToast.makeText(DownloadService.this, R.string.spider_request_error, Toast.LENGTH_SHORT).show();
                 }
                 DownloadService.this.notifyReceiveNewTask((String) msg.obj);
@@ -97,8 +97,10 @@ public class DownloadService extends Service {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                FloatViewManager manager = FloatViewManager.getDefault();
-                manager.showFloatView();
+                if (DownloadingTaskList.SINGLETON.getFutureTask().size() == 0) {
+                    FloatViewManager manager = FloatViewManager.getDefault();
+                    manager.showFloatView();
+                }
             }
         });
 
@@ -161,15 +163,15 @@ public class DownloadService extends Service {
                         downloadContentItem = VideoDownloadFactory.getInstance().request(url);
 
                         if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
-                            EventUtil.getDefault().onEvent("download","DownloadService.StartDownload:" + url);
+                            EventUtil.getDefault().onEvent("download", "DownloadService.StartDownload:" + url);
                             if (showFloatView) {
                                 showFloatView();
                             }
-                            LogUtil.e("download","startDownload:" + url + ":" + downloadContentItem.pageHOME);
+                            LogUtil.e("download", "startDownload:" + url + ":" + downloadContentItem.pageHOME);
                             String pageHome = DownloaderDBHelper.SINGLETON.getPageHomeByPageURL(url);
-                            LogUtil.e("download","startDownload:existHome=" + pageHome );
-                            if(!TextUtils.isEmpty(pageHome)) {
-                               downloadContentItem.pageHOME = pageHome;
+                            LogUtil.e("download", "startDownload:existHome=" + pageHome);
+                            if (!TextUtils.isEmpty(pageHome)) {
+                                downloadContentItem.pageHOME = pageHome;
                             }
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
                             mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
