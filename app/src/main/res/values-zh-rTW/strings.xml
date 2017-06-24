@@ -54,7 +54,7 @@
 
     <string name="toast_downlaoded_video">已經下載</string>
         
-    <string name="uploaded_left_task_count">％d 個文件</string>
+    <string name="downloading_left_task_count">%d 個文件</string>
         
     <string name="ratingstar_1">討厭它</string>
         
