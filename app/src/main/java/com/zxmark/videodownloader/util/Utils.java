@@ -88,7 +88,7 @@ public class Utils {
     public static void launchMySelf() {
         Intent intent = new Intent(MainApplication.getInstance().getApplicationContext(), MainActivity.class);
         try {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             MainApplication.getInstance().getApplicationContext().startActivity(intent);
         } catch (ActivityNotFoundException e) {
 //            startActivity(new Intent(Intent.ACTION_VIEW,

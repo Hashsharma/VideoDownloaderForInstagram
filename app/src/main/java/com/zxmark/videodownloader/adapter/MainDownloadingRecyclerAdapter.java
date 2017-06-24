@@ -25,6 +25,7 @@ import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.FileUtils;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
@@ -98,19 +99,26 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     holder.fanMenuButtons.toggleShow();
                 }
             });
-
-            holder.progressBar.setProgress(0);
+            if(DownloadingTaskList.SINGLETON.isPendingDownloadTask(bean.pageURL)) {
+                holder.progressBar.setProgress(0);
+                holder.progressBar.setVisibility(View.VISIBLE);
+            } else {
+                holder.progressBar.setVisibility(View.GONE);
+            }
             holder.fanMenuButtons.setOnFanButtonClickListener(new FanMenuButtons.OnFanClickListener() {
                 @Override
                 public void onFanButtonClicked(int index) {
                     holder.fanMenuButtons.toggleShow();
                     if (index == 0) {
+                        EventUtil.getDefault().onEvent("downloading","startDownload");
                         holder.progressBar.setProgress(0);
                         holder.progressBar.setVisibility(View.VISIBLE);
                         DownloadUtil.startResumeDownload(bean.pageURL);
                     } else if (index == 1) {
+                        EventUtil.getDefault().onEvent("downloading","downloadPageThumbnail");
                         DownloadUtil.downloadThumbnail(bean.pageURL, bean.pageThumb);
                     } else if (index == 2) {
+                        EventUtil.getDefault().onEvent("downloading","delete");
                         deleteDownloadingVideo(bean, position);
                     }
                 }
@@ -153,6 +161,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             holder.showHowToBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventUtil.getDefault().onEvent("main","howto");
                     if (callback != null) {
                         callback.showHowTo();
                     }
@@ -164,6 +173,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 public void onClick(View v) {
                     holder.downloadBtn.setVisibility(View.GONE);
                     mClickedPasteBtn = true;
+                    EventUtil.getDefault().onEvent("download","Click Main Paste to Download");
                     if (callback != null) {
                         callback.onDownloadFromClipboard();
                     }
@@ -187,7 +197,11 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     //TODO:最后一个位置有问题
     private void deleteDownloadingVideo(final DownloadContentItem bean, int positoin) {
         mDataList.remove(bean);
-        notifyItemRemoved(positoin);
+        if(mDataList.size()-1 == positoin) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemRemoved(positoin);
+        }
         DownloadingTaskList.SINGLETON.intrupted(bean.pageURL);
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
@@ -211,7 +225,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     public interface IBtnCallback {
         public void showHowTo();
-
         void onDownloadFromClipboard();
 
     }

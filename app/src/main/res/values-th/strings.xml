@@ -49,4 +49,23 @@
 	<string name="nav_rate_us">ให้คะแนนเรา</string>
 	<string name="nav_send">ส่ง</string>
 	<string name="nav_change_language">เปลี่ยนภาษา</string>
+
+
+	<string name = "toast_downlaoded_video"> ดาวน์โหลดแล้ว </string>
+	<string name = "downloading_left_task_count">%d ไฟล์ซ้าย</string>
+	<string name = "ratingstar_1">เกลียดมัน</string>
+	<string name = "ratingstar_2">ไม่ชอบ</string>
+	<string name = "ratingstar_3">โอเค</string>
+	<string name = "ratingstar_4">ชอบ </string>
+	<string name = "ratingstar_5">ชื่นชอบมัน</string>
+	<string name = "rating_close">ปิด</string>
+	<string name = "rating_RATE">ให้คะแนน</string>
+	<string name = "rating_title">เรากำลังทำงานอย่างหนักเพื่อประสบการณ์การใช้งานที่ดีขึ้น</string>
+	<string name = "rating_subtitle">เรายินดีเป็นอย่างยิ่งที่จะให้คะแนนเรา</string>
+	<string name = "rating_best_operation">สิ่งที่ดีที่สุดที่จะได้รับ</string>
+
+	<string name = "option_copy_all">คัดลอกทั้งหมด</string>
+	<string name = "option_copy_tags">คัดลอก HashTags</string>
+	<string name = "btn_check_url">ตรวจสอบ URL</string>
+
 </resources>

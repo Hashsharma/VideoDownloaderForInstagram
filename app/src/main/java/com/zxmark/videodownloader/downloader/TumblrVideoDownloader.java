@@ -123,7 +123,6 @@ public class TumblrVideoDownloader extends BaseDownloader {
                     data.pageThumb = data.futureImageList.get(0);
                 }
             }
-            data.pageHOME = DownloadUtil.getDownloadItemDirectory(htmlUrl);
 
             if (TextUtils.isEmpty(data.pageTitle)) {
                 data.pageTitle = DownloadUtil.getFileNameByUrl(htmlUrl);

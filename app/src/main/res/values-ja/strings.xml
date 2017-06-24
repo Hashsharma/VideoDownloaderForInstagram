@@ -51,4 +51,22 @@
 	<string name="nav_rate_us">賞賛を与えます</string>
 	<string name="nav_send">シェア</string>
 	<string name="nav_change_language">スイッチの言語</string>
+
+	<string name="toast_downlaoded_video">既にダウンロード済み</string>
+	<string name="downloading_left_task_count">％d個のファイルが残っています</string>
+	<string name="ratingstar_1">それを憎んだ</string>
+	<string name="ratingstar_2">気に入らなかった点</string>
+	<string name="ratingstar_3">大丈夫です</string>
+	<string name="ratingstar_4">好きでした</string>
+	<string name="ratingstar_5">楽しかった</string>
+	<string name="rating_close">閉じる</string>
+	<string name="rating_RATE">レート</string>
+	<string name="rating_title">より良いユーザーエクスペリエンスを目指して努力しています</string>
+	<string name="rating_subtitle">あなたが私たちに評価をつけることができれば大いに感謝しています。</string>
+	<string name="rating_best_operation">最高のwo得ることができる</string>
+
+	<string name="option_copy_all">すべてをコピー</string>
+	<string name="option_copy_tags">コピー HashTags</string>
+	<string name="btn_check_url">URLを確認する</string>
+
 </resources>

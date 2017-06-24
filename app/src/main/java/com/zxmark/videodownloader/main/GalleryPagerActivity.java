@@ -2,13 +2,16 @@ package com.zxmark.videodownloader.main;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.model.GenericLoaderFactory;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
@@ -68,8 +71,10 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
         setContentView(R.layout.gallery_pager);
 
-        final String baseHome = getIntent().getStringExtra(Globals.EXTRAS);
-
+        String baseHome = getIntent().getStringExtra(Globals.EXTRAS);
+      //  if(Globals.TEST_FOR_GP) {
+               // baseHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mob_ins_downloader/test";
+        //}
         mPageHome = baseHome;
         findViewById(R.id.back).setOnClickListener(this);
         findViewById(R.id.more_vert).setOnClickListener(this);
@@ -102,14 +107,14 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
-
+        final String home = baseHome;
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        File targetFile = new File(baseHome);
+                        File targetFile = new File(home);
                         if (targetFile == null) {
                             return;
                         }

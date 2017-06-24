@@ -49,4 +49,21 @@
 	<string name="nav_rate_us">Votaci</string>
 	<string name="nav_send">Inviare</string>
 	<string name="nav_change_language">Cambiare la lingua</string>
+
+	<string name="toast_downlaoded_video">Già scaricati</string>
+	<string name="downloading_left_task_count">%d File sinistro</string>
+	<string name="ratingstar_1">Odiava</string>
+	<string name="ratingstar_2">Mi è piaciuto molto</string>
+	<string name="ratingstar_3">Va bene</string>
+	<string name="ratingstar_4">Mi è piaciuto</string>
+	<string name="ratingstar_5">Lo amo</string>
+	<string name="rating_close">Vicino</string>
+	<string name="rating_RATE">Vota</string>
+	<string name="rating_title">Stiamo lavorando sodo per una migliore esperienza utente</string>
+	<string name="rating_subtitle">Ci piacerebbe molto se ci puoi valutare.</string>
+	<string name="rating_best_operation">Il miglior wo può ottenere</string>
+
+	<string name="option_copy_all">Copia tutto</string>
+	<string name="option_copy_tags">Copia HashTags</string>
+	<string name="btn_check_url">Controlla URL</string>
 </resources>

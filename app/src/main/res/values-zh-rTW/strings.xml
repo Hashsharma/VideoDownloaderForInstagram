@@ -1,54 +1,85 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
 
-	<string name="btn_download_from_clipboard">粘貼</string>
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
-	<string name="action_settings">設置</string>
+    <string name="btn_download_from_clipboard">粘貼</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">設置</string>
 
-	<string name="tab_title_downloading">下載</string>
-	<string name="tab_title_history">歷史紀錄</string>
+    <string name="tab_title_downloading">下載</string>
+    <string name="tab_title_history">歷史紀錄</string>
 
-	<string name="how_to">使用說明</string>
+    <string name="how_to">使用說明</string>
 
-	<string name="option_delete">刪除</string>
-	<string name="option_launch">打開 Instagram</string>
-	<string name="option_copy">覆制鏈接</string>
-	<string name="option_share">分享</string>
-	<string name="menu_download_video">下載視頻</string>
-	<string name="menu_download_image">下載圖片</string>
-	<string name="menu_delete">刪除</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
+    <string name="option_delete">刪除</string>
+    <string name="option_launch">打開 Instagram</string>
+    <string name="option_copy">覆制鏈接</string>
+    <string name="option_share">分享</string>
+    <string name="menu_download_video">下載視頻</string>
+    <string name="menu_download_image">下載圖片</string>
+    <string name="menu_delete">刪除</string>
+    <string-array name="fan_labels">
+        <item>@string/menu_download_video</item>
+        <item>@string/menu_download_image</item>
+        <item>@string/menu_delete</item>
+    </string-array>
 
-	<string name="download_home_lable">文件保存在: /%s</string>
-	<string name="repost">重新發布</string>
-	<string name="spider_request_error">獲取下載地址失敗!</string>
+    <string name="download_home_lable">文件保存在: /%s</string>
+    <string name="repost">重新發布</string>
+    <string name="spider_request_error">獲取下載地址失敗!</string>
 
-	<string name="download_from_send_action">開始下載</string>
-	<string name="not_support_url">請輸入正確鏈接地址</string>
+    <string name="download_from_send_action">開始下載</string>
+    <string name="not_support_url">請輸入正確鏈接地址</string>
 
 
-	<string name="eheck_url_dialgo_title">等待</string>
-	<string name="check_url">正在識別鏈接，請等待</string>
+    <string name="eheck_url_dialgo_title">等待</string>
+    <string name="check_url">正在識別鏈接，請等待</string>
 
-	<string name="str_share_this_video">分享</string>
+    <string name="str_share_this_video">分享</string>
 
-	<string name="clipboard_copy_text">鏈接已經存入剪切板</string>
+    <string name="clipboard_copy_text">鏈接已經存入剪切板</string>
 
-	<string name="download_result_success">下載成功</string>
-	<string name="download_failed">下載失敗</string>
-	<string name="download_result_start">開始下載</string>
+    <string name="download_result_success">下載成功</string>
+    <string name="download_failed">下載失敗</string>
+    <string name="download_result_start">開始下載</string>
 
-	<string name="how_to_1">1.打開 Instagram</string>
-	<string name="how_to_2">2.打開 InstaDownloader</string>
-	<string name="how_to_3">3.點擊右下角下載按鈕</string>
+    <string name="how_to_1">1.打開 Instagram</string>
+    <string name="how_to_2">2.打開 InstaDownloader</string>
+    <string name="how_to_3">3.點擊右下角下載按鈕</string>
 
-	<string name="nav_rate_us">給我打好評</string>
-	<string name="nav_send">分享</string>
-	<string name="nav_change_language">切換語言</string>
+    <string name="nav_rate_us">給我打好評</string>
+    <string name="nav_send">分享</string>
+    <string name="nav_change_language">切換語言</string>
 
+
+    <string name="toast_downlaoded_video">已經下載</string>
+        
+    <string name="uploaded_left_task_count">％d 個文件</string>
+        
+    <string name="ratingstar_1">討厭它</string>
+        
+    <string name="ratingstar_2">不喜歡它</string>
+        
+    <string name="ratingstar_3">可以</string>
+        
+    <string name="ratingstar_4">喜歡它</string>
+        
+    <string name="ratingstar_5">喜歡它</string>
+        
+    <string name="rating_close">關閉</string>
+        
+    <string name="rating_RATE">評分</string>
+        
+    <string name="rating_title">我們正在努力為更好的用戶體驗</string>
+        
+    <string name="rating_subtitle">如果您能給我們評分，我們非常感謝。</string>
+        
+    <string name="rating_best_operation">最好的可以得到</string>
+
+        
+    <string name="option_copy_all">全部複製</string>
+        
+    <string name="option_copy_tags">複製HashTags</string>
+        
+    <string name="btn_check_url">檢查URL</string>
 </resources>

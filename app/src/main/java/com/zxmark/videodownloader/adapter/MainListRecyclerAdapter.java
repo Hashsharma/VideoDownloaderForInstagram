@@ -30,6 +30,7 @@ import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
@@ -85,6 +86,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventUtil.getDefault().onEvent("history","openFileList");
                     DownloadUtil.openFileList(bean.pageHOME);
                 }
             });
@@ -102,10 +104,10 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.repostView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventUtil.getDefault().onEvent("history","delete");
                     int index = mDataList.indexOf(bean);
                     notifyItemRemoved(index);
                     mDataList.remove(index);
-
                     DownloaderDBHelper.SINGLETON.deleteDownloadTaskAsync(bean.pageURL);
                 }
             });
@@ -123,6 +125,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     PopWindowUtils.showVideoMoreOptionWindow(v, new IPopWindowClickCallback() {
                         @Override
                         public void onCopyAll() {
+
+                            EventUtil.getDefault().onEvent("history","copyAll");
                             String title = bean.pageTitle;
                             String hashTags = bean.pageTags;
                             StringBuilder sb = new StringBuilder(bean.pageURL);
@@ -140,6 +144,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void onCopyHashTags() {
+
+                            EventUtil.getDefault().onEvent("history","copyHashTags");
                             String hashTags = bean.pageTags;
                             StringBuilder sb = new StringBuilder();
 
@@ -151,6 +157,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void launchAppByUrl() {
+
+                            EventUtil.getDefault().onEvent("history","launchInstagramByURL");
                             if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
                                 Utils.openInstagramByUrl(bean.pageURL);
                             }
@@ -158,6 +166,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void onPasteSharedUrl() {
+
+                            EventUtil.getDefault().onEvent("history","pasteURL");
                             if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
                                 Utils.copyText2Clipboard(bean.pageURL);
                             }

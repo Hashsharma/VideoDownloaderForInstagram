@@ -35,7 +35,7 @@ public class DownloadUtil {
         final Context context = MainApplication.getInstance().getApplicationContext();
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
-        intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW,false);
+        intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, false);
         intent.putExtra(Globals.EXTRAS, url);
         context.startService(intent);
     }
@@ -100,6 +100,7 @@ public class DownloadUtil {
 
     /**
      * 组成文件下载目录
+     *
      * @param parent
      * @param fileName
      * @return
@@ -109,15 +110,18 @@ public class DownloadUtil {
         return targetDir.getAbsolutePath();
     }
 
-    public static String getDownloadItemDirectory(String pageURL) {
+    public static String getDownloadItemDirectory(boolean create) {
         File homeDirectory = DownloadUtil.getHomeDirectory();
-        if(!homeDirectory.exists()) {
-            homeDirectory.mkdir();
+        if (create) {
+            if (!homeDirectory.exists()) {
+                homeDirectory.mkdir();
+            }
         }
-       // String name = getFileNameByUrl(pageURL);
         File itemDirectory = new File(homeDirectory, String.valueOf(System.currentTimeMillis()));
-        if (!itemDirectory.exists()) {
-            itemDirectory.mkdir();
+        if (create) {
+            if (!itemDirectory.exists()) {
+                itemDirectory.mkdir();
+            }
         }
         return itemDirectory.getAbsolutePath();
     }

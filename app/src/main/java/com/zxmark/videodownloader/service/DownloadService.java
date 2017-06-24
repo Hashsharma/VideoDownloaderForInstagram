@@ -159,13 +159,15 @@ public class DownloadService extends Service {
                     public void run() {
                         DownloadContentItem downloadContentItem = null;
                         downloadContentItem = VideoDownloadFactory.getInstance().request(url);
-                        if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
 
+                        if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
                             EventUtil.getDefault().onEvent("download","DownloadService.StartDownload:" + url);
                             if (showFloatView) {
                                 showFloatView();
                             }
+                            LogUtil.e("download","startDownload:" + url + ":" + downloadContentItem.pageHOME);
                             String pageHome = DownloaderDBHelper.SINGLETON.getPageHomeByPageURL(url);
+                            LogUtil.e("download","startDownload:existHome=" + pageHome );
                             if(!TextUtils.isEmpty(pageHome)) {
                                downloadContentItem.pageHOME = pageHome;
                             }

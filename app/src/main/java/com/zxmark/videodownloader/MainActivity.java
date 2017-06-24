@@ -191,20 +191,25 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             if (Globals.TEST_FOR_GP) {
                 if (BuildConfig.DEBUG) {
-                    showRatingDialog();
+                    //showRatingDialog();
                     GPDataGenerator.saveGPTask();
                 }
             }
+            EventUtil.getDefault().onEvent("main","openInsByNav");
             Utils.openInstagram();
         } else if (id == R.id.nav_gallery) {
+            EventUtil.getDefault().onEvent("main","showHowTo");
             if (mViewPagerAdapter.getDownloadingFragment() != null) {
                 mViewPagerAdapter.getDownloadingFragment().showHotToInfo();
             }
         } else if (id == R.id.nav_send) {
+            EventUtil.getDefault().onEvent("main","sendMyApp");
             Utils.sendMyApp();
         } else if (id == R.id.nav_rate) {
+            EventUtil.getDefault().onEvent("main","rateUs");
             Utils.rateUs5Star();
         } else if (id == R.id.nav_change_language) {
+            EventUtil.getDefault().onEvent("main","changeLanguage");
             showLocaleSelectDialog();
         }
 
@@ -218,6 +223,7 @@ public class MainActivity extends AppCompatActivity
         if(PreferenceUtils.isShowedRateGuide()) {
             return;
         }
+        EventUtil.getDefault().onEvent("main","showRatingDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         View convertView = getLayoutInflater().inflate(R.layout.rating_app, null);
         builder.setView(convertView);
@@ -259,6 +265,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 float rating = ratingBar.getRating();
+                EventUtil.getDefault().onEvent("main","rating=" + rating);
                 if (rating >= 3.0f) {
                     PreferenceUtils.showedRateGuide();
                     Utils.rateUs5Star();
@@ -273,20 +280,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-//        if (v.getId() == R.id.btn_paste) {
-//            String downloadUrl = mUrlEditText.getText().toString();
-//            if (!TextUtils.isEmpty(downloadUrl)) {
-//                Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
-//                startDownload(downloadUrl);
-//            }
-//        } else if (v.getId() == R.id.btn_paste) {
-//            final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-//            String pastUrl = cb.getText().toString();
-//            if (!TextUtils.isEmpty(pastUrl)) {
-//                Toast.makeText(this, "start download", Toast.LENGTH_SHORT).show();
-//                startDownload(pastUrl);
-//            }
         if (v.getId() == R.id.ins_icon) {
+            EventUtil.getDefault().onEvent("main","openInsByTitle");
             Utils.openInstagram();
         }
     }
@@ -432,6 +427,7 @@ public class MainActivity extends AppCompatActivity
                                     public void onClick(DialogInterface dialog, int which) {
                                         PreferenceUtils.saveCurrentLanguage(countryCode[which], which);
                                         Utils.changeLocale(countryCode[which]);
+                                        EventUtil.getDefault().onEvent("la","coutryCode:" + countryCode[which]);
                                         dialog.dismiss();
                                     }
                                 }).show();

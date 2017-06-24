@@ -43,6 +43,18 @@ public class DownloadingTaskList {
     private List<String> mFuturedTaskList = new LinkedList<>();
     private HashMap<String, DownloadContentItem> mFutureTaskDetailMap = new HashMap<>();
 
+    public boolean isPendingDownloadTask(String pageURL) {
+        if(TextUtils.isEmpty(pageURL)) {
+            return false;
+        }
+
+        return mFuturedTaskList.indexOf(pageURL) > -1;
+    }
+
+    public List<String> getFutureTask() {
+        return mFuturedTaskList;
+    }
+
     private DownloadingTaskList() {
 
     }

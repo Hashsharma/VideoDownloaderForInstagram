@@ -1,53 +1,82 @@
 <resources>
-	<string name="btn_download_from_clipboard">Пасти</string>
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="btn_download_from_clipboard">Пасти</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-	<string name="how_to">Як</string>
-	<string name="action_settings">Налаштування</string>
+    <string name="how_to">Як</string>
+    <string name="action_settings">Налаштування</string>
 
-	<string name="tab_title_downloading">Завантажити</string>
-	<string name="tab_title_history">Історія</string>
+    <string name="tab_title_downloading">Завантажити</string>
+    <string name="tab_title_history">Історія</string>
 
-	<string name="option_delete">Видалити</string>
-	<string name="option_launch">Відкрийте Instagram</string>
-	<string name="option_copy">Скопіювати посилання</string>
-	<string name="option_share">Поділитися</string>
-	<string name="menu_download_video">Відеоролик DownLoad</string>
-	<string name="menu_download_image">Завантажити зображення</string>
-	<string name="menu_delete">Видалити</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
+    <string name="option_delete">Видалити</string>
+    <string name="option_launch">Відкрийте Instagram</string>
+    <string name="option_copy">Скопіювати посилання</string>
+    <string name="option_share">Поділитися</string>
+    <string name="menu_download_video">Відеоролик DownLoad</string>
+    <string name="menu_download_image">Завантажити зображення</string>
+    <string name="menu_delete">Видалити</string>
+    <string-array name="fan_labels">
+        <item>@string/menu_download_video</item>
+        <item>@string/menu_download_image</item>
+        <item>@string/menu_delete</item>
+    </string-array>
 
-	<string name="download_home_lable">Файл збережено в: /%s</string>
-	<string name="repost">REPOST</string>
-	<string name="spider_request_error">Не вдалося завантажити посилання!</string>
+    <string name="download_home_lable">Файл збережено в: /%s</string>
+    <string name="repost">REPOST</string>
+    <string name="spider_request_error">Не вдалося завантажити посилання!</string>
 
-	<string name="download_from_send_action">Почніть завантажувати посилання</string>
-	<string name="not_support_url">Будь ласка, надішліть правильну посилання</string>
-
-
-	<string name="eheck_url_dialgo_title">Очікування.</string>
-	<string name="check_url">Перевірка посилань....</string>
-
-	<string name="str_share_this_video">Поділитися</string>
-
-	<string name="clipboard_copy_text">Посилання потрібно скопіювати в буфер обміну</string>
-
-	<string name="download_result_success">Завантажити успіх</string>
-	<string name="download_failed">Помилка завантаження</string>
-	<string name="download_result_start">Почніть завантажувати</string>
+    <string name="download_from_send_action">Почніть завантажувати посилання</string>
+    <string name="not_support_url">Будь ласка, надішліть правильну посилання</string>
 
 
-	<string name="how_to_1">1.Відкрийте Instagram</string>
-	<string name="how_to_2">2.Відкрийте InstaDownloader</string>
-	<string name="how_to_3">3.Клацніть правою кнопкою</string>
+    <string name="eheck_url_dialgo_title">Очікування.</string>
+    <string name="check_url">Перевірка посилань....</string>
 
-	<string name="nav_rate_us">Оцініть нас</string>
-	<string name="nav_send">Відправити</string>
-	<string name="nav_change_language">Переключити мову</string>
+    <string name="str_share_this_video">Поділитися</string>
 
+    <string name="clipboard_copy_text">Посилання потрібно скопіювати в буфер обміну</string>
+
+    <string name="download_result_success">Завантажити успіх</string>
+    <string name="download_failed">Помилка завантаження</string>
+    <string name="download_result_start">Почніть завантажувати</string>
+
+
+    <string name="how_to_1">1.Відкрийте Instagram</string>
+    <string name="how_to_2">2.Відкрийте InstaDownloader</string>
+    <string name="how_to_3">3.Клацніть правою кнопкою</string>
+
+    <string name="nav_rate_us">Оцініть нас</string>
+    <string name="nav_send">Відправити</string>
+    <string name="nav_change_language">Переключити мову</string>
+    <string name="toast_downlaoded_video">вже завантажено</string>
+        
+    <string name="loading_left_task_count">%d файли ліворуч</string>
+        
+    <string name="ratingstar_1">ненавидіти його</string>
+        
+    <string name="ratingstar_2">Не сподобалося</string>
+        
+    <string name="ratingstar_3">It\'s OK</string>
+        
+    <string name="ratingstar_4">сподобалося</string>
+        
+    <string name="ratingstar_5">Любить його</string>
+        
+    <string name="rating_close">Закрити</string>
+        
+    <string name="rating_RATE">Оцінити</string>
+        
+    <string name="rating_title">Ми працюємо над тим, щоб краще користуватися користувачем</string>
+        
+    <string name="rating_subtitle">Ми дуже вдячні, якщо ви можете оцінити нас.</string>
+        
+    <string name="rating_best_operation">Кращий wo може отримати</string>
+
+        
+    <string name="option_copy_all">Копіювати всі</string>
+        
+    <string name="option_copy_tags">Копіювати HashTags</string>
+        
+    <string name="btn_check_url">Перевірити URL-адресу</string>
 </resources>

@@ -183,12 +183,10 @@ public class InstagramDownloader extends BaseDownloader {
         getVideoUrlFromJs(content, data);
         data.pageThumb = getImageUrl(content);
         getImageUrlFromJs(content, data);
-
         data.pageTitle = getPageTitle(content);
         data.pageDesc = getDescription(content);
         data.pageURL = htmlUrl;
         data.pageTags = getPageHashTags(content);
-        data.pageHOME = DownloadUtil.getDownloadItemDirectory(htmlUrl);
         if (data.futureImageList == null && data.futureVideoList == null) {
             return null;
         }

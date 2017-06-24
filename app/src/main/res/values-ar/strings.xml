@@ -50,4 +50,21 @@
 	<string name="nav_send">إرسال</string>
 	<string name="nav_change_language">تبديل اللغة</string>
 
+	<string name="toast_downlaoded_video">تم تنزيلها من قبل</string>
+	<string name="downloading_left_task_count">%d وثائق</string>
+	<string name="ratingstar_1">كرهتها</string>
+	<string name="ratingstar_2">لم يعجبني</string>
+	<string name="ratingstar_3">إنها جيدة</string>
+	<string name="ratingstar_4">أعجبني</string>
+	<string name="ratingstar_5">احببته</string>
+	<string name="rating_close">قريب</string>
+	<string name="rating_RATE">معدل</string>
+	<string name="rating_title">نحن نعمل بجد للحصول على تجربة أفضل للمستخدم</string>
+	<string name="rating_subtitle">نحن نقدر كثيرا إذا كنت يمكن أن تقيم لنا.</string>
+	<string name="rating_best_operation">أفضل وو يمكن الحصول عليها</string>
+
+	<string name="option_copy_all">نسخ جميع</string>
+	<string name="option_copy_tags">نسخ علامات التصنيف</string>
+	<string name="btn_check_url">تحقق من عنوان ورل</string>
+
 </resources>

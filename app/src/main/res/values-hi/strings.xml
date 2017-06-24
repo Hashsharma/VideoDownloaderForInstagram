@@ -49,4 +49,21 @@
 	<string name="nav_rate_us">हमें रेटिंग दें</string>
 	<string name="nav_send">भेजना</string>
 	<string name="nav_change_language">भाषा स्विच करें</string>
+
+	<string name="toast_downlaoded_video">पहले से डाउनलोड किया गया</string>
+	<string name="downloading_left_task_count">%d फ़ाइल वाम</string>
+	<string name="ratingstar_1">इस से नफरत की गई</string>
+	<string name="ratingstar_2">इसे नापसंद किया</string>
+	<string name="ratingstar_3">यह ठीक है</string>
+	<string name="ratingstar_4">अच्छा लगा</string>
+	<string name="ratingstar_5">पसन्द आया</string>
+	<string name="rating_close">बंद करे</string>
+	<string name="rating_RATE">मूल्यांकन करें</string>
+	<string name="rating_title">हम एक बेहतर उपयोगकर्ता अनुभव के लिए कड़ी मेहनत कर रहे हैं</string>
+	<string name="rating_subtitle">अगर आप हमें रेट कर सकते हैं तो हम बहुत सराहना करते हैं</string>
+	<string name="rating_best_operation">सबसे अच्छा wo मिल सकता है</string>
+
+	<string name="option_copy_all">सभी को कॉपी करें</string>
+	<string name="option_copy_tags">हैशटैग कॉपी करें</string>
+	<string name="btn_check_url">URL जांचें</string>
 </resources>

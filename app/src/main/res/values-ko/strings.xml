@@ -1,52 +1,83 @@
 <resources>
-	<string name="btn_download_from_clipboard">풀</string>
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="btn_download_from_clipboard">풀</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-	<string name="how_to">어떻게</string>
-	<string name="action_settings">설정</string>
+    <string name="how_to">어떻게</string>
+    <string name="action_settings">설정</string>
 
-	<string name="tab_title_downloading">다운로드</string>
-	<string name="tab_title_history">역사</string>
+    <string name="tab_title_downloading">다운로드</string>
+    <string name="tab_title_history">역사</string>
 
-	<string name="option_delete">지우다</string>
-	<string name="option_launch">열다 Instagram</string>
-	<string name="option_copy">복사 링크</string>
-	<string name="option_share">몫</string>
-	<string name="menu_download_video">다운로드 비디오</string>
-	<string name="menu_download_image">이미지 다운로드</string>
-	<string name="menu_delete">Delete</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
+    <string name="option_delete">지우다</string>
+    <string name="option_launch">열다 Instagram</string>
+    <string name="option_copy">복사 링크</string>
+    <string name="option_share">몫</string>
+    <string name="menu_download_video">다운로드 비디오</string>
+    <string name="menu_download_image">이미지 다운로드</string>
+    <string name="menu_delete">Delete</string>
+    <string-array name="fan_labels">
+        <item>@string/menu_download_video</item>
+        <item>@string/menu_download_image</item>
+        <item>@string/menu_delete</item>
+    </string-array>
 
-	<string name="download_home_lable">에 저장된 파일: /%s</string>
-	<string name="repost">보충</string>
-	<string name="spider_request_error">다운로드 링크를 가져 오는 데 실패했습니다.</string>
+    <string name="download_home_lable">에 저장된 파일: /%s</string>
+    <string name="repost">보충</string>
+    <string name="spider_request_error">다운로드 링크를 가져 오는 데 실패했습니다.</string>
 
-	<string name="download_from_send_action">다운로드 시작 링크</string>
-	<string name="not_support_url">올바른 링크를 보내주십시오.</string>
-
-
-	<string name="eheck_url_dialgo_title">기다리는.</string>
-	<string name="check_url">링크 확인 중 ....</string>
-
-	<string name="str_share_this_video">몫</string>
-
-	<string name="clipboard_copy_text">링크가 클립 보드에 복사됩니다.</string>
-
-	<string name="download_result_success">다운로드 성공</string>
-	<string name="download_failed">다운로드 실패</string>
-	<string name="download_result_start">다운로드를 시작하다</string>
+    <string name="download_from_send_action">다운로드 시작 링크</string>
+    <string name="not_support_url">올바른 링크를 보내주십시오.</string>
 
 
-	<string name="how_to_1">1.열다 Instagram</string>
-	<string name="how_to_2">2.열다 InstaDownloader</string>
-	<string name="how_to_3">3.오른쪽 버튼을 클릭하십시오.</string>
+    <string name="eheck_url_dialgo_title">기다리는.</string>
+    <string name="check_url">링크 확인 중 ....</string>
 
-	<string name="nav_rate_us">우리 평가하기</string>
-	<string name="nav_send">보내다</string>
-	<string name="nav_change_language">언어 전환</string>
+    <string name="str_share_this_video">몫</string>
+
+    <string name="clipboard_copy_text">링크가 클립 보드에 복사됩니다.</string>
+
+    <string name="download_result_success">다운로드 성공</string>
+    <string name="download_failed">다운로드 실패</string>
+    <string name="download_result_start">다운로드를 시작하다</string>
+
+
+    <string name="how_to_1">1.열다 Instagram</string>
+    <string name="how_to_2">2.열다 InstaDownloader</string>
+    <string name="how_to_3">3.오른쪽 버튼을 클릭하십시오.</string>
+
+    <string name="nav_rate_us">우리 평가하기</string>
+    <string name="nav_send">보내다</string>
+    <string name="nav_change_language">언어 전환</string>
+
+    <string name="toast_downlaoded_video"> 이미 다운로드 됨 </string>
+        
+    <string name="downloading_left_task_count">%d 파일 왼쪽 </string>
+        
+    <string name="ratingstar_1">미움</string>
+        
+    <string name="ratingstar_2">싫어함</string>
+        
+    <string name="ratingstar_3">괜찮습니다.</string>
+        
+    <string name="ratingstar_4">좋아했습니다</string>
+        
+    <string name="ratingstar_5">좋아했습니다</string>
+        
+    <string name="rating_close">닫기</string>
+        
+    <string name="rating_RATE">평가</string>
+        
+    <string name="rating_title">보다 나은 사용자 환경을 위해 최선을 다하고 있습니다.</string>
+        
+    <string name="rating_subtitle">평가 해 주시면 대단히 감사하겠습니다.</string>
+        
+    <string name="rating_best_operation">최상의 결과는</string>
+
+        
+    <string name="option_copy_all">모두 복사</string>
+        
+    <string name="option_copy_tags">HashTags 복사</string>
+        
+    <string name="btn_check_url">URL 확인</string>
 </resources>

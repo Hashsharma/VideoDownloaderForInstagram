@@ -12,6 +12,7 @@ import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,10 +81,6 @@ public class DownloadContentItem implements BaseColumns {
         this.pageURL = pageURL;
     }
 
-    public void setPageHome(String pageHome) {
-        this.pageHOME = pageHome;
-    }
-
     public void setPageThumb(String thumb) {
         this.pageThumb = thumb;
     }
@@ -129,7 +126,6 @@ public class DownloadContentItem implements BaseColumns {
         item.pageTags = cursor.getString(cursor.getColumnIndexOrThrow(DownloadContentItem.HASH_TAGS));
         item.mimeType = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadContentItem.PAGE_MIME_TYPE));
         item.fileCount = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadContentItem.PAGE_DOWNLOAD_FILE_COUNT));
-        LogUtil.e("item", "fromCursor.fileCount=" + item.fileCount);
         item.pageStatus = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadContentItem.PAGE_STATUS));
         item.itemType = TYPE_NORMAL_ITEM;
         return item;
@@ -138,14 +134,15 @@ public class DownloadContentItem implements BaseColumns {
     public static ContentValues from(DownloadContentItem item) {
         ContentValues cv = new ContentValues();
         cv.put(PAGE_URL, item.pageURL);
-        cv.put(PAGE_HOME, item.getPageHome());
         cv.put(PAGE_THUMBNAIL, item.pageThumb);
         cv.put(PAGE_TITLE, item.pageTitle);
         cv.put(PAGE_DESCRIPTION, item.pageDesc);
         cv.put(HASH_TAGS, item.pageTags);
         cv.put(PAGE_MIME_TYPE, item.getMimeType());
         cv.put(PAGE_DOWNLOAD_FILE_COUNT, item.getFileCount());
-        LogUtil.e("item", "pageHome:" + item.getPageHome());
+        LogUtil.e("download","page_before_home:" + item.pageHOME);
+        cv.put(PAGE_HOME, item.getPageHomeAndCreateHome());
+        LogUtil.e("download","page_Hoem=" + new File(item.pageHOME).exists() + ":" + item.pageHOME);
         cv.put(PAGE_STATUS, item.pageStatus);
         return cv;
     }
@@ -154,9 +151,16 @@ public class DownloadContentItem implements BaseColumns {
     public List<String> futureVideoList;
     public List<String> futureImageList;
 
+    private String getPageHomeAndCreateHome() {
+        if (TextUtils.isEmpty(pageHOME)) {
+            pageHOME = DownloadUtil.getDownloadItemDirectory(true);
+        }
+        return pageHOME;
+    }
+
     public String getPageHome() {
         if (TextUtils.isEmpty(pageHOME)) {
-            pageHOME = DownloadUtil.getDownloadItemDirectory(pageURL);
+            pageHOME = DownloadUtil.getDownloadItemDirectory(false);
         }
         return pageHOME;
     }

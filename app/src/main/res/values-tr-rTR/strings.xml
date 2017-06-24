@@ -49,4 +49,35 @@
     <string name="nav_rate_us">Bizi değerlendirin</string>
     <string name="nav_send">göndermek</string>
     <string name="nav_change_language">Dili değiştir</string>
+
+    <string name="toast_downlaoded_video"> Zaten İndirildi</string>
+        
+    <string name="downloading_left_task_count">%d Dosya Left</string>
+        
+    <string name="ratingstar_1">Nefret etti</string>
+        
+    <string name="ratingstar_2">Beğenmedi</string>
+        
+    <string name="ratingstar_3">Tamam</string>
+        
+    <string name="ratingstar_4">Beğendim</string>
+        
+    <string name="ratingstar_5">Sevdim</string>
+        
+    <string name="rating_close">Kapat</string>
+        
+    <string name="rating_RATE">Oran</string>
+        
+    <string name="rating_title">Daha iyi bir kullanıcı deneyimi için çok çalışıyoruz</string>
+        
+    <string name="rating_subtitle"> Bize oy verin, teşekkür ederiz.</string>
+        
+    <string name="rating_best_operation">En iyi wo alabilirsiniz</string>
+
+        
+    <string name="option_copy_all">Tümünü Kopyala</string>
+        
+    <string name="option_copy_tags"> HashTag\'ları Kopyala</string>
+        
+    <string name="btn_check_url"> URL\'yi kontrol et</string>
 </resources>

@@ -56,4 +56,16 @@
     <string name="ratingstar_3">还行</string>
     <string name="ratingstar_4">喜欢</string>
     <string name="ratingstar_5">超喜欢</string>
+
+    <string name="toast_downlaoded_video">已经下载</string>
+    <string name="downloading_left_task_count">%d 个文件</string>
+    <string name="rating_close">关闭</string>
+    <string name="rating_RATE">评分</string>
+    <string name="rating_title">我们正在努力为更好的用户体验</string>
+    <string name="rating_subtitle">如果你能给我们评分，我们非常感激。</string>
+    <string name="rating_best_operation">最好可以给我们5分</string>
+
+    <string name="option_copy_all">复制全部</string>
+    <string name="option_copy_tags">复制HashTags</string>
+    <string name="btn_check_url">解析URL</string>
 </resources>

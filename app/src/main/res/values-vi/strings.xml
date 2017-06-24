@@ -1,53 +1,83 @@
 <resources>
-	<string name="btn_download_from_clipboard">PASTE</string>
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="btn_download_from_clipboard">PASTE</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-	<string name="how_to">Làm thế nào để</string>
-	<string name="action_settings">Cài đặt</string>
+    <string name="how_to">Làm thế nào để</string>
+    <string name="action_settings">Cài đặt</string>
 
-	<string name="tab_title_downloading">Tải về</string>
-	<string name="tab_title_history">Lịch sử</string>
+    <string name="tab_title_downloading">Tải về</string>
+    <string name="tab_title_history">Lịch sử</string>
 
-	<string name="option_delete">Xóa bỏ</string>
-	<string name="option_launch">Mở Instagram</string>
-	<string name="option_copy">Sao chép đường dẫn</string>
-	<string name="option_share">Chia sẻ</string>
-	<string name="menu_download_video">DownLoad Video</string>
-	<string name="menu_download_image">Download Image</string>
-	<string name="menu_delete">Xóa bỏ</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
+    <string name="option_delete">Xóa bỏ</string>
+    <string name="option_launch">Mở Instagram</string>
+    <string name="option_copy">Sao chép đường dẫn</string>
+    <string name="option_share">Chia sẻ</string>
+    <string name="menu_download_video">DownLoad Video</string>
+    <string name="menu_download_image">Download Image</string>
+    <string name="menu_delete">Xóa bỏ</string>
+    <string-array name="fan_labels">
+        <item>@string/menu_download_video</item>
+        <item>@string/menu_download_image</item>
+        <item>@string/menu_delete</item>
+    </string-array>
 
-	<string name="download_home_lable">Đã lưu tệp: /%s</string>
-	<string name="repost">REPOST</string>
-	<string name="spider_request_error">Không thể tải liên kết tải xuống!</string>
+    <string name="download_home_lable">Đã lưu tệp: /%s</string>
+    <string name="repost">REPOST</string>
+    <string name="spider_request_error">Không thể tải liên kết tải xuống!</string>
 
-	<string name="download_from_send_action">Bắt đầu tải liên kết</string>
-	<string name="not_support_url">Vui lòng gửi liên kết chính xác</string>
-
-
-	<string name="eheck_url_dialgo_title">Đang chờ đợi.</string>
-	<string name="check_url">Kiểm tra liên kết....</string>
-
-	<string name="str_share_this_video">Chia sẻ</string>
-
-	<string name="clipboard_copy_text">Liên kết đã được sao chép vào khay nhớ tạm</string>
-
-	<string name="download_result_success">Tải về thành công</string>
-	<string name="download_failed">Tải xuống Không thành công</string>
-	<string name="download_result_start">Bắt đầu Tải về</string>
+    <string name="download_from_send_action">Bắt đầu tải liên kết</string>
+    <string name="not_support_url">Vui lòng gửi liên kết chính xác</string>
 
 
-	<string name="how_to_1">1.Mở Instagram</string>
-	<string name="how_to_2">2.Mở InstaDownloader</string>
-	<string name="how_to_3">3.Nhấp vào nút bên phải</string>
+    <string name="eheck_url_dialgo_title">Đang chờ đợi.</string>
+    <string name="check_url">Kiểm tra liên kết....</string>
 
-	<string name="nav_rate_us">đánh giá chúng tôi</string>
-	<string name="nav_send">Gửi</string>
+    <string name="str_share_this_video">Chia sẻ</string>
 
-	<string name="nav_change_language">Chuyển đổi ngôn ngữ</string>
+    <string name="clipboard_copy_text">Liên kết đã được sao chép vào khay nhớ tạm</string>
+
+    <string name="download_result_success">Tải về thành công</string>
+    <string name="download_failed">Tải xuống Không thành công</string>
+    <string name="download_result_start">Bắt đầu Tải về</string>
+
+
+    <string name="how_to_1">1.Mở Instagram</string>
+    <string name="how_to_2">2.Mở InstaDownloader</string>
+    <string name="how_to_3">3.Nhấp vào nút bên phải</string>
+
+    <string name="nav_rate_us">đánh giá chúng tôi</string>
+    <string name="nav_send">Gửi</string>
+
+    <string name="nav_change_language">Chuyển đổi ngôn ngữ</string>
+    <string name="toast_downlaoded_video">đã được tải xuống</string>
+        
+    <string name="downloading_left_task_count">%d tệp còn lại</string>
+        
+    <string name="ratingstar_1">Ghét nó</string>
+        
+    <string name="ratingstar_2">Không thích nó</string>
+        
+    <string name="ratingstar_3">Nó là của OK</string>
+        
+    <string name="ratingstar_4">Thích nó</string>
+        
+    <string name="ratingstar_5">Rất thích nó</string>
+        
+    <string name="rating_close">Đóng</string>
+        
+    <string name="rating_RATE">Xếp hạng</string>
+        
+    <string name="rating_title"> Chúng tôi đang làm việc chăm chỉ để có trải nghiệm người dùng tốt hơn</string>
+        
+    <string name="rating_subtitle">Chúng tôi đánh giá rất cao nếu bạn có thể đánh giá chúng tôi.</string>
+        
+    <string name="rating_best_operation"> Wo tốt nhất có thể nhận được</string>
+
+        
+    <string name="option_copy_all">Sao chép tất cả</string>
+        
+    <string name="option_copy_tags">Sao chép HashTags</string>
+        
+    <string name="btn_check_url">Kiểm tra URL</string>
 </resources>

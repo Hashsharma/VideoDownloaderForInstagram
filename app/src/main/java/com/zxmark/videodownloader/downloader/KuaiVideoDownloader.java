@@ -91,12 +91,11 @@ public class KuaiVideoDownloader extends BaseDownloader {
         DownloadContentItem data = new DownloadContentItem();
 
         if (!TextUtils.isEmpty(videoUrl)) {
-            LogUtil.e("kw","videoURL=" + videoUrl);
+            LogUtil.e("kw", "videoURL=" + videoUrl);
             data.addVideo(videoUrl);
             data.pageThumb = imageUrl;
             data.pageTitle = pageTitle;
             data.pageURL = htmlUrl;
-            data.pageHOME = DownloadUtil.getDownloadItemDirectory(htmlUrl);
         }
 
         if (data.futureVideoList == null && data.futureImageList == null) {

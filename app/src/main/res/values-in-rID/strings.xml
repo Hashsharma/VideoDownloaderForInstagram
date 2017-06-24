@@ -49,4 +49,20 @@
 	<string name="nav_rate_us">Beri peringkat kami</string>
 	<string name="nav_send">Kirim</string>
 	<string name="nav_change_language">Beralih bahasa</string>
+	<string name="toast_downlaoded_video">Sudah Diunduh</string>
+	<string name="downloading_left_task_count">%d File Kiri</string>
+	<string name="ratingstar_1">Benci itu</string>
+	<string name="ratingstar_2">Bukan dari TripAdvisor LLC</string>
+	<string name="ratingstar_3">Tidak apa-apa</string>
+	<string name="ratingstar_4">Menyukai ini</string>
+	<string name="ratingstar_5">Menyukainya</string>
+	<string name="rating_close">Dekat</string>
+	<string name="rating_RATE">Menilai</string>
+	<string name="rating_title">Kami bekerja keras untuk mendapatkan pengalaman pengguna yang lebih baik</string>
+	<string name="rating_subtitle">Kami akan sangat menghargai jika Anda dapat menilai kami.</string>
+	<string name="rating_best_operation">Yang terbaik bisa didapat</string>
+
+	<string name="option_copy_all">Salin semua</string>
+	<string name="option_copy_tags">Salin HashTags</string>
+	<string name="btn_check_url">Periksa URL</string>
 </resources>
