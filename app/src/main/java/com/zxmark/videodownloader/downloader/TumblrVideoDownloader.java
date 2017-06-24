@@ -1,5 +1,6 @@
 package com.zxmark.videodownloader.downloader;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
@@ -123,6 +124,10 @@ public class TumblrVideoDownloader extends BaseDownloader {
                 }
             }
             data.pageHOME = DownloadUtil.getDownloadItemDirectory(htmlUrl);
+
+            if (TextUtils.isEmpty(data.pageTitle)) {
+                data.pageTitle = DownloadUtil.getFileNameByUrl(htmlUrl);
+            }
         } catch (JSONException ex) {
             ex.printStackTrace();
             data.futureVideoList = null;

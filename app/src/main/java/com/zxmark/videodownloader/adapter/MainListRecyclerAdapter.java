@@ -110,6 +110,12 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
 
+            if(TextUtils.isEmpty(bean.pageTags)) {
+                holder.hashTagView.setVisibility(View.GONE);
+            } else {
+                holder.hashTagView.setVisibility(View.VISIBLE);
+                holder.hashTagView.setText(bean.pageTags);
+            }
 
             holder.moreIv.setOnClickListener(new View.OnClickListener() {
                 @Override
