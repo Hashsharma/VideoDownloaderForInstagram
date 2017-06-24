@@ -44,6 +44,10 @@ public class DownloaderDBHelper {
         }
     }
 
+    public void saveNewDownloadTask(ContentValues cv) {
+
+    }
+
     public List<DownloadContentItem> getDownloadingTask() {
         Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_STATUS + " = ?", new String[]{String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOADING)}, null);
         List<DownloadContentItem> itemList = new ArrayList<>();

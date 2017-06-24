@@ -98,35 +98,6 @@ public class VideoPlayActivity extends Activity  implements View.OnClickListener
     @Override
     public void onClick(final View v) {
         if(v.getId() == R.id.more_vert) {
-            PopWindowUtils.showPlayVideoMorePopWindow(v,new PopWindowUtils.IPopWindowCallback() {
-                @Override
-                public void onShare() {
-                    VideoBean videoBean  = DBHelper.getDefault().getVideoInfoByPath(mVideoPath);
-                    if(videoBean  != null) {
-                        Utils.startShareIntent(videoBean);
-                    } else {
-                        Utils.startShareIntent(mVideoPath);
-                    }
-                }
-
-                @Override
-                public void launchInstagram() {
-                    VideoBean videoBean  = DBHelper.getDefault().getVideoInfoByPath(mVideoPath);
-                    if(videoBean  != null) {
-                        Utils.openInstagramByUrl(videoBean.appPageUrl);
-                    }
-
-                }
-
-                @Override
-                public void onPastePageUrl() {
-
-                    VideoBean videoBean  = DBHelper.getDefault().getVideoInfoByPath(mVideoPath);
-                    if(videoBean  != null) {
-                        Utils.copyText2Clipboard(videoBean.appPageUrl);
-                    }
-                }
-            });
         }
     }
 

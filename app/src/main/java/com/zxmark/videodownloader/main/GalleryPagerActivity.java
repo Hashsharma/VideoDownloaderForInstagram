@@ -15,6 +15,7 @@ import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.BaseActivity;
+import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.adapter.ImageGalleryPagerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
@@ -25,6 +26,7 @@ import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
+import com.zxmark.videodownloader.util.ShareActionUtil;
 import com.zxmark.videodownloader.util.Utils;
 import com.zxmark.videodownloader.widget.MobMediaView;
 
@@ -53,6 +55,8 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
     private NativeAd nativeAd;
 
+    private int mSelectedPosition = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onPageSelected(int position) {
+                mSelectedPosition = position;
                 MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
                 mSelectedMobView = itemView;
                 mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1 + position, mDataList.size()));
@@ -169,7 +174,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         PagerBean adBean = new PagerBean();
         adBean.facebookNativeAd = nativeAd;
         int count = mDataList.size();
-        LogUtil.v("view","onFacebookAdLoaded:" + nativeAd);
+        LogUtil.v("view", "onFacebookAdLoaded:" + nativeAd);
         mDataList.add(count - 1, adBean);
         mAdapter.notifyDataSetChanged();
     }
@@ -195,11 +200,17 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
             finish();
         } else if (v.getId() == R.id.more_vert) {
             PopWindowUtils.showPlayVideoMorePopWindow(v, new PopWindowUtils.IPopWindowCallback() {
+
+                @Override
+                public void onRepost() {
+                    MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(mSelectedPosition);
+                    ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), itemView.getMediaSource());
+                }
+
                 @Override
                 public void onShare() {
-                    if (mSelectedMobView != null) {
-                        Utils.startShareIntent(mSelectedMobView.getMediaSource());
-                    }
+                    MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(mSelectedPosition);
+                    Utils.startShareIntent(itemView.getMediaSource());
                 }
 
                 @Override

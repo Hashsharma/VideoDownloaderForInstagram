@@ -29,7 +29,6 @@ public class ShareActionUtil {
 
     private void createInstagramIntent(Context activity, String type, String mediaPath) {
         // Create the new Intent using the 'Send' action.
-
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setPackage(PKG_INSTAGRAM);
         // Set the MIME type

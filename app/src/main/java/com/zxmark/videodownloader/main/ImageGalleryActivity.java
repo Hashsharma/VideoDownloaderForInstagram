@@ -58,34 +58,6 @@ public class ImageGalleryActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.more_vert) {
-            PopWindowUtils.showPlayVideoMorePopWindow(v, new PopWindowUtils.IPopWindowCallback() {
-                @Override
-                public void onShare() {
-                    VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
-                    if (videoBean != null) {
-                        Utils.startShareIntent(videoBean);
-                    } else {
-                        Utils.startShareIntent(mImagePath);
-                    }
-                }
-
-                @Override
-                public void launchInstagram() {
-                    VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
-                    if (videoBean != null) {
-                        Utils.openInstagramByUrl(videoBean.appPageUrl);
-                    }
-
-                }
-
-                @Override
-                public void onPastePageUrl() {
-                    VideoBean videoBean = DBHelper.getDefault().getVideoInfoByPath(mImagePath);
-                    if (videoBean != null) {
-                        Utils.copyText2Clipboard(videoBean.appPageUrl);
-                    }
-                }
-            });
         }
     }
 }

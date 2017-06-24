@@ -23,7 +23,6 @@ public class PopWindowUtils {
     public static void showVideoMoreOptionWindow(View trigerView, final MainListRecyclerAdapter.IPopWindowClickCallback callback) {
         Context context = MainApplication.getInstance().getApplicationContext();
         View contentView = LayoutInflater.from(context).inflate(R.layout.more_option, null);
-        View deleteView = contentView.findViewById(R.id.delete);
 
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 DimensUtil.dip2px(120), ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -35,18 +34,29 @@ public class PopWindowUtils {
                 return false;
             }
         });
-        deleteView.setOnClickListener(new View.OnClickListener() {
+
+
+        contentView.findViewById(R.id.copy_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (callback != null) {
-                    callback.onDelete();
+                    callback.onCopyAll();
                 }
 
                 popupWindow.dismiss();
-
             }
         });
 
+        contentView.findViewById(R.id.copy_hashtags).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onCopyHashTags();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
         contentView.findViewById(R.id.launch).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,16 +79,6 @@ public class PopWindowUtils {
             }
         });
 
-        contentView.findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (callback != null) {
-                    callback.onShare();
-                }
-
-                popupWindow.dismiss();
-            }
-        });
 
         int windowPos[] = calculatePopWindowPos(trigerView, contentView);
 
@@ -92,7 +92,6 @@ public class PopWindowUtils {
         Context context = MainApplication.getInstance().getApplicationContext();
         View contentView = LayoutInflater.from(context).inflate(R.layout.videoplay_more_option, null);
         View deleteView = contentView.findViewById(R.id.share);
-
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 DimensUtil.dip2px(120), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setOutsideTouchable(true);
@@ -101,6 +100,17 @@ public class PopWindowUtils {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return false;
+            }
+        });
+        contentView.findViewById(R.id.repost).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onRepost();
+                }
+
+                popupWindow.dismiss();
+
             }
         });
         deleteView.setOnClickListener(new View.OnClickListener() {
@@ -174,6 +184,7 @@ public class PopWindowUtils {
 
 
     public interface IPopWindowCallback {
+        void onRepost();
         void onShare();
         void launchInstagram();
         void onPastePageUrl();

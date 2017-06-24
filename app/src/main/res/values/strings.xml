@@ -68,6 +68,10 @@
     <string name="rating_title">We are working hard for a better user experience</string>
     <string name="rating_subtitle">We\'d greatly appreciate if you can rate us.</string>
 
+    <string name="option_copy_all">Copy All</string>
+    <string name="option_copy_tags">Copy HashTags</string>
+
+
     <string name="locale_english" translatable="false">English</string>
     <string name="locale_chinese_china" translatable="false">简体中文</string>
     <string name="locale_chinese_taiwan" translatable="false">繁體中文</string>

@@ -18,14 +18,25 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/share"
+                android:id="@+id/copy_all"
                 style="@style/PopWindowTextStyle"
-                android:text="@string/option_share" />
+                android:text="@string/option_copy_all" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
-                android:background="#21000000" />
+                android:background="@color/divider_color" />
+
+            <TextView
+                android:id="@+id/copy_hashtags"
+                style="@style/PopWindowTextStyle"
+                android:text="@string/option_copy_tags" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/divider_color" />
+
             <TextView
                 android:id="@+id/launch"
                 style="@style/PopWindowTextStyle"
@@ -34,26 +45,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
-                android:background="#21000000" />
+                android:background="@color/divider_color" />
 
             <TextView
                 android:id="@+id/copy"
                 style="@style/PopWindowTextStyle"
                 android:text="@string/option_copy" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:background="#21000000" />
-
-            <TextView
-                android:id="@+id/delete"
-                style="@style/PopWindowTextStyle"
-                android:text="@string/option_delete" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
-                android:background="#21000000" />
+                android:background="@color/divider_color" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

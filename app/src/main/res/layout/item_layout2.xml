@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="top"
-                android:background="@color/image_bg_color"
+                android:background="@mipmap/image_placeholder"
                 android:scaleType="centerCrop" />
 
 

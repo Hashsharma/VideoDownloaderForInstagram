@@ -22,7 +22,7 @@
                 android:id="@+id/thumbnail"
                 android:layout_width="100dip"
                 android:layout_height="match_parent"
-                android:background="@mipmap/image_placeholder"
+                android:background="@mipmap/img_place_holder_1"
                 android:scaleType="centerCrop" />
 
             <ImageView
@@ -76,7 +76,7 @@
             android:layout_gravity="bottom|right"
             android:fontFamily="sans-serif-medium"
             android:padding="15dip"
-            android:text="@string/repost"
+            android:text="@string/option_delete"
             android:textColor="@color/repost_background"
             android:textSize="15dip" />
 

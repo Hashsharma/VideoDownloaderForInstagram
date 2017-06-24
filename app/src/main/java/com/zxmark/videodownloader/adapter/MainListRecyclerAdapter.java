@@ -102,7 +102,11 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.repostView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                //    ShareActionUtil.startInstagramShare(MainApplication.getInstance().getApplicationContext(), bean.videoPath);
+                    int index = mDataList.indexOf(bean);
+                    notifyItemRemoved(index);
+                    mDataList.remove(index);
+
+                    DownloaderDBHelper.SINGLETON.deleteDownloadTaskAsync(bean.pageURL);
                 }
             });
 
@@ -112,31 +116,50 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 public void onClick(View v) {
                     PopWindowUtils.showVideoMoreOptionWindow(v, new IPopWindowClickCallback() {
                         @Override
-                        public void onDelete() {
-                            int index = mDataList.indexOf(bean);
-                            notifyItemRemoved(index);
-                            mDataList.remove(index);
+                        public void onCopyAll() {
+                            String title = bean.pageTitle;
+                            String hashTags = bean.pageTags;
+                            StringBuilder sb = new StringBuilder(bean.pageURL);
+                            if (!TextUtils.isEmpty(title)) {
+                                sb.append(title);
+                            }
 
-                            DownloaderDBHelper.SINGLETON.deleteDownloadTaskAsync(bean.pageURL);
+                            if (!TextUtils.isEmpty(hashTags)) {
+                                sb.append(hashTags);
+                            }
+
+                            Utils.copyText2Clipboard(sb.toString());
+
+                        }
+
+                        @Override
+                        public void onCopyHashTags() {
+                            String hashTags = bean.pageTags;
+                            StringBuilder sb = new StringBuilder();
+
+                            if (!TextUtils.isEmpty(hashTags)) {
+                                sb.append(hashTags);
+                                Utils.copyText2Clipboard(sb.toString());
+                            }
                         }
 
                         @Override
                         public void launchAppByUrl() {
-//                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
-//                              //  Utils.openInstagramByUrl(bean.appPageUrl);
-//                            }
+                            if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
+                                Utils.openInstagramByUrl(bean.pageURL);
+                            }
                         }
 
                         @Override
                         public void onPasteSharedUrl() {
-//                            if (bean != null && !TextUtils.isEmpty(bean.appPageUrl)) {
-//                                Utils.copyText2Clipboard(bean.sharedUrl);
-//                            }
+                            if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
+                                Utils.copyText2Clipboard(bean.pageURL);
+                            }
+
                         }
 
                         @Override
                         public void onShare() {
-                           // Utils.startShareIntent(bean.file.getAbsolutePath());
                         }
                     });
                 }
@@ -168,7 +191,9 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public interface IPopWindowClickCallback {
-        void onDelete();
+        void onCopyAll();
+
+        void onCopyHashTags();
 
         void onShare();
 
