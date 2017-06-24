@@ -36,7 +36,7 @@ public class DownloaderDBHelper {
 
     public void saveNewDownloadTask(DownloadContentItem item) {
         if (item != null && !TextUtils.isEmpty(item.pageURL)) {
-            if(getPageIdByPageURL(item.pageURL) > -1) {
+            if (getPageIdByPageURL(item.pageURL) > -1) {
                 return;
             }
             Uri id = mContentResolver.insert(DownloadContentItem.CONTENT_URI, DownloadContentItem.from(item));
@@ -81,6 +81,21 @@ public class DownloaderDBHelper {
             }
 
             return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public int getDownloadedTaskCount() {
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_STATUS + " = ?", new String[]{String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED)}, null);
+        try {
+            if (cursor != null) {
+                return cursor.getCount();
+            }
+
+            return 0;
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -167,7 +182,7 @@ public class DownloaderDBHelper {
         if (TextUtils.isEmpty(pageURL)) {
             return -1;
         }
-        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? and " + DownloadContentItem.PAGE_STATUS + " = ?", new String[]{pageURL,String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED)}, null);
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? and " + DownloadContentItem.PAGE_STATUS + " = ?", new String[]{pageURL, String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED)}, null);
         try {
             if (cursor != null) {
                 if (cursor.moveToNext()) {

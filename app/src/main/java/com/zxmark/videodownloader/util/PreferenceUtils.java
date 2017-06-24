@@ -18,6 +18,7 @@ public class PreferenceUtils {
     public static final String KEY_LANGUAGE_PRFS = "KEY_LANGUAGE";
     public static final String KEY_LANGUAGE_POSITION = "KEY_LANGUAGE_POSTION";
     public static final String FIRST_LAUNCH = "first_launch";
+    public static final String SHOW_RATE_GUIDE = "show_rate_guide";
 
     private static SharedPreferences getSharedPreferences() {
         if (mMainSharedPreference == null) {
@@ -48,5 +49,15 @@ public class PreferenceUtils {
         boolean result = mMainSharedPreference.getBoolean(FIRST_LAUNCH, true);
         mMainSharedPreference.edit().putBoolean(FIRST_LAUNCH, false).commit();
         return result;
+    }
+
+    public static void showedRateGuide() {
+        getSharedPreferences();
+        mMainSharedPreference.edit().putBoolean(SHOW_RATE_GUIDE,true);
+    }
+
+    public static boolean isShowedRateGuide() {
+        getSharedPreferences();
+        return mMainSharedPreference.getBoolean(SHOW_RATE_GUIDE,false);
     }
 }

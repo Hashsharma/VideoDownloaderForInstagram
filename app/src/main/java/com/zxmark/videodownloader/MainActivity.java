@@ -33,11 +33,13 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.nineoldandroids.view.ViewHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
+import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
@@ -184,9 +186,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            if(Globals.TEST_FOR_GP) {
-                showRatingDialog();
-                GPDataGenerator.saveGPTask();
+            if (Globals.TEST_FOR_GP) {
+                if (BuildConfig.DEBUG) {
+                    showRatingDialog();
+                    GPDataGenerator.saveGPTask();
+                }
             }
             Utils.openInstagram();
         } else if (id == R.id.nav_gallery) {
@@ -208,6 +212,9 @@ public class MainActivity extends AppCompatActivity
 
 
     private void showRatingDialog() {
+        if(PreferenceUtils.isShowedRateGuide()) {
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         View convertView = getLayoutInflater().inflate(R.layout.rating_app, null);
         builder.setView(convertView);
@@ -250,6 +257,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 float rating = ratingBar.getRating();
                 if (rating >= 3.0f) {
+                    PreferenceUtils.showedRateGuide();
                     Utils.rateUs5Star();
                 } else {
                     Utils.sendMeEmail();
@@ -364,8 +372,10 @@ public class MainActivity extends AppCompatActivity
                         if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
                             mViewPagerAdapter.getVideoHistoryFragment().onAddNewDownloadedFile(path);
                         }
+
+
                         //TODO:安装第三天后引导用户给评分
-                        if (System.currentTimeMillis() - Utils.getMyAppInstallTime() > 2 * 24 * 60 * 60 * 1000) {
+                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && System.currentTimeMillis() - Utils.getMyAppInstallTime() > 2 * 24 * 60 * 60 * 1000) {
                             showRatingDialog();
                         }
                     }
