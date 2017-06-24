@@ -240,7 +240,11 @@ public class DownloadContentItem implements BaseColumns {
 
             if (itemType == bean.itemType) {
                 if (itemType == TYPE_NORMAL_ITEM) {
-                    return pageURL.equals(bean.pageURL);
+                    if (bean.itemType == TYPE_NORMAL_ITEM) {
+                        return pageURL.equals(bean.pageURL);
+                    } else {
+                        return false;
+                    }
                 } else {
                     if (itemType == DownloadContentItem.TYPE_FACEBOOK_AD) {
                         return false;
