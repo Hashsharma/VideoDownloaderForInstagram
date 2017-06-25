@@ -133,16 +133,17 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                             }
 
                             Collections.sort(mDataList, new PagerBeanComparator());
-
-                            DownloadContentItem item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
-                            if (item != null) {
-                                mAdBean = new PagerBean();
-                                mAdBean.facebookNativeAd = item.facebookNativeAd;
-                                int size = mDataList.size();
-                                if (size >= 2) {
-                                    mDataList.add(size - 2, mAdBean);
-                                } else {
-                                    mDataList.add(mAdBean);
+                            if (mDataList.size() > 1) {
+                                DownloadContentItem item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
+                                if (item != null) {
+                                    mAdBean = new PagerBean();
+                                    mAdBean.facebookNativeAd = item.facebookNativeAd;
+                                    int size = mDataList.size();
+                                    if (size >= 2) {
+                                        mDataList.add(size - 2, mAdBean);
+                                    } else {
+                                        mDataList.add(mAdBean);
+                                    }
                                 }
                             }
                             mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
@@ -152,6 +153,9 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                             }
                             mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
                             if (mDataList.size() > MAX_COUNT_THREHOLD) {
+                                if (!ADCache.SHOW_AD) {
+                                    return;
+                                }
                                 showNativeAd();
                             }
                         }

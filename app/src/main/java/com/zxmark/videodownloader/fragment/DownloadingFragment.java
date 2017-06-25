@@ -324,6 +324,9 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
 
     private void showNativeAd() {
+        if(!ADCache.SHOW_AD) {
+            return;
+        }
         if (isAdded()) {
             if (mFirstAdBean != null) {
                 return;

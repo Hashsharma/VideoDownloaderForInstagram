@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class ADCache {
 
 
+    public static final boolean SHOW_AD = true;
     public static final String AD_KEY_DOWNLOADING_VIDEO = "AD_KEY_DOWNLOADING_VIDEO";
     public static final String AD_KEY_HISTORY_VIDEO = "AD_KEY_HISTORY_VIDEO";
 

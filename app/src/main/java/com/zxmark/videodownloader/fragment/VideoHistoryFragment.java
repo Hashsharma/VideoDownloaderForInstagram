@@ -137,6 +137,9 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void showNativeAd() {
+        if(!ADCache.SHOW_AD) {
+            return;
+        }
         if (mAdVideoBean == null) {
             if (isAdded()) {
                 mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
