@@ -69,6 +69,7 @@ public class DownloadContentItem implements BaseColumns {
     public int fileCount;
     public int pageStatus;
 
+    public long createdTime;
     public int itemType = TYPE_NORMAL_ITEM;
 
     private ContentValues mContentValues;
@@ -109,6 +110,7 @@ public class DownloadContentItem implements BaseColumns {
     public void setMimeType(int mimeType) {
         this.mimeType = mimeType;
     }
+
 
     public int getMimeType() {
         return getVideoCount() > 0 ? PAGE_MIME_TYPE_VIDEO : PAGE_MIME_TYPE_IMAGE;
@@ -254,7 +256,11 @@ public class DownloadContentItem implements BaseColumns {
                     }
                 } else {
                     if (itemType == DownloadContentItem.TYPE_FACEBOOK_AD) {
-                        return false;
+                        if (itemType == bean.itemType) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                     if (itemType == DownloadContentItem.TYPE_HOWTO_ITEM) {
                         if (itemType == bean.itemType) {

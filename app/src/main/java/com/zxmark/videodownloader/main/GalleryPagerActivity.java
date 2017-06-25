@@ -25,6 +25,7 @@ import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
+import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
@@ -61,10 +62,12 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
     private int mSelectedPosition = 0;
 
+    private PagerBean mAdBean;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventUtil.getDefault().onEvent("UI","GalleryPageActivity.onCreate");
+        EventUtil.getDefault().onEvent("UI", "GalleryPageActivity.onCreate");
         requestWindowFeature(Window.FEATURE_NO_TITLE);  //去掉 title
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //设置全屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -72,8 +75,8 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.gallery_pager);
 
         String baseHome = getIntent().getStringExtra(Globals.EXTRAS);
-      //  if(Globals.TEST_FOR_GP) {
-               // baseHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mob_ins_downloader/test";
+        //  if(Globals.TEST_FOR_GP) {
+        // baseHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mob_ins_downloader/test";
         //}
         mPageHome = baseHome;
         findViewById(R.id.back).setOnClickListener(this);
@@ -91,7 +94,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                 mSelectedPosition = position;
                 MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(position);
                 mSelectedMobView = itemView;
-                if(itemView != null) {
+                if (itemView != null) {
                     itemView.play();
                 }
                 mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1 + position, mDataList.size()));
@@ -122,21 +125,35 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                             return;
                         }
                         mDataList = new ArrayList<PagerBean>();
-                        for (File file : targetFile.listFiles()) {
-                            PagerBean bean = new PagerBean();
-                            bean.file = file;
-                            mDataList.add(bean);
-                        }
+                        if (targetFile.listFiles() != null && targetFile.listFiles().length > 0) {
+                            for (File file : targetFile.listFiles()) {
+                                PagerBean bean = new PagerBean();
+                                bean.file = file;
+                                mDataList.add(bean);
+                            }
 
-                        Collections.sort(mDataList, new PagerBeanComparator());
-                        mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
-                        mMainViewPager.setAdapter(mAdapter);
-                        if (mDataList.size() == 1) {
-                            mCountInfoView.setVisibility(View.GONE);
-                        }
-                        mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
-                        if (mDataList.size() > MAX_COUNT_THREHOLD) {
-                            showNativeAd();
+                            Collections.sort(mDataList, new PagerBeanComparator());
+
+                            DownloadContentItem item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
+                            if (item != null) {
+                                mAdBean = new PagerBean();
+                                mAdBean.facebookNativeAd = item.facebookNativeAd;
+                                int size = mDataList.size();
+                                if (size >= 2) {
+                                    mDataList.add(size - 2, mAdBean);
+                                } else {
+                                    mDataList.add(mAdBean);
+                                }
+                            }
+                            mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
+                            mMainViewPager.setAdapter(mAdapter);
+                            if (mDataList.size() == 1) {
+                                mCountInfoView.setVisibility(View.GONE);
+                            }
+                            mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
+                            if (mDataList.size() > MAX_COUNT_THREHOLD) {
+                                showNativeAd();
+                            }
                         }
                     }
                 });
@@ -145,30 +162,34 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void showNativeAd() {
-        nativeAd = new NativeAd(this, "2099565523604162_2099565860270795");
-        nativeAd.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                LogUtil.v("facebook", "onError:" + adError);
-            }
+        if (mAdBean == null) {
+            nativeAd = new NativeAd(this, "2099565523604162_2099565860270795");
+            nativeAd.setAdListener(new AdListener() {
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    LogUtil.v("facebook", "onError:" + adError);
+                }
 
-            @Override
-            public void onAdLoaded(Ad ad) {
-                onFacebookAdLoaded(ad);
-            }
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    onFacebookAdLoaded(ad);
+                }
 
-            @Override
-            public void onAdClicked(Ad ad) {
+                @Override
+                public void onAdClicked(Ad ad) {
+                    if (mAdBean != null) {
+                        ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_HISTORY_VIDEO);
+                    }
+                }
 
-            }
+                @Override
+                public void onLoggingImpression(Ad ad) {
 
-            @Override
-            public void onLoggingImpression(Ad ad) {
+                }
+            });
 
-            }
-        });
-
-        nativeAd.loadAd();
+            nativeAd.loadAd();
+        }
     }
 
     // The next step is to extract the ad metadata and use its properties
@@ -183,7 +204,10 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         PagerBean adBean = new PagerBean();
         adBean.facebookNativeAd = nativeAd;
         int count = mDataList.size();
-        LogUtil.v("view", "onFacebookAdLoaded:" + nativeAd);
+        DownloadContentItem downloadContentItem = new DownloadContentItem();
+        downloadContentItem.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
+        downloadContentItem.facebookNativeAd = nativeAd;
+        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, downloadContentItem);
         mDataList.add(count - 1, adBean);
         mAdapter.notifyDataSetChanged();
     }

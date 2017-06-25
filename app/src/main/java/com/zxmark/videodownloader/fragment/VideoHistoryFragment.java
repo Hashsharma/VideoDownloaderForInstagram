@@ -1,6 +1,7 @@
 package com.zxmark.videodownloader.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +26,7 @@ import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
+import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
@@ -51,6 +53,8 @@ public class VideoHistoryFragment extends Fragment {
     private NativeAd mNativeAd;
     private boolean mHaveDeletedUselessFiles = false;
     private DownloadContentItem mAdVideoBean;
+
+    private Handler mMainLooperHandler = new Handler();
 
     public static VideoHistoryFragment newInstance() {
         VideoHistoryFragment fragment = new VideoHistoryFragment();
@@ -95,6 +99,8 @@ public class VideoHistoryFragment extends Fragment {
             @Override
             public void run() {
                 mDataList = DownloaderDBHelper.SINGLETON.getDownloadedTask();
+
+                mAdVideoBean = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
                 if (mAdVideoBean != null) {
                     if (mDataList.size() > 2) {
                         mDataList.add(2, mAdVideoBean);
@@ -131,9 +137,6 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void showNativeAd() {
-        if(Globals.TEST_FOR_GP) {
-            return;
-        }
         if (mAdVideoBean == null) {
             if (isAdded()) {
                 mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
@@ -150,7 +153,22 @@ public class VideoHistoryFragment extends Fragment {
 
                     @Override
                     public void onAdClicked(Ad ad) {
-
+                        LogUtil.e("facebook", "onAdClicked");
+                        mMainLooperHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mAdVideoBean != null) {
+                                    ADCache.getDefault().removeClickedAd(mAdVideoBean);
+                                    final int position = mDataList.indexOf(mAdVideoBean);
+                                    LogUtil.e("facebook2","position:" + position);
+                                    if (position >= 0) {
+                                        mDataList.remove(position);
+                                        mAdapter.notifyItemRemoved(position);
+                                        mAdVideoBean = null;
+                                    }
+                                }
+                            }
+                        },1000);
                     }
 
                     @Override
@@ -179,17 +197,22 @@ public class VideoHistoryFragment extends Fragment {
             mAdVideoBean = new DownloadContentItem();
             mAdVideoBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
             mAdVideoBean.facebookNativeAd = mNativeAd;
-            if (mDataList != null) {
-                if (mDataList.size() > 2) {
-                    mDataList.add(2, mAdVideoBean);
-                    mAdapter.notifyItemInserted(2);
-                } else {
-                   // mDataList.add(mAdVideoBean);
-                }
-            } else {
+            mAdVideoBean.createdTime = System.currentTimeMillis();
 
+            ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, mAdVideoBean);
+
+            if (mDataList != null) {
+                if (mDataList.size() == 0) {
+                    mDataList.add(mAdVideoBean);
+                    mAdapter.notifyItemInserted(0);
+                } else {
+                    int adPosition = mLayoutManager.findFirstVisibleItemPosition() + 1;
+                    if (adPosition < mDataList.size()) {
+                        mDataList.add(adPosition, mAdVideoBean);
+                        mAdapter.notifyItemInserted(adPosition);
+                    }
+                }
             }
         }
-
     }
 }

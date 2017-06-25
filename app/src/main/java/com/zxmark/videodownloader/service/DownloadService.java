@@ -148,6 +148,9 @@ public class DownloadService extends Service {
 
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
+                if(TextUtils.isEmpty(url)) {
+                    return super.onStartCommand(intent,flags, startId);
+                }
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
                 if (DownloaderDBHelper.SINGLETON.isExistDownloadedPageURL(url)) {
                     mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);

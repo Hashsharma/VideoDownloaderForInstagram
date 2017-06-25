@@ -15,7 +15,10 @@ import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.VideoBean;
@@ -24,6 +27,7 @@ import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
+import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.FileUtils;
@@ -52,6 +56,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     private IBtnCallback callback;
     private boolean mClickedPasteBtn = false;
     private Resources mResources;
+    private String mLeftDownloadFileString;
 
     public MainDownloadingRecyclerAdapter(List<DownloadContentItem> dataList, boolean isFullImage, IBtnCallback callback) {
         mDataList = dataList;
@@ -61,6 +66,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
         this.callback = callback;
         mClickedPasteBtn = false;
         mResources = mContext.getResources();
+        mLeftDownloadFileString = mResources.getString(R.string.downloading_left_task_count);
     }
 
     @Override
@@ -99,7 +105,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     holder.fanMenuButtons.toggleShow();
                 }
             });
-            if(DownloadingTaskList.SINGLETON.isPendingDownloadTask(bean.pageURL)) {
+            if (DownloadingTaskList.SINGLETON.isPendingDownloadTask(bean.pageURL)) {
                 holder.progressBar.setProgress(0);
                 holder.progressBar.setVisibility(View.VISIBLE);
             } else {
@@ -110,26 +116,26 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 public void onFanButtonClicked(int index) {
                     holder.fanMenuButtons.toggleShow();
                     if (index == 0) {
-                        EventUtil.getDefault().onEvent("downloading","startDownload");
+                        EventUtil.getDefault().onEvent("downloading", "startDownload");
                         holder.progressBar.setProgress(0);
                         holder.progressBar.setVisibility(View.VISIBLE);
                         DownloadUtil.startResumeDownload(bean.pageURL);
                     } else if (index == 1) {
-                        EventUtil.getDefault().onEvent("downloading","downloadPageThumbnail");
+                        EventUtil.getDefault().onEvent("downloading", "downloadPageThumbnail");
                         DownloadUtil.downloadThumbnail(bean.pageURL, bean.pageThumb);
                     } else if (index == 2) {
-                        EventUtil.getDefault().onEvent("downloading","delete");
+                        EventUtil.getDefault().onEvent("downloading", "delete");
                         deleteDownloadingVideo(bean, position);
                     }
                 }
             });
-            if(TextUtils.isEmpty(bean.pageTags)) {
+            if (TextUtils.isEmpty(bean.pageTags)) {
                 holder.hashTagView.setVisibility(View.GONE);
             } else {
                 holder.hashTagView.setVisibility(View.VISIBLE);
                 holder.hashTagView.setText(bean.pageTags);
             }
-            holder.taskCountView.setText(mResources.getString(R.string.downloading_left_task_count, bean.fileCount));
+            holder.taskCountView.setText(String.format(mLeftDownloadFileString, bean.fileCount));
             holder.playView.setVisibility(bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
             imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             if (TextUtils.isEmpty(bean.pageTitle)) {
@@ -148,7 +154,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
                 imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).into(holder.adCoverView);
                 imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).into(holder.adIconView);
-
                 holder.adBodyView.setText(bean.facebookNativeAd.getAdBody());
                 holder.adTitleView.setText(bean.facebookNativeAd.getAdTitle());
                 // Register the native ad view with the native ad instance
@@ -161,7 +166,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             holder.showHowToBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventUtil.getDefault().onEvent("main","howto");
+                    EventUtil.getDefault().onEvent("main", "howto");
                     if (callback != null) {
                         callback.showHowTo();
                     }
@@ -173,7 +178,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 public void onClick(View v) {
                     holder.downloadBtn.setVisibility(View.GONE);
                     mClickedPasteBtn = true;
-                    EventUtil.getDefault().onEvent("download","Click Main Paste to Download");
+                    EventUtil.getDefault().onEvent("download", "Click Main Paste to Download");
                     if (callback != null) {
                         callback.onDownloadFromClipboard();
                     }
@@ -183,7 +188,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             if (mClickedPasteBtn) {
                 holder.downloadBtn.setVisibility(View.GONE);
             } else {
-                LogUtil.e("main","showPasteBtn_" + VideoDownloadFactory.getInstance().needShowPasteBtn());
+                LogUtil.e("main", "showPasteBtn_" + VideoDownloadFactory.getInstance().needShowPasteBtn());
                 if (VideoDownloadFactory.getInstance().needShowPasteBtn()) {
                     holder.downloadBtn.setVisibility(View.VISIBLE);
                 } else {
@@ -197,7 +202,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     //TODO:最后一个位置有问题
     private void deleteDownloadingVideo(final DownloadContentItem bean, int positoin) {
         mDataList.remove(bean);
-        if(mDataList.size()-1 == positoin) {
+        if (mDataList.size() - 1 == positoin) {
             notifyDataSetChanged();
         } else {
             notifyItemRemoved(positoin);
@@ -225,6 +230,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     public interface IBtnCallback {
         public void showHowTo();
+
         void onDownloadFromClipboard();
 
     }

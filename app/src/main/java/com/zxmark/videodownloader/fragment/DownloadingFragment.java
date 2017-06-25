@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -34,6 +35,7 @@ import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.service.DownloadService;
+import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
@@ -52,15 +54,11 @@ import java.util.List;
 public class DownloadingFragment extends Fragment implements View.OnClickListener, MainDownloadingRecyclerAdapter.IBtnCallback {
 
 
-    private EditText mUrlEditText;
-    private Button mDownloadBtn;
     private RecyclerView mListView;
     private LinearLayoutManager mLayoutManager;
     private MainDownloadingRecyclerAdapter mAdapter;
     private List<DownloadContentItem> mDataList;
     private ProgressDialog mProgressDialog;
-
-    private View mHowToView;
 
     public String mReceiveUrlParams;
 
@@ -69,11 +67,16 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private View mFacebookAdViewContainer;
     private RequestManager mGlide;
     private DownloadContentItem mFirstAdBean;
-
     private DownloadContentItem mHowToBean = null;
 
     private boolean isShowHowToPage;
 
+    private String mFormatLeftFileString;
+
+
+    private Handler mHandler = new Handler() {
+
+    };
 
     public static DownloadingFragment newInstance(String params) {
         DownloadingFragment fragment = new DownloadingFragment();
@@ -127,8 +130,16 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                     mHowToBean = new DownloadContentItem();
                     mHowToBean.itemType = DownloadContentItem.TYPE_HOWTO_ITEM;
                     mDataList.add(mHowToBean);
+                } else {
+                    mFirstAdBean = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_DOWNLOADING_VIDEO);
+                    if (mFirstAdBean != null) {
+                        if (mDataList.size() <= 1) {
+                            mDataList.add(mFirstAdBean);
+                        } else {
+                            mDataList.add(2, mFirstAdBean);
+                        }
+                    }
                 }
-
                 if (isAdded()) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -146,6 +157,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (!TextUtils.isEmpty(mReceiveUrlParams)) {
             receiveSendAction(mReceiveUrlParams);
         }
+
+        mFormatLeftFileString = getResources().getString(R.string.downloading_left_task_count);
 
     }
 
@@ -198,7 +211,9 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                             if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
                                 ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
                                 itemHolder.progressBar.setVisibility(View.VISIBLE);
-                                itemHolder.taskCountView.setText(getResources().getString(R.string.downloading_left_task_count, downloadContentItem.fileCount - filePosition));
+                                int leftFileCount = downloadContentItem.fileCount - filePosition;
+
+                                itemHolder.taskCountView.setText(String.format(mFormatLeftFileString, leftFileCount));
                                 int count = downloadContentItem.fileCount * 100;
                                 int position = filePosition;
                                 int totalProgress = position * 100 + progress;
@@ -328,7 +343,19 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
                     @Override
                     public void onAdClicked(Ad ad) {
-
+                        LogUtil.e("facebook", "onAdClicked");
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ADCache.getDefault().removeClickedAd(mFirstAdBean);
+                                final int position = mDataList.indexOf(mFirstAdBean);
+                                if (position >= 0) {
+                                    mDataList.remove(position);
+                                    mAdapter.notifyItemRemoved(position);
+                                    mFirstAdBean = null;
+                                }
+                            }
+                        },1000);
                     }
 
                     @Override
@@ -357,17 +384,15 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mFirstAdBean = new DownloadContentItem();
         mFirstAdBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
         mFirstAdBean.facebookNativeAd = nativeAd;
-        if (mDataList == null) {
-            return;
-        }
-        if (mDataList.size() == 1) {
-            mDataList.add(mFirstAdBean);
-            mAdapter.notifyDataSetChanged();
-        } else {
-            int position = mDataList.size() / 2;
-            mDataList.add(position, mFirstAdBean);
-            mAdapter.notifyItemInserted(position);
-        }
+        mFirstAdBean.createdTime = System.currentTimeMillis();
+
+        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_DOWNLOADING_VIDEO, mFirstAdBean);
+
+        int lastPosition = mLayoutManager.findLastVisibleItemPosition();
+        LogUtil.e("facebook", "insert1FacebookAd");
+        int insertADPosition = lastPosition + 1;
+        mDataList.add(insertADPosition, mFirstAdBean);
+        mAdapter.notifyItemInserted(insertADPosition);
 
     }
 
