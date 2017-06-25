@@ -4,6 +4,7 @@ import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 import com.zxmark.videodownloader.util.CpuUtils;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.File;
@@ -76,7 +77,14 @@ public class PowerfulDownloader {
         mCurrentTaskId = taskId;
         LogUtil.e("download", "power.startDownload:" + targetPath);
         mFilePosition = filePosition;
-        download(fileUrl, targetPath, THREAD_COUNT, 0, true);
+        try {
+            download(fileUrl, targetPath, THREAD_COUNT, 0, true);
+        } catch (OutOfMemoryError error) {
+            EventUtil.getDefault().onEvent("error", "PowerfulDownloader.OutOfMemory:" + error.toString());
+            System.gc();
+            System.gc();
+            System.gc();
+        }
     }
 
     /**
@@ -105,7 +113,7 @@ public class PowerfulDownloader {
                 int fileSize = conn.getContentLength();
                 if (fileSize <= 0) {
                     if (mCallback != null) {
-                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, mCurrentTaskId,mFilePosition,targetPath);
+                        mCallback.onFinish(CODE_DOWNLOAD_FAILED, mCurrentTaskId, mFilePosition, targetPath);
                     }
                     return;
                 }
@@ -130,7 +138,7 @@ public class PowerfulDownloader {
                         fos.flush();
                         mReadBytesCount += byteCount;
                         if (mCallback != null) {
-                            mCallback.onProgress( mCurrentTaskId, mFilePosition,targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
+                            mCallback.onProgress(mCurrentTaskId, mFilePosition, targetPath, (int) (1 + 100 * (mReadBytesCount * 1.0f / fileSize)));
                         }
                     }
                     fis.close();

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
+import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -86,7 +87,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventUtil.getDefault().onEvent("history","openFileList");
+                    EventUtil.getDefault().onEvent("history", "openFileList");
                     DownloadUtil.openFileList(bean.pageHOME);
                 }
             });
@@ -100,11 +101,17 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
 
             holder.albumView.setVisibility(bean.fileCount > 1 ? View.VISIBLE : View.GONE);
-            imageLoader.load(bean.pageThumb).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+            try {
+                imageLoader.load(bean.pageThumb).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+            } catch (OutOfMemoryError error) {
+                System.gc();
+                System.gc();
+                System.gc();
+            }
             holder.repostView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventUtil.getDefault().onEvent("history","delete");
+                    EventUtil.getDefault().onEvent("history", "delete");
                     int index = mDataList.indexOf(bean);
                     notifyItemRemoved(index);
                     mDataList.remove(index);
@@ -112,7 +119,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
 
-            if(TextUtils.isEmpty(bean.pageTags)) {
+            if (TextUtils.isEmpty(bean.pageTags)) {
                 holder.hashTagView.setVisibility(View.GONE);
             } else {
                 holder.hashTagView.setVisibility(View.VISIBLE);
@@ -126,7 +133,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void onCopyAll() {
 
-                            EventUtil.getDefault().onEvent("history","copyAll");
+                            EventUtil.getDefault().onEvent("history", "copyAll");
                             String title = bean.pageTitle;
                             String hashTags = bean.pageTags;
                             StringBuilder sb = new StringBuilder(bean.pageURL);
@@ -145,7 +152,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void onCopyHashTags() {
 
-                            EventUtil.getDefault().onEvent("history","copyHashTags");
+                            EventUtil.getDefault().onEvent("history", "copyHashTags");
                             String hashTags = bean.pageTags;
                             StringBuilder sb = new StringBuilder();
 
@@ -158,7 +165,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void launchAppByUrl() {
 
-                            EventUtil.getDefault().onEvent("history","launchInstagramByURL");
+                            EventUtil.getDefault().onEvent("history", "launchInstagramByURL");
                             if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
                                 Utils.openInstagramByUrl(bean.pageURL);
                             }
@@ -167,7 +174,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void onPasteSharedUrl() {
 
-                            EventUtil.getDefault().onEvent("history","pasteURL");
+                            EventUtil.getDefault().onEvent("history", "pasteURL");
                             if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
                                 Utils.copyText2Clipboard(bean.pageURL);
                             }
@@ -188,13 +195,18 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.adChoiceView.addView(adChoicesView);
                 }
 
-
-                imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        holder.adCoverView.setBackgroundDrawable(new BitmapDrawable(resource));
-                    }
-                });
+                try {
+                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            holder.adCoverView.setBackgroundDrawable(new BitmapDrawable(resource));
+                        }
+                    });
+                } catch (OutOfMemoryError error) {
+                    System.gc();
+                    System.gc();
+                    System.gc();
+                }
                 holder.adBtn.setText(bean.facebookNativeAd.getAdCallToAction());
                 holder.adTitle.setText(bean.facebookNativeAd.getAdTitle());
                 // Register the native ad view with the native ad instance

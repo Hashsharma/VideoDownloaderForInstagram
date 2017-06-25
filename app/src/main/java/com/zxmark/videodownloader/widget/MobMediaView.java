@@ -73,7 +73,7 @@ public class MobMediaView extends FrameLayout {
 
     public void setAdSource(NativeAd nativeAd) {
         if (nativeAd != null) {
-            LogUtil.v("view","setAdSource=" + nativeAd);
+            LogUtil.v("view", "setAdSource=" + nativeAd);
             mAdContainer.setVisibility(View.VISIBLE);
             mImageView.setVisibility(View.GONE);
             if (mVideoView != null) {
@@ -90,9 +90,15 @@ public class MobMediaView extends FrameLayout {
             }
             ImageView adCoverView = (ImageView) findViewById(R.id.ad_cover);
             ImageView adIconView = (ImageView) findViewById(R.id.ad_icon);
-            mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(adCoverView);
-            mImageLoader.load(nativeAd.getAdIcon().getUrl()).into(adIconView);
+            try {
+                mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(adCoverView);
+                mImageLoader.load(nativeAd.getAdIcon().getUrl()).into(adIconView);
 
+            } catch (OutOfMemoryError error) {
+                System.gc();
+                System.gc();
+                System.gc();
+            }
             TextView adBodyView = (TextView) findViewById(R.id.ad_body);
             TextView adTitleView = (TextView) findViewById(R.id.ad_title);
             adBodyView.setText(nativeAd.getAdBody());
@@ -137,7 +143,13 @@ public class MobMediaView extends FrameLayout {
             }
             if (mImageView != null) {
                 mImageView.reset();
-                mImageLoader.load(mMediaSource).diskCacheStrategy(DiskCacheStrategy.RESULT).into(mImageView);
+                try {
+                    mImageLoader.load(mMediaSource).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImageView);
+                } catch (OutOfMemoryError error) {
+                    System.gc();
+                    System.gc();
+                    System.gc();
+                }
             }
         }
     }

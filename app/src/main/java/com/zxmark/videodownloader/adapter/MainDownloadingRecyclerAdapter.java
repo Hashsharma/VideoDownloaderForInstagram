@@ -2,6 +2,7 @@ package com.zxmark.videodownloader.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -137,7 +138,13 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             }
             holder.taskCountView.setText(String.format(mLeftDownloadFileString, bean.fileCount));
             holder.playView.setVisibility(bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
-            imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+            try {
+                imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+            } catch (OutOfMemoryError error) {
+                System.gc();
+                System.gc();
+                System.gc();
+            }
             if (TextUtils.isEmpty(bean.pageTitle)) {
                 holder.titleTv.setVisibility(View.GONE);
             } else {
@@ -151,9 +158,14 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 if (holder.adChoiceView.getChildCount() == 0) {
                     holder.adChoiceView.addView(adChoicesView);
                 }
-
-                imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).into(holder.adCoverView);
-                imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).into(holder.adIconView);
+                try {
+                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).into(holder.adCoverView);
+                    imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).into(holder.adIconView);
+                } catch (OutOfMemoryError error) {
+                    System.gc();
+                    System.gc();
+                    System.gc();
+                }
                 holder.adBodyView.setText(bean.facebookNativeAd.getAdBody());
                 holder.adTitleView.setText(bean.facebookNativeAd.getAdTitle());
                 // Register the native ad view with the native ad instance

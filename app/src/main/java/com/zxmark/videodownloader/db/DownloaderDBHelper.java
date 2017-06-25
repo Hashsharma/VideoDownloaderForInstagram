@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.zxmark.videodownloader.MainApplication;
@@ -222,9 +223,11 @@ public class DownloaderDBHelper {
         if (item != null) {
             String dir = item.pageHOME;
             File dirFile = new File(dir);
+            Context context = MainApplication.getInstance().getApplicationContext();
             if (dirFile.isDirectory()) {
                 for (File meidaFile : dirFile.listFiles()) {
                     meidaFile.delete();
+                    deleteMediaDB(context, meidaFile.getAbsolutePath());
                 }
                 dirFile.delete();
             } else {
@@ -233,6 +236,22 @@ public class DownloaderDBHelper {
         }
 
         return mContentResolver.delete(DownloadContentItem.CONTENT_URI, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL});
+    }
+
+
+    private void deleteMediaDB(Context context, String path) {
+        try {
+            int id = context.getContentResolver().delete(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    MediaStore.Images.Media.DATA + " = '" + path + "'", null);
+            LogUtil.e("delete","images.id = " + id);
+            id = context.getContentResolver().delete(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    MediaStore.Video.Media.DATA + " = '" + path + "'", null);
+            LogUtil.e("delete","video.id = " + id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public boolean isExistDownloadedPageURL(String pageURL) {

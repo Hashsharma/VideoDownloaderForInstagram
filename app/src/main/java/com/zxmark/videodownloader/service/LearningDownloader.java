@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 import com.zxmark.videodownloader.util.CpuUtils;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class LearningDownloader {
     public static final int CODE_DOWNLOAD_CANCELED = 100;
     public volatile static LearningDownloader sInstance;
 
-    public static final int MAX_RETRY_TIMES = 5;
+    public static final int MAX_RETRY_TIMES = 3;
 
     public int THREAD_COUNT = 1;
 
@@ -73,14 +74,23 @@ public class LearningDownloader {
     }
 
     public void startDownload(int filePos, String pageURL, String fileUrl, String tagetPath, IPowerfulDownloadCallback callback) {
-        mCallback = callback;
-        mCurrentTaskId = pageURL;
-        mFilePos = filePos;
-        LogUtil.e(TAG, "startDownload:" + pageURL);
-        LogUtil.e(TAG, "targetPath=" + tagetPath);
-        long start = System.currentTimeMillis();
-        download(filePos, fileUrl, tagetPath, THREAD_COUNT, 0, true);
-        LogUtil.e(TAG, "time = " + (System.currentTimeMillis() - start));
+        try {
+
+
+            mCallback = callback;
+            mCurrentTaskId = pageURL;
+            mFilePos = filePos;
+            LogUtil.e(TAG, "startDownload:" + pageURL);
+            LogUtil.e(TAG, "targetPath=" + tagetPath);
+            long start = System.currentTimeMillis();
+            download(filePos, fileUrl, tagetPath, THREAD_COUNT, 0, true);
+            LogUtil.e(TAG, "time = " + (System.currentTimeMillis() - start));
+        } catch (OutOfMemoryError error) {
+            EventUtil.getDefault().onEvent("error", "LearingDownloader.OutOfMemory:" + error.toString());
+            System.gc();
+            System.gc();
+            System.gc();
+        }
     }
 
     /**
@@ -176,7 +186,8 @@ public class LearningDownloader {
                 int retrySingleTimes = 0;
                 boolean finalResult = false;
                 while (retrySingleTimes < MAX_RETRY_TIMES) {
-                    boolean result = startDownloadBySingleThread(fileUrl, targetPath, mFilePos);
+                    int time = retrySingleTimes++;
+                    boolean result = startDownloadBySingleThread(fileUrl, targetPath, mFilePos,time);
                     finalResult = result;
                     if (result) {
                         break;
@@ -209,7 +220,7 @@ public class LearningDownloader {
                     //TODO:开启多线程下载是失败的策略，在这里选择单线程下载
                     LogUtil.e(TAG, "start single thread");
                     DownloadingThread thread = mDownloadingTaskMap.get(0);
-                    startDownloadBySingleThread(thread.url, thread.file, mFilePos);
+                    startDownloadBySingleThread(thread.url, thread.file, mFilePos,retryTime++);
                 } else {
                     LogUtil.e(TAG, "multi task download error:" + mDownloadingTaskMap.size());
                     CountDownLatch retryLatch = new CountDownLatch(mDownloadingTaskMap.size());
@@ -241,17 +252,22 @@ public class LearningDownloader {
         return mCurrentTaskId;
     }
 
-    private boolean startDownloadBySingleThread(String stringUrl, String targetpath, final int filePos) {
+    private boolean startDownloadBySingleThread(String stringUrl, String targetpath, final int filePos,int retryTimes) {
         try {
             URL requestUrl = new URL(stringUrl);
-            return startDownloadBySingleThread(requestUrl, new File(targetpath), filePos);
+            return startDownloadBySingleThread(requestUrl, new File(targetpath), filePos,retryTimes);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    private boolean startDownloadBySingleThread(URL requestUrl, File targetFile, final int filePos) {
+    private boolean startDownloadBySingleThread(URL requestUrl, File targetFile, final int filePos,final int retryTimes) {
+        if(retryTimes > MAX_RETRY_TIMES) {
+            LogUtil.v("error","Learing.StartDownloadBySingleThread.retryTimes=" + retryTimes);
+            EventUtil.getDefault().onEvent("error","LearingStartDownloadBySingleThread");
+            return false;
+        }
         LogUtil.e(TAG, "startDownloadBySingleThread");
         HttpURLConnection conn = null;
         //通过下载路径获取连接
