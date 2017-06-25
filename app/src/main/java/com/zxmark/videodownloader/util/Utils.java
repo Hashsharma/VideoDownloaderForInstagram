@@ -109,7 +109,7 @@ public class Utils {
         final Context context = MainApplication.getInstance().getApplicationContext();
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         String pastContent = cmb.getText().toString();
-        LogUtil.e("main","getTextFromClipboard:" + pastContent);
+        LogUtil.e("main", "getTextFromClipboard:" + pastContent);
         if (!TextUtils.isEmpty(pastContent)) {
             String handledUrl = URLMatcher.getHttpURL(pastContent);
             return handledUrl;
@@ -122,7 +122,9 @@ public class Utils {
     public static void sendMyApp() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/html");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getResources().getString(R.string.app_name) + " is very easy tool for downloading ins videos \n https://play.google.com/store/apps/details?id=com.imobapp.videodownloaderforinstagram");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getResources().getString(R.string.app_name) +
+                " is very userful to download instagram video or pictures"
+                + "\n https://play.google.com/store/apps/details?id=com.imobapp.videodownloaderforinstagram");
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent sendIntent = Intent.createChooser(sharingIntent, "Share using");
         sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
