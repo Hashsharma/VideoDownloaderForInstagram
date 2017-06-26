@@ -17,9 +17,7 @@ public class ADCache {
     public static final String AD_KEY_HISTORY_VIDEO = "AD_KEY_HISTORY_VIDEO";
 
 
-    public static final long MAX_EXPIRE_TIME = 50 * 60 * 1000L;
-
-    public NativeAd facebookNativeAd;
+    public static final long MAX_EXPIRE_TIME = 30 * 60 * 1000L;
 
     public HashMap<String, DownloadContentItem> mAdCacheMap;
 
@@ -65,11 +63,9 @@ public class ADCache {
     }
 
     public void removeClickedAd(DownloadContentItem item) {
-        LogUtil.e("facebook","removeClickedAd");
         if (mAdCacheMap != null && item != null) {
             String key = null;
             for (String adKey : mAdCacheMap.keySet()) {
-                DownloadContentItem cache = mAdCacheMap.get(adKey);
                 if (item.equals(item)) {
                     key = adKey;
                     break;

@@ -324,7 +324,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
 
     private void showNativeAd() {
-        if(!ADCache.SHOW_AD) {
+        if (!ADCache.SHOW_AD) {
             return;
         }
         if (isAdded()) {
@@ -358,7 +358,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                                     mFirstAdBean = null;
                                 }
                             }
-                        },1000);
+                        }, 1000);
                     }
 
                     @Override
@@ -394,8 +394,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         int lastPosition = mLayoutManager.findLastVisibleItemPosition();
         LogUtil.e("facebook", "insert1FacebookAd");
         int insertADPosition = lastPosition + 1;
-        mDataList.add(insertADPosition, mFirstAdBean);
-        mAdapter.notifyItemInserted(insertADPosition);
+        if (insertADPosition <= mDataList.size() - 1) {
+            mDataList.add(insertADPosition, mFirstAdBean);
+            mAdapter.notifyItemInserted(insertADPosition);
+        } else {
+            mDataList.add(mFirstAdBean);
+            mAdapter.notifyItemInserted(insertADPosition);
+        }
 
     }
 

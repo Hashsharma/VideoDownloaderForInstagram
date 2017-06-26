@@ -17,40 +17,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
-import com.nineoldandroids.view.ViewHelper;
 import com.umeng.analytics.MobclickAgent;
-import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
-import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
-import com.zxmark.videodownloader.main.GalleryPagerActivity;
-import com.zxmark.videodownloader.main.RatingAppActivity;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
-import com.zxmark.videodownloader.util.DeviceUtil;
-import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.GPDataGenerator;
 import com.zxmark.videodownloader.util.Globals;
@@ -59,10 +42,7 @@ import com.zxmark.videodownloader.util.PreferenceUtils;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.util.Utils;
 
-import java.util.List;
-import java.util.Locale;
-
-import io.fabric.sdk.android.Fabric;
+import javax.microedition.khronos.opengles.GL;
 
 
 public class MainActivity extends AppCompatActivity
@@ -79,12 +59,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         subscribeDownloadService();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        EventUtil.getDefault().onEvent(KEY,"MainActivity.onCreate");
+        EventUtil.getDefault().onEvent(KEY, "MainActivity.onCreate");
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -128,6 +107,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        if (Globals.TEST_FOR_GP) {
+            showRatingDialog();
+        }
     }
 
     private void handleSendIntent() {
@@ -199,21 +182,21 @@ public class MainActivity extends AppCompatActivity
                     GPDataGenerator.saveGPTask();
                 }
             }
-            EventUtil.getDefault().onEvent("main","openInsByNav");
+            EventUtil.getDefault().onEvent("main", "openInsByNav");
             Utils.openInstagram();
         } else if (id == R.id.nav_gallery) {
-            EventUtil.getDefault().onEvent("main","showHowTo");
+            EventUtil.getDefault().onEvent("main", "showHowTo");
             if (mViewPagerAdapter.getDownloadingFragment() != null) {
                 mViewPagerAdapter.getDownloadingFragment().showHotToInfo();
             }
         } else if (id == R.id.nav_send) {
-            EventUtil.getDefault().onEvent("main","sendMyApp");
+            EventUtil.getDefault().onEvent("main", "sendMyApp");
             Utils.sendMyApp();
         } else if (id == R.id.nav_rate) {
-            EventUtil.getDefault().onEvent("main","rateUs");
+            EventUtil.getDefault().onEvent("main", "rateUs");
             Utils.rateUs5Star();
         } else if (id == R.id.nav_change_language) {
-            EventUtil.getDefault().onEvent("main","changeLanguage");
+            EventUtil.getDefault().onEvent("main", "changeLanguage");
             showLocaleSelectDialog();
         }
 
@@ -224,10 +207,10 @@ public class MainActivity extends AppCompatActivity
 
 
     private void showRatingDialog() {
-        if(PreferenceUtils.isShowedRateGuide()) {
+        if (PreferenceUtils.isShowedRateGuide()) {
             return;
         }
-        EventUtil.getDefault().onEvent("main","showRatingDialog");
+        EventUtil.getDefault().onEvent("main", "showRatingDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         View convertView = getLayoutInflater().inflate(R.layout.rating_app, null);
         builder.setView(convertView);
@@ -269,7 +252,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 float rating = ratingBar.getRating();
-                EventUtil.getDefault().onEvent("main","rating=" + rating);
+                EventUtil.getDefault().onEvent("main", "rating=" + rating);
                 if (rating >= 3.0f) {
                     PreferenceUtils.showedRateGuide();
                     Utils.rateUs5Star();
@@ -285,7 +268,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ins_icon) {
-            EventUtil.getDefault().onEvent("main","openInsByTitle");
+            EventUtil.getDefault().onEvent("main", "openInsByTitle");
             Utils.openInstagram();
         }
     }
@@ -431,7 +414,7 @@ public class MainActivity extends AppCompatActivity
                                     public void onClick(DialogInterface dialog, int which) {
                                         PreferenceUtils.saveCurrentLanguage(countryCode[which], which);
                                         Utils.changeLocale(countryCode[which]);
-                                        EventUtil.getDefault().onEvent("la","coutryCode:" + countryCode[which]);
+                                        EventUtil.getDefault().onEvent("la", "coutryCode:" + countryCode[which]);
                                         dialog.dismiss();
                                     }
                                 }).show();
