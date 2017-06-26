@@ -122,8 +122,12 @@ public class DownloadingTaskList {
         if (item != null) {
             List<String> futureDownloadedList = item.getDownloadContentList();
             downloadItem(futureDownloadedList, item);
-            DownloaderDBHelper.SINGLETON.finishDownloadTask(item.pageURL);
-            mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, item.pageURL).sendToTarget();
+            if(item.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED) {
+                mHandler.sendEmptyMessage(DownloadService.MSG_DOWNLOAD_ERROR);
+            } else {
+                DownloaderDBHelper.SINGLETON.finishDownloadTask(item.pageURL);
+                mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, item.pageURL).sendToTarget();
+            }
         }
     }
 
@@ -151,6 +155,8 @@ public class DownloadingTaskList {
                         mHandler.sendMessage(msg);
                     } else if (code == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
                         EventUtil.getDefault().onEvent("download", "failed=" + pageURL);
+                        DownloaderDBHelper.SINGLETON.setDownloadingTaskFailed(pageURL);
+                        item.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED;
 
                     } else if (code == PowerfulDownloader.CODE_DOWNLOAD_CANCELED) {
                         DownloaderDBHelper.SINGLETON.deleteDownloadTask(pageURL);
@@ -194,6 +200,8 @@ public class DownloadingTaskList {
                         DownloaderDBHelper.SINGLETON.deleteDownloadTask(pageURL);
                     } else if(statusCode == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
                         EventUtil.getDefault().onEvent("download", "failed=" + pageURL);
+                        item.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED;
+                        DownloaderDBHelper.SINGLETON.setDownloadingTaskFailed(pageURL);
                     }
                     downloadItem(totalDownloadedList, item);
                 }

@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
+import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class DownloaderDBHelper {
     }
 
     public List<DownloadContentItem> getDownloadingTask() {
-        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_STATUS + " = ?", new String[]{String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOADING)}, null);
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_STATUS + " != ?", new String[]{String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED)}, null);
         List<DownloadContentItem> itemList = new ArrayList<>();
         try {
             if (cursor != null) {
@@ -158,6 +159,26 @@ public class DownloaderDBHelper {
         }
     }
 
+    public int getDownloadingPageIdByPageURL(String pageURL) {
+        LogUtil.v("db", "getPageIdByPageURL=" + pageURL);
+        if (TextUtils.isEmpty(pageURL)) {
+            return -1;
+        }
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? and " + DownloadContentItem.PAGE_STATUS + " = ?", new String[]{pageURL, String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOADING)}, null);
+        try {
+            if (cursor != null) {
+                if (cursor.moveToNext()) {
+                    return cursor.getInt(cursor.getColumnIndexOrThrow(DownloadContentItem._ID));
+                }
+            }
+            return -1;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public String getPageHomeByPageURL(String pageURL) {
         LogUtil.v("db", "getPageIdByPageURL=" + pageURL);
         if (TextUtils.isEmpty(pageURL)) {
@@ -203,10 +224,21 @@ public class DownloaderDBHelper {
         if (TextUtils.isEmpty(pageURL)) {
             return;
         }
-        int pageId = getPageIdByPageURL(pageURL);
+        int pageId = getDownloadingPageIdByPageURL(pageURL);
         LogUtil.e("db", "finishDownloadTask:" + pageURL + ":" + pageId);
         if (pageId > -1) {
             updateDownloadTaskStatus(pageId, DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED);
+        }
+    }
+
+    public void setDownloadingTaskFailed(String pageURL) {
+        if (TextUtils.isEmpty(pageURL)) {
+            return;
+        }
+        int pageId = getDownloadingPageIdByPageURL(pageURL);
+        LogUtil.e("db", "finishDownloadTask:" + pageURL + ":" + pageId);
+        if (pageId > -1) {
+            updateDownloadTaskStatus(pageId, DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED);
         }
     }
 
@@ -244,11 +276,11 @@ public class DownloaderDBHelper {
             int id = context.getContentResolver().delete(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     MediaStore.Images.Media.DATA + " = '" + path + "'", null);
-            LogUtil.e("delete","images.id = " + id);
+            LogUtil.e("delete", "images.id = " + id);
             id = context.getContentResolver().delete(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     MediaStore.Video.Media.DATA + " = '" + path + "'", null);
-            LogUtil.e("delete","video.id = " + id);
+            LogUtil.e("delete", "video.id = " + id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -74,9 +74,7 @@ public class DownloadService extends Service {
                     DownloadService.this.notifyDownloadFinished((String) msg.obj);
                 }
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
-                if (!ActivityManagerUtils.isTopActivity(DownloadService.this)) {
-                    IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
-                }
+                IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
@@ -148,8 +146,8 @@ public class DownloadService extends Service {
 
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
-                if(TextUtils.isEmpty(url)) {
-                    return super.onStartCommand(intent,flags, startId);
+                if (TextUtils.isEmpty(url)) {
+                    return super.onStartCommand(intent, flags, startId);
                 }
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
                 if (DownloaderDBHelper.SINGLETON.isExistDownloadedPageURL(url)) {
