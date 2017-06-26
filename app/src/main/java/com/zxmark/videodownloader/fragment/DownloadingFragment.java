@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.duapps.ad.DuAdListener;
+import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
@@ -54,6 +56,8 @@ import java.util.List;
 public class DownloadingFragment extends Fragment implements View.OnClickListener, MainDownloadingRecyclerAdapter.IBtnCallback {
 
 
+    private static final int AD_PID = 138164;
+
     private RecyclerView mListView;
     private LinearLayoutManager mLayoutManager;
     private MainDownloadingRecyclerAdapter mAdapter;
@@ -72,6 +76,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private boolean isShowHowToPage;
 
     private String mFormatLeftFileString;
+
+    private DuNativeAd mDuNativeAd;
 
 
     private Handler mHandler = new Handler() {
@@ -332,42 +338,62 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 return;
             }
             if (mDataList != null && (mDataList.size() == 1 || mDataList.size() > 3)) {
-                nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
-                nativeAd.setAdListener(new AdListener() {
+
+                mDuNativeAd = new DuNativeAd(getActivity(), AD_PID, 2);
+                mDuNativeAd.setMobulaAdListener(new DuAdListener() {
                     @Override
-                    public void onError(Ad ad, AdError adError) {
-                        LogUtil.v("facebook", "onError:" + adError);
+                    public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
+
                     }
 
                     @Override
-                    public void onAdLoaded(Ad ad) {
-                        onFacebookAdLoaded(ad);
+                    public void onAdLoaded(DuNativeAd duNativeAd) {
+                        LogUtil.e("main","DuAdLoaded.onAdLoaded" + duNativeAd);
+                        onDuNativeAdLoaded(duNativeAd);
                     }
 
                     @Override
-                    public void onAdClicked(Ad ad) {
-                        LogUtil.e("facebook", "onAdClicked");
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ADCache.getDefault().removeClickedAd(mFirstAdBean);
-                                final int position = mDataList.indexOf(mFirstAdBean);
-                                if (position >= 0) {
-                                    mDataList.remove(position);
-                                    mAdapter.notifyItemRemoved(position);
-                                    mFirstAdBean = null;
-                                }
-                            }
-                        }, 1000);
-                    }
-
-                    @Override
-                    public void onLoggingImpression(Ad ad) {
+                    public void onClick(DuNativeAd duNativeAd) {
 
                     }
                 });
-
-                nativeAd.loadAd();
+                mDuNativeAd.load();
+//                nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
+//                nativeAd.setAdListener(new AdListener() {
+//                    @Override
+//                    public void onError(Ad ad, AdError adError) {
+//                        LogUtil.v("facebook", "onError:" + adError);
+//                    }
+//
+//                    @Override
+//                    public void onAdLoaded(Ad ad) {
+//                        onFacebookAdLoaded(ad);
+//                    }
+//
+//                    @Override
+//                    public void onAdClicked(Ad ad) {
+//                        LogUtil.e("facebook", "onAdClicked");
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                ADCache.getDefault().removeClickedAd(mFirstAdBean);
+//                                final int position = mDataList.indexOf(mFirstAdBean);
+//                                if (position >= 0) {
+//                                    mDataList.remove(position);
+//                                    mAdapter.notifyItemRemoved(position);
+//                                    mFirstAdBean = null;
+//                                }
+//                            }
+//                        }, 1000);
+//                    }
+//
+//                    @Override
+//                    public void onLoggingImpression(Ad ad) {
+//
+//                    }
+//                });
+//
+//                nativeAd.loadAd();
             }
         }
     }
@@ -401,7 +427,33 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             mDataList.add(mFirstAdBean);
             mAdapter.notifyItemInserted(insertADPosition);
         }
+    }
 
+    private void onDuNativeAdLoaded(DuNativeAd duNativeAd) {
+        if (getActivity() == null || isDetached()) {
+            return;
+        }
+
+        mFirstAdBean = new DownloadContentItem();
+        mFirstAdBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
+        mFirstAdBean.duNativeAd = duNativeAd;
+        mFirstAdBean.createdTime = System.currentTimeMillis();
+
+        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_DOWNLOADING_VIDEO, mFirstAdBean);
+
+        int lastPosition = mLayoutManager.findLastVisibleItemPosition();
+        LogUtil.e("facebook", "insert1FacebookAd");
+
+        if(mDataList != null && mDataList.size() <= 1) {
+            mDataList.add(mFirstAdBean);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            int insertADPosition = lastPosition + 1;
+            if (insertADPosition <= mDataList.size() - 1) {
+                mDataList.add(insertADPosition, mFirstAdBean);
+                mAdapter.notifyItemInserted(insertADPosition);
+            }
+        }
     }
 
     @Override

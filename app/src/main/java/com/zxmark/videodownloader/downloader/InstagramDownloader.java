@@ -42,15 +42,12 @@ public class InstagramDownloader extends BaseDownloader {
         regex = "<meta property=\"og:video\" content=\"(.*?)\" />";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
-        Log.v("fan2", "ma=" + ma);
 
         if (ma.find()) {
-            Log.v("fan2", "" + ma.group());
             videoUrl = ma.group(1);
         }
 
         String thumbnail = getImageUrl(content);
-        Log.v("fan3", "thumbnail:" + thumbnail);
         return videoUrl;
     }
 

@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.model.GenericLoaderFactory;
+import com.duapps.ad.DuAdListener;
+import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
@@ -46,6 +48,9 @@ import java.util.List;
  */
 
 public class GalleryPagerActivity extends BaseActivity implements View.OnClickListener {
+
+
+    public static final int PID = 138166;
 
     public static final int MAX_COUNT_THREHOLD = 3;
 
@@ -137,10 +142,10 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                                 DownloadContentItem item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
                                 if (item != null) {
                                     mAdBean = new PagerBean();
-                                    mAdBean.facebookNativeAd = item.facebookNativeAd;
+                                    mAdBean.duNativeAd = item.duNativeAd;
                                     int size = mDataList.size();
                                     if (size >= 2) {
-                                        mDataList.add(size - 2, mAdBean);
+                                        mDataList.add(size - 1, mAdBean);
                                     } else {
                                         mDataList.add(mAdBean);
                                     }
@@ -165,34 +170,55 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
+    private DuNativeAd mDuNativeAd;
+
     private void showNativeAd() {
         if (mAdBean == null) {
-            nativeAd = new NativeAd(this, "2099565523604162_2099565860270795");
-            nativeAd.setAdListener(new AdListener() {
+            mDuNativeAd = new DuNativeAd(this, PID, 2);
+            mDuNativeAd.setMobulaAdListener(new DuAdListener() {
                 @Override
-                public void onError(Ad ad, AdError adError) {
-                    LogUtil.v("facebook", "onError:" + adError);
+                public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
+
                 }
 
                 @Override
-                public void onAdLoaded(Ad ad) {
-                    onFacebookAdLoaded(ad);
+                public void onAdLoaded(DuNativeAd duNativeAd) {
+                    LogUtil.e("main", "DuAdLoaded.onAdLoaded" + duNativeAd);
+                    onDuNativeAdLoaded(duNativeAd);
                 }
 
                 @Override
-                public void onAdClicked(Ad ad) {
-                    if (mAdBean != null) {
-                        ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_HISTORY_VIDEO);
-                    }
-                }
-
-                @Override
-                public void onLoggingImpression(Ad ad) {
+                public void onClick(DuNativeAd duNativeAd) {
 
                 }
             });
-
-            nativeAd.loadAd();
+            mDuNativeAd.load();
+//            nativeAd = new NativeAd(this, "2099565523604162_2099565860270795");
+//            nativeAd.setAdListener(new AdListener() {
+//                @Override
+//                public void onError(Ad ad, AdError adError) {
+//                    LogUtil.v("facebook", "onError:" + adError);
+//                }
+//
+//                @Override
+//                public void onAdLoaded(Ad ad) {
+//                    onFacebookAdLoaded(ad);
+//                }
+//
+//                @Override
+//                public void onAdClicked(Ad ad) {
+//                    if (mAdBean != null) {
+//                        ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_HISTORY_VIDEO);
+//                    }
+//                }
+//
+//                @Override
+//                public void onLoggingImpression(Ad ad) {
+//
+//                }
+//            });
+//
+//            nativeAd.loadAd();
         }
     }
 
@@ -216,9 +242,22 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         mAdapter.notifyDataSetChanged();
     }
 
+    private void onDuNativeAdLoaded(DuNativeAd duNativeAd) {
+        PagerBean adBean = new PagerBean();
+        adBean.duNativeAd = duNativeAd;
+        int count = mDataList.size();
+        DownloadContentItem downloadContentItem = new DownloadContentItem();
+        downloadContentItem.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
+        downloadContentItem.duNativeAd = duNativeAd;
+        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, downloadContentItem);
+        mDataList.add(count - 1, adBean);
+        mAdapter.notifyDataSetChanged();
+    }
+
     public static class PagerBean {
         public File file;
         public NativeAd facebookNativeAd;
+        public DuNativeAd duNativeAd;
     }
 
     public class PagerBeanComparator implements Comparator<PagerBean> {

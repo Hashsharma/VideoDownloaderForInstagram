@@ -16,6 +16,7 @@ import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
@@ -171,7 +172,26 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 // Register the native ad view with the native ad instance
                 holder.adButton.setText(bean.facebookNativeAd.getAdCallToAction());
                 bean.facebookNativeAd.registerViewForInteraction(holder.itemView);
-
+            } else if (bean.duNativeAd != null) {
+                if (bean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
+                    AdChoicesView adChoicesView = new AdChoicesView(mContext, bean.facebookNativeAd, true);
+                    if (holder.adChoiceView.getChildCount() == 0) {
+                        holder.adChoiceView.addView(adChoicesView);
+                    }
+                }
+                try {
+                    imageLoader.load(bean.duNativeAd.getImageUrl()).into(holder.adCoverView);
+                    imageLoader.load(bean.duNativeAd.getIconUrl()).into(holder.adIconView);
+                } catch (OutOfMemoryError error) {
+                    System.gc();
+                    System.gc();
+                    System.gc();
+                }
+                holder.adBodyView.setText(bean.duNativeAd.getShortDesc());
+                holder.adTitleView.setText(bean.duNativeAd.getTitle());
+                // Register the native ad view with the native ad instance
+                holder.adButton.setText(bean.duNativeAd.getCallToAction());
+                bean.duNativeAd.registerViewForInteraction(holder.itemView);
             }
         } else if (baseHolder instanceof ItemHeaderHolder) {
             final ItemHeaderHolder holder = (ItemHeaderHolder) baseHolder;

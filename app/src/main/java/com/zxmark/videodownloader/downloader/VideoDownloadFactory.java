@@ -70,6 +70,10 @@ public final class VideoDownloadFactory {
             return new KuaiVideoDownloader();
         }
 
+//        if (url.contains("facebook.com")) {
+//            return new FacebookDownloader();
+//        }
+
         return null;
     }
 
@@ -86,12 +90,16 @@ public final class VideoDownloadFactory {
             return true;
         }
 
+//        if(url.contains("facebook.com")) {
+//            return true;
+//        }
+
         return false;
     }
 
     public boolean needShowPasteBtn() {
         String normalURL = Utils.getTextFromClipboard();
-        LogUtil.e("main","needShowPasteBtn====" + normalURL);
+        LogUtil.e("main", "needShowPasteBtn====" + normalURL);
         if (DownloaderDBHelper.SINGLETON.isExistPageURL(normalURL)) {
             return false;
         }

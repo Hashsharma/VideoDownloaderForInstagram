@@ -72,7 +72,6 @@ public class HttpRequestSpider {
         return request(htmlUrl, RequestMethod.GET);
     }
 
-
     public String request(String htmlUrl, RequestMethod method) {
         URL url = null;
         String htmlContext = "";

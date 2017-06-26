@@ -16,10 +16,12 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.component.PinchImageView;
+import com.zxmark.videodownloader.main.GalleryPagerActivity;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 
@@ -71,43 +73,82 @@ public class MobMediaView extends FrameLayout {
         initSelfByMimeType();
     }
 
-    public void setAdSource(NativeAd nativeAd) {
-        if (nativeAd != null) {
-            LogUtil.v("view", "setAdSource=" + nativeAd);
-            mAdContainer.setVisibility(View.VISIBLE);
-            mImageView.setVisibility(View.GONE);
-            if (mVideoView != null) {
-                mVideoView.setVisibility(View.GONE);
-            }
-            if (mVideoIcon != null) {
-                mVideoIcon.setVisibility(View.GONE);
-            }
-            // mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(mImageView);
-            AdChoicesView adChoicesView = new AdChoicesView(getContext(), nativeAd, true);
-            LinearLayout adChoiceView = (LinearLayout) findViewById(R.id.ad_choices_container);
-            if (adChoiceView.getChildCount() == 0) {
-                adChoiceView.addView(adChoicesView);
-            }
-            ImageView adCoverView = (ImageView) findViewById(R.id.ad_cover);
-            ImageView adIconView = (ImageView) findViewById(R.id.ad_icon);
-            try {
-                mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(adCoverView);
-                mImageLoader.load(nativeAd.getAdIcon().getUrl()).into(adIconView);
+    public void setAdSource(GalleryPagerActivity.PagerBean adBean) {
+        if (adBean != null) {
+            if (adBean.facebookNativeAd != null) {
+                LogUtil.v("view", "setAdSource=" + adBean.facebookNativeAd);
+                mAdContainer.setVisibility(View.VISIBLE);
+                mImageView.setVisibility(View.GONE);
+                if (mVideoView != null) {
+                    mVideoView.setVisibility(View.GONE);
+                }
+                if (mVideoIcon != null) {
+                    mVideoIcon.setVisibility(View.GONE);
+                }
+                // mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(mImageView);
+                AdChoicesView adChoicesView = new AdChoicesView(getContext(), adBean.facebookNativeAd, true);
+                LinearLayout adChoiceView = (LinearLayout) findViewById(R.id.ad_choices_container);
+                if (adChoiceView.getChildCount() == 0) {
+                    adChoiceView.addView(adChoicesView);
+                }
+                ImageView adCoverView = (ImageView) findViewById(R.id.ad_cover);
+                ImageView adIconView = (ImageView) findViewById(R.id.ad_icon);
+                try {
+                    mImageLoader.load(adBean.facebookNativeAd.getAdCoverImage().getUrl()).into(adCoverView);
+                    mImageLoader.load(adBean.facebookNativeAd.getAdIcon().getUrl()).into(adIconView);
 
-            } catch (OutOfMemoryError error) {
-                System.gc();
-                System.gc();
-                System.gc();
-            }
-            TextView adBodyView = (TextView) findViewById(R.id.ad_body);
-            TextView adTitleView = (TextView) findViewById(R.id.ad_title);
-            adBodyView.setText(nativeAd.getAdBody());
-            adTitleView.setText(nativeAd.getAdTitle());
-            // Register the native ad view with the native ad instance
+                } catch (OutOfMemoryError error) {
+                    System.gc();
+                    System.gc();
+                    System.gc();
+                }
+                TextView adBodyView = (TextView) findViewById(R.id.ad_body);
+                TextView adTitleView = (TextView) findViewById(R.id.ad_title);
+                adBodyView.setText(adBean.facebookNativeAd.getAdBody());
+                adTitleView.setText(adBean.facebookNativeAd.getAdTitle());
+                // Register the native ad view with the native ad instance
 
-            Button adButton = (Button) findViewById(R.id.facebook_ad_btn);
-            adButton.setText(nativeAd.getAdCallToAction());
-            nativeAd.registerViewForInteraction(mAdContainer);
+                Button adButton = (Button) findViewById(R.id.facebook_ad_btn);
+                adButton.setText(adBean.facebookNativeAd.getAdCallToAction());
+                adBean.facebookNativeAd.registerViewForInteraction(mAdContainer);
+            } else if (adBean.duNativeAd != null) {
+                mAdContainer.setVisibility(View.VISIBLE);
+                mImageView.setVisibility(View.GONE);
+                if (mVideoView != null) {
+                    mVideoView.setVisibility(View.GONE);
+                }
+                if (mVideoIcon != null) {
+                    mVideoIcon.setVisibility(View.GONE);
+                }
+                // mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(mImageView);
+                if (adBean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
+                    AdChoicesView adChoicesView = new AdChoicesView(getContext(), adBean.facebookNativeAd, true);
+                    LinearLayout adChoiceView = (LinearLayout) findViewById(R.id.ad_choices_container);
+                    if (adChoiceView.getChildCount() == 0) {
+                        adChoiceView.addView(adChoicesView);
+                    }
+                }
+                ImageView adCoverView = (ImageView) findViewById(R.id.ad_cover);
+                ImageView adIconView = (ImageView) findViewById(R.id.ad_icon);
+                try {
+                    mImageLoader.load(adBean.duNativeAd.getImageUrl()).into(adCoverView);
+                    mImageLoader.load(adBean.duNativeAd.getIconUrl()).into(adIconView);
+
+                } catch (OutOfMemoryError error) {
+                    System.gc();
+                    System.gc();
+                    System.gc();
+                }
+                TextView adBodyView = (TextView) findViewById(R.id.ad_body);
+                TextView adTitleView = (TextView) findViewById(R.id.ad_title);
+                adBodyView.setText(adBean.duNativeAd.getShortDesc());
+                adTitleView.setText(adBean.duNativeAd.getTitle());
+                // Register the native ad view with the native ad instance
+
+                Button adButton = (Button) findViewById(R.id.facebook_ad_btn);
+                adButton.setText(adBean.duNativeAd.getCallToAction());
+                adBean.duNativeAd.registerViewForInteraction(mAdContainer);
+            }
         }
     }
 

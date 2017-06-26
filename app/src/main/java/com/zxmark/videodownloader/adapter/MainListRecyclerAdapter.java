@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.util.Util;
+import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.AdChoicesView;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.MainApplication;
@@ -212,6 +213,30 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 // Register the native ad view with the native ad instance
                 bean.facebookNativeAd.registerViewForInteraction(holder.itemView);
 
+            } else if (bean.duNativeAd != null) {
+                if (bean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
+                    AdChoicesView adChoicesView = new AdChoicesView(mContext, bean.facebookNativeAd, true);
+                    if (holder.adChoiceView.getChildCount() == 0) {
+                        holder.adChoiceView.addView(adChoicesView);
+                    }
+                }
+
+                try {
+                    imageLoader.load(bean.duNativeAd.getImageUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            holder.adCoverView.setBackgroundDrawable(new BitmapDrawable(resource));
+                        }
+                    });
+                } catch (OutOfMemoryError error) {
+                    System.gc();
+                    System.gc();
+                    System.gc();
+                }
+                holder.adBtn.setText(bean.duNativeAd.getCallToAction());
+                holder.adTitle.setText(bean.duNativeAd.getTitle());
+                // Register the native ad view with the native ad instance
+                bean.duNativeAd.registerViewForInteraction(holder.itemView);
             }
         }
 
