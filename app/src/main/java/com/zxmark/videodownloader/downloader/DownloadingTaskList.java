@@ -132,7 +132,7 @@ public class DownloadingTaskList {
         if (item.getVideoCount() > 0) {
             final String fileURL = item.getVideoList().remove(0);
             final int filePositon = totalDownloadedList.indexOf(fileURL);
-            LearningDownloader.getDefault().startDownload(filePositon, item.pageURL, fileURL, item.getTargetDirectory(fileURL), new LearningDownloader.IPowerfulDownloadCallback() {
+            LearningDownloader.getDefault().startDownload(filePositon, item.pageURL, fileURL, item.getTargetDirectory(item.pageURL,fileURL), new LearningDownloader.IPowerfulDownloadCallback() {
                 @Override
                 public void onStart(String path) {
 

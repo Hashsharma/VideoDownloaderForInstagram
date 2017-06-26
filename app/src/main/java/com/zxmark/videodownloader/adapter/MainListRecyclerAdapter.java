@@ -103,7 +103,18 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             holder.albumView.setVisibility(bean.fileCount > 1 ? View.VISIBLE : View.GONE);
             try {
-                imageLoader.load(bean.pageThumb).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+                if (TextUtils.isEmpty(bean.pageThumb)) {
+                    File file = new File(bean.pageHOME);
+                    if (file != null && file.listFiles() != null && file.listFiles().length > 0) {
+                        String path = file.listFiles()[0].getAbsolutePath();
+                        if (MimeTypeUtil.isVideoType(path)) {
+                            imageLoader.load(path).into(holder.thumbnailView);
+                        }
+                    }
+
+                } else {
+                    imageLoader.load(bean.pageThumb).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+                }
             } catch (OutOfMemoryError error) {
                 System.gc();
                 System.gc();

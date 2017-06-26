@@ -82,6 +82,7 @@ public class LearningDownloader {
             mFilePos = filePos;
             LogUtil.e(TAG, "startDownload:" + pageURL);
             LogUtil.e(TAG, "targetPath=" + tagetPath);
+            LogUtil.v(TAG,"fileURL=" + fileUrl);
             long start = System.currentTimeMillis();
             download(filePos, fileUrl, tagetPath, THREAD_COUNT, 0, true);
             LogUtil.e(TAG, "time = " + (System.currentTimeMillis() - start));

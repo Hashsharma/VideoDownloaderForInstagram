@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -102,18 +103,25 @@ public class FacebookDownloader extends BaseDownloader {
 
         String regex;
         String videoUrl = null;
-        regex = "&quot;(.*?).mp4&quot;";
+        regex = "href=\"/video_redirect/\\?src=(.*?)\"";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
-        Log.v("fan2", "ma=" + ma);
+        LogUtil.e("facebook", "ma=" + ma);
 
         while (ma.find()) {
-            Log.v("fan2", "" + ma.group());
+            LogUtil.e("facebook", "" + ma.group());
             videoUrl = ma.group(1);
             if (!TextUtils.isEmpty(videoUrl)) {
+                if(videoUrl.startsWith("http")) {
+                    try {
+                        videoUrl =  URLDecoder.decode(videoUrl,"utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+
+                    }
+                }
                 videoUrl = replaceEscapteSequence(videoUrl);
                 item.addVideo(videoUrl);
-                LogUtil.e("facebook", "encode=videoUrl=" + videoUrl);
             }
             LogUtil.e("facebook", "videoUrl=" + videoUrl);
         }
@@ -133,14 +141,43 @@ public class FacebookDownloader extends BaseDownloader {
         LogUtil.e("facebook", "startSpideThePage:" + htmlUrl);
         String content = startRequest(htmlUrl);
 
-        writeFile(content);
         LogUtil.e("facebook", "content:" + content);
         DownloadContentItem data = new DownloadContentItem();
         getVideoUrl2(content, data);
         getImageURL(content, data);
+        data.pageURL = htmlUrl;
         data.pageTitle = DownloadUtil.getFileNameByUrl(htmlUrl);
         data.pageTags = "FaceBook";
+        data.pageThumb = getVideoThumbnail(content);
         return data;
+    }
+
+
+    private String getVideoThumbnail(String content) {
+        String regex;
+        String videoUrl = null;
+        regex = "<div class=\"bl\"><img src=\"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+        LogUtil.e("facebook", "ma=" + ma);
+
+        while (ma.find()) {
+            LogUtil.e("facebook", "" + ma.group());
+            videoUrl = ma.group(1);
+            if (!TextUtils.isEmpty(videoUrl)) {
+                if(videoUrl.startsWith("http")) {
+                    try {
+                        videoUrl =  URLDecoder.decode(videoUrl,"utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+
+                    }
+                }
+                videoUrl = replaceEscapteSequence(videoUrl);
+            }
+            LogUtil.e("facebook", "thumbnail=" + videoUrl);
+        }
+        return videoUrl;
     }
 
     private void writeFile(String content) {
@@ -148,7 +185,7 @@ public class FacebookDownloader extends BaseDownloader {
         try {
             writename.createNewFile(); // 创建新文件
             BufferedWriter out = new BufferedWriter(new FileWriter(writename));
-            out.write("我会写入文件啦\r\n"); // \r\n即为换行
+            out.write(content); // \r\n即为换行
             out.flush(); // 把缓存区内容压入文件
             out.close();
         } catch (IOException e) {

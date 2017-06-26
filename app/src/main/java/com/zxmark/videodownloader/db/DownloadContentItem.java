@@ -236,7 +236,37 @@ public class DownloadContentItem implements BaseColumns {
 
 
     public String getTargetDirectory(String fileUrl) {
-        return DownloadUtil.getDownloadTargetDir(getPageHome(), DownloadUtil.getFileNameByUrl(fileUrl));
+        String childDirectory = "";
+        if (fileUrl.contains("facebook.com")) {
+            String targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
+            if (fileUrl.contains(".mp4")) {
+                String mp4Array[] = fileUrl.split(".mp4");
+                if (mp4Array.length > 0) {
+                    targetFileName = mp4Array[0].substring(mp4Array[0].lastIndexOf("/")) + ".mp4";
+                }
+            }
+            childDirectory = targetFileName;
+        } else {
+            childDirectory = DownloadUtil.getFileNameByUrl(fileUrl);
+        }
+        return DownloadUtil.getDownloadTargetDir(getPageHome(), childDirectory);
+    }
+
+    public String getTargetDirectory(String pageURL,String fileURL) {
+        String childDirectory = "";
+        if (pageURL.contains("facebook.com")) {
+            String targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
+            if (fileURL.contains(".mp4")) {
+                String mp4Array[] = fileURL.split(".mp4");
+                if (mp4Array.length > 0) {
+                    targetFileName = mp4Array[0].substring(mp4Array[0].lastIndexOf("/")) + ".mp4";
+                }
+            }
+            childDirectory = targetFileName;
+        } else {
+            childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
+        }
+        return DownloadUtil.getDownloadTargetDir(getPageHome(), childDirectory);
     }
 
 
