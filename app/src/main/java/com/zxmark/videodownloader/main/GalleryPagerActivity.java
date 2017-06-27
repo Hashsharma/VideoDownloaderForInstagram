@@ -168,6 +168,29 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mDataList != null && mStopCurrentPosition > -1) {
+            MobMediaView mobMediaView = (MobMediaView) mMainViewPager.findViewWithTag(mStopCurrentPosition);
+            mobMediaView.resume();
+        }
+    }
+
+    private int mStopCurrentPosition = -1;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mDataList != null) {
+            mStopCurrentPosition = mSelectedPosition;
+            MobMediaView mobMediaView = (MobMediaView) mMainViewPager.findViewWithTag(mStopCurrentPosition);
+            mobMediaView.stop();
+        }
+
+    }
+
     private DuNativeAd mDuNativeAd;
 
     private void showNativeAd() {

@@ -145,18 +145,19 @@ public class VideoHistoryFragment extends Fragment {
         if (!ADCache.SHOW_AD) {
             return;
         }
+        LogUtil.e("history","showNativeAd:" + mAdVideoBean);
         if (mAdVideoBean == null) {
             if (isAdded()) {
                 mDuNativeAd = new DuNativeAd(getActivity(), PID, 2);
                 mDuNativeAd.setMobulaAdListener(new DuAdListener() {
                     @Override
                     public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
-
+                        LogUtil.e("history","onError:" + adError.getErrorMessage());
                     }
 
                     @Override
                     public void onAdLoaded(DuNativeAd duNativeAd) {
-                        LogUtil.e("main", "DuAdLoaded.onAdLoaded" + duNativeAd);
+                        LogUtil.e("history", "DuAdLoaded.onAdLoaded" + duNativeAd);
                         onDuNativeAdLoaded(duNativeAd);
                     }
 

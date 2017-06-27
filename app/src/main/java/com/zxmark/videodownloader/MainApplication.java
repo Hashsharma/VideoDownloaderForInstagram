@@ -33,6 +33,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        DuAdNetwork.init(this,getConfigJSON(this));
         sApplication = this;
         initDefaultLocale();
         init();

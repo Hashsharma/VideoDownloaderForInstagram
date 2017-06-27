@@ -235,6 +235,18 @@ public class MobMediaView extends FrameLayout {
         }
     }
 
+    public void pause() {
+        if (mVideoView != null && mVideoView.isPlaying()) {
+            mVideoView.pause();
+        }
+    }
+
+    public void resume() {
+        if (mVideoView != null && mVideoView.getVisibility() == View.VISIBLE) {
+            mVideoView.resume();
+        }
+    }
+
     public String getMediaSource() {
         return mMediaSource;
     }
