@@ -97,7 +97,6 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void initData() {
-
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {

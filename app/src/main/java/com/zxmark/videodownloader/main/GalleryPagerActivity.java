@@ -88,7 +88,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.more_vert).setOnClickListener(this);
         mCountInfoView = (TextView) findViewById(R.id.count_info);
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mMainViewPager.setOffscreenPageLimit(3);
+        mMainViewPager.setOffscreenPageLimit(2);
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -139,7 +139,10 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
                             Collections.sort(mDataList, new PagerBeanComparator());
                             if (mDataList.size() > 1) {
-                                DownloadContentItem item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
+                                DownloadContentItem item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_GALLERY);
+                                if (item == null) {
+                                    item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
+                                }
                                 if (item != null) {
                                     mAdBean = new PagerBean();
                                     mAdBean.duNativeAd = item.duNativeAd;
@@ -240,11 +243,10 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
     private void onDuNativeAdLoaded(DuNativeAd duNativeAd) {
         PagerBean adBean = new PagerBean();
         adBean.duNativeAd = duNativeAd;
-        int count = mDataList.size();
         DownloadContentItem downloadContentItem = new DownloadContentItem();
         downloadContentItem.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
         downloadContentItem.duNativeAd = duNativeAd;
-        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, downloadContentItem);
+        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_GALLERY, downloadContentItem);
         mDataList.add(adBean);
         mAdapter.notifyDataSetChanged();
     }
