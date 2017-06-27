@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -7,8 +6,8 @@ android {
         applicationId "com.imobapp.videodownloaderforinstagram"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 25
+        versionName "2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -26,17 +25,106 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             //Zipalign优化
             zipAlignEnabled true
             // 移除无用的resource文件
-//            shrinkResources true
+            shrinkResources true
             //签名
             signingConfig signingConfigs.release
         }
     }
 }
+
+task compressReleaseApp {
+    // 微信Android资源混淆打包工具
+    def guardJarFile = file('../AndResGuard/AndResGuard-cli-1.1.9.jar')
+    println("guardJarFile:");
+    // 工具配置文件
+    def guardConfigFile = file('../AndResGuard/config.xml')
+    // 原始apk文件
+    def originApkFile = file("./build/outputs/apk/app-release.apk")
+    // 新apk输出目录
+    def outputDir = file("./build/outputs/apk/compressed/")
+    // 签名文件
+    def signature = file("../app/fanlitao.keystore")
+    // 7zip工具路径
+    def sevenZipDir = file("/usr/local/Cellar/p7zip/16.02/bin/7za")
+    // aipalign工具路径
+//    def zipalignDir = file("/Users/baidu/development/adt-bundle-mac-x86_64-20140702/sdk/build-tools/23.0.0/zipalign")
+//    def zipalignDir = file("/Users/baidu/Android/adt-bundle-mac-x86_64-20140702/sdk/build-tools/23.0.1/zipalign")
+    def zipalignDir = file("/Users/fanlitao/Library/Android/sdk/build-tools/23.0.3/zipalign")
+    def proc = """java -jar ${guardJarFile} ${originApkFile} -config ${guardConfigFile} -out ${
+        outputDir
+    }
+            -signature ${signature} fanlitao fanlitao fanlitao
+            -7zip ${sevenZipDir} -zipalign ${zipalignDir}""".execute();
+    proc.waitFor();
+    println "return code: ${proc.exitValue()}" + ", stderr: ${proc.err.text}" + " stdout: ${proc.in.text}"
+}
+
+//andResGuard {
+//// mappingFile = file("./resource_mapping.txt")
+//    mappingFile = null //指定旧的mapping文件，保证同一资源文件在不同版本混淆后的名称保持一致。若在命令行设置会覆盖config.xml中的信息。
+//    use7zip = true
+//    useSign = true
+//// 打开这个开关，会keep住所有资源的原始路径，只混淆资源的名字
+//    keepRoot = false
+//    whiteList = [
+//            // 你的图标
+//            "R.drawable.icon",
+//            // 你的项目名字
+//            "R.string.com.crashlytics.*",
+//            // 友盟统计
+//            "R.string.umeng*",
+//            "R.string.UM*",
+//            "R.string.tb_*",
+//            "R.layout.umeng*",
+//            "R.layout.tb_*",
+//            "R.drawable.umeng*",
+//            "R.drawable.tb_*",
+//            "R.anim.umeng*",
+//            "R.color.umeng*",
+//            "R.color.tb_*",
+//            "R.style.*UM*",
+//            "R.style.umeng*",
+//            "R.id.umeng*",
+//            // 新浪图标
+//            "R.drawable.sina*",
+//            // for google-services.json
+//            "R.string.google_app_id",
+//            "R.string.gcm_defaultSenderId",
+//            "R.string.default_web_client_id",
+//            "R.string.ga_trackingId",
+//            "R.string.firebase_database_url",
+//            "R.string.google_api_key",
+//            "R.string.google_crash_reporting_api_key",
+//            // facebook
+//            "R.layout.*facebook*",
+//            "R.id.*facebook*",
+//            // 短信验证
+//            "R.layout.*messager*",
+//            "R.id.*messager*",
+//            // share commond
+//            "R.id.progress_bar_parent",
+//            "R.id.webView"
+//    ]
+//    compressFilePattern = [
+//            "*.png",
+//            "*.jpg",
+//            "*.jpeg",
+//            "*.gif",
+//            "resources.arsc"
+//    ]
+//    sevenzip {
+//        //一般artifact与path中选一个，如果两个都选，会优先path
+//        artifact = 'com.tencent.mm:SevenZip:1.1.16'
+//        //path = "/usr/local/bin/7za" -linux
+//        //path = "C:\\Program Files\\7-Zip\\7za.exe" -window
+//    }
+//}
+
 repositories {
     flatDir {
         dirs 'libs'
@@ -61,7 +149,11 @@ dependencies {
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile 'com.bcgdv.asia.lib:fanmenu:1.2'
     compile 'com.umeng.analytics:analytics:latest.integration'
-    compile  (name: 'AudienceNetwork', ext: 'aar')
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+    compile(name: 'AudienceNetwork', ext: 'aar')
+    compile(name: 'DuappsAd-HW-v1.0.9.8-release', ext: 'aar')
+    compile 'com.google.firebase:firebase-core:9.6.1'
     testCompile 'junit:junit:4.12'
-
 }
+
+apply plugin: 'com.google.gms.google-services'

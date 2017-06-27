@@ -112,3 +112,22 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+-keep class com.dianxinos.DXStatService.stat.TokenManager {
+public static java.lang.String getToken(android.content.Context);
+}
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+        @com.google.android.gms.common.annotation.KeepName *;}
+-keep class com.google.android.gms.common.GooglePlayServicesUtil {
+      public <methods>;}
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
+      public <methods>;}
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
+      public <methods>;}
+
+
+-keep class com.facebook.ads.NativeAd
+-keep class com.google.android.gms.ads.formats.NativeContentAd
