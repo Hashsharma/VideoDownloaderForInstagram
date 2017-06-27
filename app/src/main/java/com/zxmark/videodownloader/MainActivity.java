@@ -111,6 +111,16 @@ public class MainActivity extends AppCompatActivity
         if (Globals.TEST_FOR_GP) {
             showRatingDialog();
         }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //TODO:安装第三天后引导用户给评分
+                if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && System.currentTimeMillis() - Utils.getMyAppInstallTime() > 2 * 24 * 60 * 60 * 1000) {
+                    showRatingDialog();
+                }
+            }
+        });
     }
 
     private void handleSendIntent() {

@@ -143,12 +143,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                                 if (item != null) {
                                     mAdBean = new PagerBean();
                                     mAdBean.duNativeAd = item.duNativeAd;
-                                    int size = mDataList.size();
-                                    if (size >= 2) {
-                                        mDataList.add(size - 1, mAdBean);
-                                    } else {
-                                        mDataList.add(mAdBean);
-                                    }
+                                    mDataList.add(mAdBean);
                                 }
                             }
                             mAdapter = new ImageGalleryPagerAdapter(GalleryPagerActivity.this, mDataList);
@@ -250,7 +245,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         downloadContentItem.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
         downloadContentItem.duNativeAd = duNativeAd;
         ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, downloadContentItem);
-        mDataList.add(count - 1, adBean);
+        mDataList.add(adBean);
         mAdapter.notifyDataSetChanged();
     }
 

@@ -15,6 +15,7 @@ public class ADCache {
     public static final boolean SHOW_AD = true;
     public static final String AD_KEY_DOWNLOADING_VIDEO = "AD_KEY_DOWNLOADING_VIDEO";
     public static final String AD_KEY_HISTORY_VIDEO = "AD_KEY_HISTORY_VIDEO";
+    public static final String AD_KEY_GALLERY =  "AD_KEY_GALLERY";
 
 
     public static final long MAX_EXPIRE_TIME = 30 * 60 * 1000L;
