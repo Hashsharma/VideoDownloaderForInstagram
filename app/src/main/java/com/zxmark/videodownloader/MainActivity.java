@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
@@ -51,9 +52,13 @@ public class MainActivity extends AppCompatActivity
 
     public static final String KEY = "main";
 
+    public static final long MAX_BAD_DURATION = 36 * 60 * 60 * 1000L;
+
     private ViewPager mMainViewPager;
     private MainViewPagerAdapter mViewPagerAdapter;
     private TabLayout mTabLayout;
+
+    private Handler mHandler = new Handler();
 
 
     @Override
@@ -112,15 +117,19 @@ public class MainActivity extends AppCompatActivity
             showRatingDialog();
         }
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //TODO:安装第三天后引导用户给评分
-                if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && System.currentTimeMillis() - Utils.getMyAppInstallTime() > 2 * 24 * 60 * 60 * 1000) {
-                    showRatingDialog();
-                }
+
+        if (!PreferenceUtils.isRateUsOnGooglePlay()) {
+            if (PreferenceUtils.getRateUsBadTimeStamp() == 0L || (System.currentTimeMillis() - PreferenceUtils.getRateUsBadTimeStamp() >= MAX_BAD_DURATION)) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3) {
+                            showRatingDialog();
+                        }
+                    }
+                }, 100);
             }
-        });
+        }
     }
 
     private void handleSendIntent() {
@@ -217,9 +226,6 @@ public class MainActivity extends AppCompatActivity
 
 
     private void showRatingDialog() {
-        if (PreferenceUtils.isShowedRateGuide()) {
-            return;
-        }
         EventUtil.getDefault().onEvent("main", "showRatingDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         View convertView = getLayoutInflater().inflate(R.layout.rating_app, null);
@@ -257,16 +263,18 @@ public class MainActivity extends AppCompatActivity
             }
         });
         builder.setCancelable(false);
-        builder.setNegativeButton("CLOSE", null);
-        builder.setPositiveButton("RATE", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.rating_close, null);
+        builder.setPositiveButton(R.string.nav_rate_us, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 float rating = ratingBar.getRating();
                 EventUtil.getDefault().onEvent("main", "rating=" + rating);
+
                 if (rating >= 3.0f) {
-                    PreferenceUtils.showedRateGuide();
+                    PreferenceUtils.rateUsOnGooglePlay();
                     Utils.rateUs5Star();
                 } else {
+                    PreferenceUtils.rateUsBad();
                     Utils.sendMeEmail();
                 }
             }
@@ -370,7 +378,14 @@ public class MainActivity extends AppCompatActivity
 
 
                         //TODO:安装第三天后引导用户给评分
-                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && System.currentTimeMillis() - Utils.getMyAppInstallTime() > 2 * 24 * 60 * 60 * 1000) {
+                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3) {
+                            if (PreferenceUtils.isRateUsOnGooglePlay()) {
+                                return;
+                            }
+
+                            if (PreferenceUtils.getRateUsBadTimeStamp() != 0 && (System.currentTimeMillis() - PreferenceUtils.getRateUsBadTimeStamp() < MAX_BAD_DURATION)) {
+                                return;
+                            }
                             showRatingDialog();
                         }
                     }

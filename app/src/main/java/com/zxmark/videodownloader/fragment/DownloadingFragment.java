@@ -343,6 +343,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 mDuNativeAd.setMobulaAdListener(new DuAdListener() {
                     @Override
                     public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
+                        LogUtil.e("main","DuAdLoaded.onError" + adError.getErrorMessage());
+                        startLoadFacebookAd();
 
                     }
 
@@ -376,7 +378,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 //                        mHandler.postDelayed(new Runnable() {
 //                            @Override
 //                            public void run() {
-//                                ADCache.getDefault().removeClickedAd(mFirstAdBean);
+//                               // ADCache.getDefault().removeClickedAd(mFirstAdBean);
 //                                final int position = mDataList.indexOf(mFirstAdBean);
 //                                if (position >= 0) {
 //                                    mDataList.remove(position);
@@ -396,6 +398,45 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 //                nativeAd.loadAd();
             }
         }
+    }
+
+    private void startLoadFacebookAd() {
+        nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
+        nativeAd.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                LogUtil.v("facebook", "onError:" + adError);
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                onFacebookAdLoaded(ad);
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                LogUtil.e("facebook", "onAdClicked");
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_DOWNLOADING_VIDEO);
+                        final int position = mDataList.indexOf(mFirstAdBean);
+                        if (position >= 0) {
+                            mDataList.remove(position);
+                            mAdapter.notifyItemRemoved(position);
+                            mFirstAdBean = null;
+                        }
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+
+        nativeAd.loadAd();
     }
 
     // The next step is to extract the ad metadata and use its properties

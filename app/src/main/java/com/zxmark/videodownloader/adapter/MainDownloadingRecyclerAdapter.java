@@ -131,6 +131,19 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
             });
+
+            holder.thumbnailView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (bean.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED) {
+                        bean.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
+                        EventUtil.getDefault().onEvent("downloading", "startDownloadFromThumbnail");
+                        holder.progressBar.setProgress(0);
+                        holder.progressBar.setVisibility(View.VISIBLE);
+                        DownloadUtil.startResumeDownload(bean.pageURL);
+                    }
+                }
+            });
             if (TextUtils.isEmpty(bean.pageTags)) {
                 holder.hashTagView.setVisibility(View.GONE);
             } else {

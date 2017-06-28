@@ -64,15 +64,7 @@ public class ADCache {
     }
 
     public void removeClickedAd(DownloadContentItem item) {
-        if (mAdCacheMap != null && item != null) {
-            String key = null;
-            for (String adKey : mAdCacheMap.keySet()) {
-                if (item.equals(item)) {
-                    key = adKey;
-                    break;
-                }
-            }
-            removedAdByKey(key);
-        }
+
     }
+
 }

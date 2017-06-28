@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.duapps.ad.base.DuAdNetwork;
+import com.facebook.ads.AdSettings;
+import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.zxmark.videodownloader.service.TLRequestParserService;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;

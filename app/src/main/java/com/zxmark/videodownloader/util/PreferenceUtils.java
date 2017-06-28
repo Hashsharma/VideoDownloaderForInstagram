@@ -2,6 +2,8 @@ package com.zxmark.videodownloader.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
+import android.renderscript.ScriptIntrinsicYuvToRGB;
 
 import com.zxmark.videodownloader.MainApplication;
 
@@ -19,6 +21,8 @@ public class PreferenceUtils {
     public static final String KEY_LANGUAGE_POSITION = "KEY_LANGUAGE_POSTION";
     public static final String FIRST_LAUNCH = "first_launch";
     public static final String SHOW_RATE_GUIDE = "show_rate_guide";
+
+    public static final String RATE_US_BAD = "rate_us_bad";
 
     private static SharedPreferences getSharedPreferences() {
         if (mMainSharedPreference == null) {
@@ -51,13 +55,23 @@ public class PreferenceUtils {
         return result;
     }
 
-    public static void showedRateGuide() {
+    public static void rateUsOnGooglePlay() {
         getSharedPreferences();
-        mMainSharedPreference.edit().putBoolean(SHOW_RATE_GUIDE,true);
+        mMainSharedPreference.edit().putBoolean(SHOW_RATE_GUIDE,true).commit();
     }
 
-    public static boolean isShowedRateGuide() {
+    public static boolean isRateUsOnGooglePlay() {
         getSharedPreferences();
         return mMainSharedPreference.getBoolean(SHOW_RATE_GUIDE,false);
+    }
+
+    public static void rateUsBad() {
+        getSharedPreferences();
+        mMainSharedPreference.edit().putLong(RATE_US_BAD,System.currentTimeMillis()).commit();
+    }
+
+    public static long getRateUsBadTimeStamp() {
+        getSharedPreferences();
+        return mMainSharedPreference.getLong(RATE_US_BAD,0);
     }
 }

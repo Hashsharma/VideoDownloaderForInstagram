@@ -173,6 +173,7 @@ public class DownloadService extends Service {
                             LogUtil.e("download", "startDownload:existHome=" + pageHome);
                             if (!TextUtils.isEmpty(pageHome)) {
                                 downloadContentItem.pageHOME = pageHome;
+                                downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
                             }
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
                             mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
