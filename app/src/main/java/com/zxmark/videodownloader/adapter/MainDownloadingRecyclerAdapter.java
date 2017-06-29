@@ -21,6 +21,7 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.VideoBean;
@@ -187,7 +188,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 bean.facebookNativeAd.registerViewForInteraction(holder.itemView);
             } else if (bean.duNativeAd != null) {
                 if (bean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
-                    AdChoicesView adChoicesView = new AdChoicesView(mContext, bean.facebookNativeAd, true);
+                    AdChoicesView adChoicesView = new AdChoicesView(mContext, (NativeAd) bean.duNativeAd.getRealSource().getRealData(), true);
                     if (holder.adChoiceView.getChildCount() == 0) {
                         holder.adChoiceView.addView(adChoicesView);
                     }
