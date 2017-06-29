@@ -122,7 +122,7 @@ public class MobMediaView extends FrameLayout {
                 }
                 // mImageLoader.load(nativeAd.getAdCoverImage().getUrl()).into(mImageView);
                 if (adBean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
-                    AdChoicesView adChoicesView = new AdChoicesView(getContext(), adBean.facebookNativeAd, true);
+                    AdChoicesView adChoicesView = new AdChoicesView(getContext(), (NativeAd) adBean.duNativeAd.getRealSource().getRealData(), true);
                     LinearLayout adChoiceView = (LinearLayout) findViewById(R.id.ad_choices_container);
                     if (adChoiceView.getChildCount() == 0) {
                         adChoiceView.addView(adChoicesView);

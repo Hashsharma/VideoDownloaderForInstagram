@@ -24,6 +24,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.util.Util;
 import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.AdChoicesView;
+import com.facebook.ads.NativeAd;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.zxmark.videodownloader.MainApplication;
 import com.imobapp.videodownloaderforinstagram.R;
@@ -226,7 +227,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             } else if (bean.duNativeAd != null) {
                 if (bean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
-                    AdChoicesView adChoicesView = new AdChoicesView(mContext, bean.facebookNativeAd, true);
+                    AdChoicesView adChoicesView = new AdChoicesView(mContext,(NativeAd)bean.duNativeAd.getRealSource().getRealData(), true);
                     if (holder.adChoiceView.getChildCount() == 0) {
                         holder.adChoiceView.addView(adChoicesView);
                     }

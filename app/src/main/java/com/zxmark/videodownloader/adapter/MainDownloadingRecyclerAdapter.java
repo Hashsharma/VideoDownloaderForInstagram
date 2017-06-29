@@ -194,6 +194,8 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
                 try {
+                    LogUtil.e("main","duNativeAd.getImageUrl=" + bean.duNativeAd.getImageUrl());
+                    LogUtil.e("main","duNativeAd.getIconUrl=" + bean.duNativeAd.getImageUrl());
                     imageLoader.load(bean.duNativeAd.getImageUrl()).into(holder.adCoverView);
                     imageLoader.load(bean.duNativeAd.getIconUrl()).into(holder.adIconView);
                 } catch (OutOfMemoryError error) {
