@@ -222,7 +222,7 @@ public class VideoHistoryFragment extends Fragment {
                         @Override
                         public void run() {
                             if (mAdVideoBean != null) {
-                                ADCache.getDefault().removeClickedAd(mAdVideoBean);
+                                ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_HISTORY_VIDEO);
                                 final int position = mDataList.indexOf(mAdVideoBean);
                                 LogUtil.e("facebook2", "position:" + position);
                                 if (position >= 0) {
