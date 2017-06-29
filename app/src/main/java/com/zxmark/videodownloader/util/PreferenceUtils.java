@@ -48,11 +48,15 @@ public class PreferenceUtils {
         return mMainSharedPreference.getString(KEY_LANGUAGE_PRFS, "");
     }
 
-    public static boolean isFirstRunMainFragment() {
+    public static boolean isShowedHowToInfo() {
         getSharedPreferences();
-        boolean result = mMainSharedPreference.getBoolean(FIRST_LAUNCH, true);
-        mMainSharedPreference.edit().putBoolean(FIRST_LAUNCH, false).commit();
+        boolean result = mMainSharedPreference.getBoolean(FIRST_LAUNCH, false);
         return result;
+    }
+
+    public static void showedHowToInfo() {
+        getSharedPreferences();
+        mMainSharedPreference.edit().putBoolean(FIRST_LAUNCH,true).commit();
     }
 
     public static void rateUsOnGooglePlay() {

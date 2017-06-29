@@ -10,6 +10,7 @@ import android.widget.PopupWindow;
 import com.zxmark.videodownloader.MainApplication;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
+import com.zxmark.videodownloader.db.DownloadContentItem;
 
 /**
  * Created by fanlitao on 17/6/14.

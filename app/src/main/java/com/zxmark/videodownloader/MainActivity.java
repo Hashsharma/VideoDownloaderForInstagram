@@ -29,6 +29,7 @@ import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.umeng.analytics.MobclickAgent;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
+import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity
     private TabLayout mTabLayout;
 
     private Handler mHandler = new Handler();
+
+    private boolean showedRatingDialog;
 
 
     @Override
@@ -123,7 +126,7 @@ public class MainActivity extends AppCompatActivity
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3) {
+                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && DownloaderDBHelper.SINGLETON.getDownloadingTaskCount() == 0) {
                             showRatingDialog();
                         }
                     }
@@ -226,6 +229,15 @@ public class MainActivity extends AppCompatActivity
 
 
     private void showRatingDialog() {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (showedRatingDialog) {
+            return;
+        }
+
+        showedRatingDialog = true;
         EventUtil.getDefault().onEvent("main", "showRatingDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         View convertView = getLayoutInflater().inflate(R.layout.rating_app, null);
@@ -263,7 +275,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
         builder.setCancelable(false);
-        builder.setNegativeButton(R.string.rating_close, null);
+        builder.setNegativeButton(R.string.rating_close, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PreferenceUtils.rateUsBad();
+            }
+        });
         builder.setPositiveButton(R.string.nav_rate_us, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -378,7 +395,7 @@ public class MainActivity extends AppCompatActivity
 
 
                         //TODO:安装第三天后引导用户给评分
-                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3) {
+                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && DownloaderDBHelper.SINGLETON.getDownloadingTaskCount() == 0) {
                             if (PreferenceUtils.isRateUsOnGooglePlay()) {
                                 return;
                             }
@@ -411,6 +428,14 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mViewPagerAdapter.getDownloadingFragment() != null) {
+            mViewPagerAdapter.getDownloadingFragment().hideHowToInfoCard();
+        }
     }
 
     @Override

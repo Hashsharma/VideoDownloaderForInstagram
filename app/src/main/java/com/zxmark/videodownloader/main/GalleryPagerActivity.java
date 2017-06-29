@@ -227,6 +227,9 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
 
     private void startLoadFacebookAd() {
+        if(isFinishing()) {
+            return;
+        }
         nativeAd = new NativeAd(this, "2099565523604162_2105972009630180");
         nativeAd.setAdListener(new AdListener() {
             @Override

@@ -145,14 +145,14 @@ public class VideoHistoryFragment extends Fragment {
         if (!ADCache.SHOW_AD) {
             return;
         }
-        LogUtil.e("history","showNativeAd:" + mAdVideoBean);
+        LogUtil.e("history", "showNativeAd:" + mAdVideoBean);
         if (mAdVideoBean == null) {
             if (isAdded()) {
                 mDuNativeAd = new DuNativeAd(getActivity(), PID, 2);
                 mDuNativeAd.setMobulaAdListener(new DuAdListener() {
                     @Override
                     public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
-                        LogUtil.e("history","onError:" + adError.getErrorMessage());
+                        LogUtil.e("history", "onError:" + adError.getErrorMessage());
                         startLoadFacebookAd();
                     }
 
@@ -171,8 +171,6 @@ public class VideoHistoryFragment extends Fragment {
             }
         }
     }
-
-
 
 
     private void onDuNativeAdLoaded(DuNativeAd duNativeAd) {
@@ -204,45 +202,47 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void startLoadFacebookAd() {
-        mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
-        mNativeAd.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                LogUtil.v("facebook", "onError:" + adError);
-            }
+        if (getActivity() != null && isAdded()) {
+            mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
+            mNativeAd.setAdListener(new AdListener() {
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    LogUtil.v("facebook", "onError:" + adError);
+                }
 
-            @Override
-            public void onAdLoaded(Ad ad) {
-                onFacebookAdLoaded(ad);
-            }
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    onFacebookAdLoaded(ad);
+                }
 
-            @Override
-            public void onAdClicked(Ad ad) {
-                LogUtil.e("facebook", "onAdClicked");
-                mMainLooperHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mAdVideoBean != null) {
-                            ADCache.getDefault().removeClickedAd(mAdVideoBean);
-                            final int position = mDataList.indexOf(mAdVideoBean);
-                            LogUtil.e("facebook2", "position:" + position);
-                            if (position >= 0) {
-                                mDataList.remove(position);
-                                mAdapter.notifyItemRemoved(position);
-                                mAdVideoBean = null;
+                @Override
+                public void onAdClicked(Ad ad) {
+                    LogUtil.e("facebook", "onAdClicked");
+                    mMainLooperHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mAdVideoBean != null) {
+                                ADCache.getDefault().removeClickedAd(mAdVideoBean);
+                                final int position = mDataList.indexOf(mAdVideoBean);
+                                LogUtil.e("facebook2", "position:" + position);
+                                if (position >= 0) {
+                                    mDataList.remove(position);
+                                    mAdapter.notifyItemRemoved(position);
+                                    mAdVideoBean = null;
+                                }
                             }
                         }
-                    }
-                }, 1000);
-            }
+                    }, 1000);
+                }
 
-            @Override
-            public void onLoggingImpression(Ad ad) {
+                @Override
+                public void onLoggingImpression(Ad ad) {
 
-            }
-        });
+                }
+            });
 
-        mNativeAd.loadAd();
+            mNativeAd.loadAd();
+        }
     }
 
     // The next step is to extract the ad metadata and use its properties

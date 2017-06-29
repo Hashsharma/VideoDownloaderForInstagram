@@ -105,6 +105,21 @@ public class DownloaderDBHelper {
         }
     }
 
+    public int getDownloadingTaskCount() {
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_STATUS + " = ?", new String[]{String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOADING)}, null);
+        try {
+            if (cursor != null) {
+                return cursor.getCount();
+            }
+
+            return 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public DownloadContentItem getDownloadItemByPageURL(String pageURL) {
         Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL}, null);
         try {
