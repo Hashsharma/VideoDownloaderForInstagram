@@ -26,7 +26,7 @@
     </string-array>
 
     <string name="download_home_lable">File saved to: /%s</string>
-    <string name="repost">REPOST</string>
+    <string name="repost">Repost</string>
     <string name="spider_request_error">Failed to get the download Link!</string>
 
     <string name="download_from_send_action">Start get the download Link</string>

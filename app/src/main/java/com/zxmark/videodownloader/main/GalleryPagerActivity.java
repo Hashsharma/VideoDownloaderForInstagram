@@ -138,14 +138,14 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                             }
 
                             Collections.sort(mDataList, new PagerBeanComparator());
-                            if (mDataList.size() < 4) {
+                            if (mDataList.size() > 1 && mDataList.size() < 4) {
                                 DownloadContentItem item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_GALLERY);
                                 if (item == null) {
                                     item = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
                                 }
                                 if (item != null) {
                                     mAdBean = new PagerBean();
-                                    if(item.duNativeAd != null) {
+                                    if (item.duNativeAd != null) {
                                         mAdBean.duNativeAd = item.duNativeAd;
                                     } else {
                                         mAdBean.facebookNativeAd = item.facebookNativeAd;
@@ -205,7 +205,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
             mDuNativeAd.setMobulaAdListener(new DuAdListener() {
                 @Override
                 public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
-                    LogUtil.e("facebook","DuNative:OnError:" + adError);
+                    LogUtil.e("facebook", "DuNative:OnError:" + adError);
                     startLoadFacebookAd();
                 }
 
@@ -227,7 +227,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
 
     private void startLoadFacebookAd() {
-        if(isFinishing()) {
+        if (isFinishing()) {
             return;
         }
         nativeAd = new NativeAd(this, "2099565523604162_2105972009630180");
@@ -257,6 +257,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
         nativeAd.loadAd();
     }
+
     // The next step is to extract the ad metadata and use its properties
 // to build your customized native UI. Modify the onAdLoaded function
 // above to retrieve the ad properties. For example:
@@ -264,7 +265,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         if (ad != nativeAd) {
             return;
         }
-
 
         PagerBean adBean = new PagerBean();
         adBean.facebookNativeAd = nativeAd;
@@ -291,6 +291,24 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         public File file;
         public NativeAd facebookNativeAd;
         public DuNativeAd duNativeAd;
+
+
+        @Override
+        public boolean equals(Object obj) {
+
+            if (obj instanceof PagerBean) {
+                PagerBean right = (PagerBean) obj;
+                if (file != null && right.file != null) {
+                    return file.getAbsolutePath().equals(right.file.getAbsolutePath());
+                }
+
+                if ((file != null && right.file == null) || (file == null && right.file != null)) {
+                    return false;
+                }
+
+            }
+            return false;
+        }
     }
 
     public class PagerBeanComparator implements Comparator<PagerBean> {
@@ -298,7 +316,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public int compare(PagerBean o1, PagerBean o2) {
-
             return (int) (o2.file.lastModified() - o1.file.lastModified());
         }
     }
@@ -309,6 +326,22 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
             finish();
         } else if (v.getId() == R.id.more_vert) {
             PopWindowUtils.showPlayVideoMorePopWindow(v, new PopWindowUtils.IPopWindowCallback() {
+
+
+                @Override
+                public void onDelete() {
+                    MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(mSelectedPosition);
+                    String filePath = itemView.getMediaSource();
+                    LogUtil.e("pager", "onDelete:" + filePath);
+                    PagerBean bean = new PagerBean();
+                    bean.file = new File(filePath);
+                    mAdapter.deleteItem(bean, itemView);
+                    mMainViewPager.setAdapter(mAdapter);
+                    if (mDataList.size() == 1) {
+                        mCountInfoView.setVisibility(View.GONE);
+                    }
+                    mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
+                }
 
                 @Override
                 public void onRepost() {

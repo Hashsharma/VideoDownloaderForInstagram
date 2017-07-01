@@ -137,7 +137,6 @@ public class VideoHistoryFragment extends Fragment {
         });
 
 
-
     }
 
     public void onAddNewDownloadedFile(String pageURL) {
@@ -145,13 +144,21 @@ public class VideoHistoryFragment extends Fragment {
         if (mDataList != null) {
             DownloadContentItem videoBean = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
             if (videoBean != null) {
-                mDataList.add(0, videoBean);
-                mAdapter.notifyItemInserted(0);
-                mListView.smoothScrollToPosition(0);
+                final int index = mDataList.indexOf(videoBean);
+                if (index < 0) {
+                    mDataList.add(0, videoBean);
+                    mAdapter.notifyItemInserted(0);
+                    mListView.smoothScrollToPosition(0);
+                } else {
+                    RecyclerView.ViewHolder viewHolder = mListView.findViewHolderForAdapterPosition(index);
+                    if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
+                        ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
+                        itemHolder.circleProgress.setVisibility(View.GONE);
+                    }
+                }
             }
         }
     }
-
 
 
     private void registerLocalBroadcast() {
@@ -163,7 +170,7 @@ public class VideoHistoryFragment extends Fragment {
                     mMainLooperHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            LogUtil.e("history","locale:" + pageURL);
+                            LogUtil.e("history", "locale:" + pageURL);
                             if (TextUtils.isEmpty(pageURL)) {
                                 return;
                             }
@@ -186,7 +193,7 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     private void unRegisterLocalBroadcast() {
-        if(isAdded()) {
+        if (isAdded()) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mUpdateDataReceiver);
         }
     }
@@ -361,6 +368,7 @@ public class VideoHistoryFragment extends Fragment {
             });
         }
     }
+
     @Override
     public void onDestroy() {
         unRegisterLocalBroadcast();

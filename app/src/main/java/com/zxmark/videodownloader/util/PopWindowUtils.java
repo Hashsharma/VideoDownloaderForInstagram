@@ -99,7 +99,7 @@ public class PopWindowUtils {
         View contentView = LayoutInflater.from(context).inflate(R.layout.videoplay_more_option, null);
         View deleteView = contentView.findViewById(R.id.share);
         final PopupWindow popupWindow = new PopupWindow(contentView,
-                DimensUtil.dip2px(120), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                DimensUtil.dip2px(100), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setTouchable(true);
         popupWindow.setTouchInterceptor(new View.OnTouchListener() {
@@ -152,7 +152,18 @@ public class PopWindowUtils {
                 popupWindow.dismiss();
             }
         });
-        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(118) + trigerView.getWidth() / 2,-DimensUtil.dip2px(15));
+
+        contentView.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onDelete();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(100) + trigerView.getWidth() / 2,-DimensUtil.dip2px(15));
     }
 
 
@@ -194,5 +205,6 @@ public class PopWindowUtils {
         void onShare();
         void launchInstagram();
         void onPastePageUrl();
+        void onDelete();
     }
 }

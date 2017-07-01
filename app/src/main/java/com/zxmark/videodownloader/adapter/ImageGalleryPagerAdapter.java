@@ -73,6 +73,13 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
         mPageViewList.addLast(view);
     }
 
+    public void deleteItem(GalleryPagerActivity.PagerBean pagerBean,MobMediaView mobMediaView) {
+        mDataList.remove(pagerBean);
+        pagerBean.file.delete();
+        mPageViewList.remove(mobMediaView);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         GalleryPagerActivity.PagerBean bean = mDataList.get(position);
@@ -87,7 +94,7 @@ public class ImageGalleryPagerAdapter extends PagerAdapter {
         if (bean.file != null) {
             convertView.setMediaSource(bean.file.getAbsolutePath());
         } else {
-            LogUtil.e("view","facebookNativeAd:" + bean.facebookNativeAd);
+            LogUtil.e("view", "facebookNativeAd:" + bean.facebookNativeAd);
             convertView.setAdSource(bean);
         }
         container.addView(convertView);
