@@ -1,8 +1,10 @@
 package com.zxmark.videodownloader.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.renderscript.ScriptIntrinsicYuvToRGB;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.FileUtils;
+import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.Utils;
@@ -129,6 +132,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     } else if (index == 2) {
                         EventUtil.getDefault().onEvent("downloading", "delete");
                         deleteDownloadingVideo(bean, position);
+                        sendDeleteVideoBroadcast(bean.pageURL);
                     }
                 }
             });
@@ -142,6 +146,9 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                         holder.progressBar.setProgress(0);
                         holder.progressBar.setVisibility(View.VISIBLE);
                         DownloadUtil.startResumeDownload(bean.pageURL);
+                    } else if (bean.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED) {
+                        EventUtil.getDefault().onEvent("downloading", "openFileList");
+                        DownloadUtil.openFileList(bean.pageHOME);
                     }
                 }
             });
@@ -194,8 +201,8 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
                 try {
-                    LogUtil.e("main","duNativeAd.getImageUrl=" + bean.duNativeAd.getImageUrl());
-                    LogUtil.e("main","duNativeAd.getIconUrl=" + bean.duNativeAd.getImageUrl());
+                    LogUtil.e("main", "duNativeAd.getImageUrl=" + bean.duNativeAd.getImageUrl());
+                    LogUtil.e("main", "duNativeAd.getIconUrl=" + bean.duNativeAd.getImageUrl());
                     imageLoader.load(bean.duNativeAd.getImageUrl()).into(holder.adCoverView);
                     imageLoader.load(bean.duNativeAd.getIconUrl()).into(holder.adIconView);
                 } catch (OutOfMemoryError error) {
@@ -236,7 +243,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             if (mClickedPasteBtn) {
                 holder.downloadBtn.setVisibility(View.GONE);
             } else {
-                LogUtil.e("main", "showPasteBtn_" + VideoDownloadFactory.getInstance().needShowPasteBtn());
                 if (VideoDownloadFactory.getInstance().needShowPasteBtn()) {
                     holder.downloadBtn.setVisibility(View.VISIBLE);
                 } else {
@@ -245,6 +251,13 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             }
         }
 
+    }
+
+
+    private void sendDeleteVideoBroadcast(String pageURL) {
+        Intent intent = new Intent(Globals.ACTION_NOTIFY_DATA_CHANGED);
+        intent.putExtra(Globals.KEY_BEAN_PAGE_URL, pageURL);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
     //TODO:最后一个位置有问题

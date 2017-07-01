@@ -1,13 +1,16 @@
 package com.zxmark.videodownloader.fragment;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -84,6 +87,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     };
 
+    private BroadcastReceiver mUpdateDataReceiver;
+
     public static DownloadingFragment newInstance(String params) {
         DownloadingFragment fragment = new DownloadingFragment();
         fragment.mReceiveUrlParams = params;
@@ -113,7 +118,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        registerLocalBroadcast();
         mGlide = Glide.with(getActivity());
 
         mFacebookAdViewContainer = findViewById(R.id.main_ad_container);
@@ -200,7 +205,43 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 }
             });
         }
+    }
 
+
+    private void registerLocalBroadcast() {
+        if (isAdded()) {
+            mUpdateDataReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    final String pageURL = intent.getStringExtra(Globals.KEY_BEAN_PAGE_URL);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (TextUtils.isEmpty(pageURL)) {
+                                return;
+                            }
+                            DownloadContentItem bean = new DownloadContentItem();
+                            bean.pageURL = pageURL;
+                            int index = mDataList.indexOf(bean);
+                            if (index > -1) {
+                                mAdapter.notifyItemRemoved(mDataList.indexOf(bean));
+                                mDataList.remove(bean);
+                            }
+                        }
+                    });
+                }
+            };
+
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Globals.ACTION_NOTIFY_DATA_CHANGED);
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mUpdateDataReceiver, intentFilter);
+        }
+    }
+
+    private void unRegisterLocalBroadcast() {
+        if(isAdded()) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mUpdateDataReceiver);
+        }
     }
 
     public void publishProgress(final String pageURL, final int filePosition, final int progress) {
@@ -301,10 +342,17 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
         DownloadContentItem bean = new DownloadContentItem();
         bean.pageURL = pageURL;
-        if (mDataList.contains(bean)) {
-            mAdapter.notifyItemRemoved(mDataList.indexOf(bean));
-            mDataList.remove(bean);
-
+        int index = mDataList.indexOf(bean);
+        if (index > -1) {
+            DownloadContentItem downloadContentItem = mDataList.get(index);
+            downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED;
+            RecyclerView.ViewHolder viewHolder = mListView.findViewHolderForAdapterPosition(index);
+            if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
+                ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
+                itemHolder.progressBar.setVisibility(View.GONE);
+                // mAdapter.notifyItemRemoved(mDataList.indexOf(bean));
+                // mDataList.remove(bean);
+            }
         }
     }
 
@@ -519,5 +567,12 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (!TextUtils.isEmpty(pastUrl)) {
             startDownload(pastUrl);
         }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        unRegisterLocalBroadcast();
+        super.onDestroy();
     }
 }

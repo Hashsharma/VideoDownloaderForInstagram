@@ -16,8 +16,8 @@
     <string name="option_launch">Open Instagram</string>
     <string name="option_copy">Copy Link</string>
     <string name="option_share">Share</string>
-    <string name="menu_download_video">DownLoad Video</string>
-    <string name="menu_download_image">Download Image</string>
+    <string name="menu_download_video">DownLoad</string>
+    <string name="menu_download_image">Download Thumbnail</string>
     <string name="menu_delete">Delete</string>
     <string-array name="fan_labels">
         <item>@string/menu_download_video</item>
@@ -40,7 +40,7 @@
 
     <string name="clipboard_copy_text">The Link has be copyed into clipboard</string>
 
-    <string name="download_result_success">Download Success</string>
+    <string name="download_result_success">Video Saved</string>
     <string name="download_failed">Download Failed</string>
     <string name="download_result_start">Start Download</string>
 

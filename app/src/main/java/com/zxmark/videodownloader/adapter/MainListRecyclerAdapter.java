@@ -1,12 +1,14 @@
 package com.zxmark.videodownloader.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.renderscript.ScriptIntrinsicYuvToRGB;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.EventUtil;
+import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
@@ -128,6 +131,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     int index = mDataList.indexOf(bean);
                     notifyItemRemoved(index);
                     mDataList.remove(index);
+                    sendDeleteVideoBroadcast(bean.pageURL);
                     DownloaderDBHelper.SINGLETON.deleteDownloadTaskAsync(bean.pageURL);
                 }
             });
@@ -251,9 +255,15 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 bean.duNativeAd.registerViewForInteraction(holder.itemView);
             }
         }
-
-
     }
+
+
+    private void sendDeleteVideoBroadcast(String pageURL) {
+        Intent intent = new Intent(Globals.ACTION_NOTIFY_DATA_CHANGED);
+        intent.putExtra(Globals.KEY_BEAN_PAGE_URL, pageURL);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+    }
+
 
     public interface IPopWindowClickCallback {
         void onCopyAll();

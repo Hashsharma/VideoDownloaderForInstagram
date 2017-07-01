@@ -1,12 +1,20 @@
 package com.zxmark.videodownloader.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +34,7 @@ import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
+import com.zxmark.videodownloader.db.DownloaderContentProvider;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.ADCache;
@@ -59,6 +68,8 @@ public class VideoHistoryFragment extends Fragment {
 
     private Handler mMainLooperHandler = new Handler();
 
+    private BroadcastReceiver mUpdateDataReceiver;
+
     public static VideoHistoryFragment newInstance() {
         VideoHistoryFragment fragment = new VideoHistoryFragment();
         return fragment;
@@ -91,12 +102,12 @@ public class VideoHistoryFragment extends Fragment {
         mListView.setItemAnimator(new DefaultItemAnimator());
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
                 false);
-
         mListView.setLayoutManager(mLayoutManager);
         initData();
     }
 
     private void initData() {
+        registerLocalBroadcast();
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
@@ -124,6 +135,8 @@ public class VideoHistoryFragment extends Fragment {
             }
         });
 
+
+
     }
 
     public void onAddNewDownloadedFile(String pageURL) {
@@ -135,6 +148,45 @@ public class VideoHistoryFragment extends Fragment {
                 mAdapter.notifyItemInserted(0);
                 mListView.smoothScrollToPosition(0);
             }
+        }
+    }
+
+
+
+    private void registerLocalBroadcast() {
+        if (isAdded()) {
+            mUpdateDataReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    final String pageURL = intent.getStringExtra(Globals.KEY_BEAN_PAGE_URL);
+                    mMainLooperHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.e("history","locale:" + pageURL);
+                            if (TextUtils.isEmpty(pageURL)) {
+                                return;
+                            }
+                            DownloadContentItem bean = new DownloadContentItem();
+                            bean.pageURL = pageURL;
+                            int index = mDataList.indexOf(bean);
+                            if (index > -1) {
+                                mAdapter.notifyItemRemoved(mDataList.indexOf(bean));
+                                mDataList.remove(bean);
+                            }
+                        }
+                    });
+                }
+            };
+
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Globals.ACTION_NOTIFY_DATA_CHANGED);
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mUpdateDataReceiver, intentFilter);
+        }
+    }
+
+    private void unRegisterLocalBroadcast() {
+        if(isAdded()) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mUpdateDataReceiver);
         }
     }
 
@@ -277,5 +329,12 @@ public class VideoHistoryFragment extends Fragment {
                 }
             }
         }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        unRegisterLocalBroadcast();
+        super.onDestroy();
     }
 }
