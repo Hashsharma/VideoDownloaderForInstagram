@@ -192,7 +192,9 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         if (mDataList != null) {
             mStopCurrentPosition = mSelectedPosition;
             MobMediaView mobMediaView = (MobMediaView) mMainViewPager.findViewWithTag(mStopCurrentPosition);
-            mobMediaView.stop();
+            if (mobMediaView != null) {
+                mobMediaView.stop();
+            }
         }
 
     }
@@ -265,7 +267,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         if (ad != nativeAd) {
             return;
         }
-
         PagerBean adBean = new PagerBean();
         adBean.facebookNativeAd = nativeAd;
         DownloadContentItem downloadContentItem = new DownloadContentItem();
@@ -332,7 +333,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                 public void onDelete() {
                     MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(mSelectedPosition);
                     String filePath = itemView.getMediaSource();
-                    LogUtil.e("pager", "onDelete:" + filePath);
                     PagerBean bean = new PagerBean();
                     bean.file = new File(filePath);
                     mAdapter.deleteItem(bean, itemView);
@@ -361,7 +361,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                     if (videoBean != null) {
                         Utils.openInstagramByUrl(videoBean.pageURL);
                     }
-
                 }
 
                 @Override

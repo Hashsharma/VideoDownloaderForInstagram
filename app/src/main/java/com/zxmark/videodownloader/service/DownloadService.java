@@ -111,6 +111,7 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.getAction() != null) {
             LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
+            DownloadUtil.checkDownloadBaseHomeDirectory();
             if (DOWNLOAD_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final String pageURL = intent.getStringExtra(DOWNLOAD_PAGE_URL);
@@ -187,7 +188,9 @@ public class DownloadService extends Service {
                                 downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
                             }
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
-                            mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
+                            if (!forceDownload) {
+                                mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
+                            }
                             DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);
                         } else {
                             mHandler.sendEmptyMessage(MSG_HANDLE_SEND_ACTION);

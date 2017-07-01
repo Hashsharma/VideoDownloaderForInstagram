@@ -90,7 +90,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         final DownloadContentItem bean = mDataList.get(position);
 
         if (baseHolder instanceof ItemViewHolder) {
-            ItemViewHolder holder = (ItemViewHolder) baseHolder;
+           final  ItemViewHolder holder = (ItemViewHolder) baseHolder;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,7 +99,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         DownloadUtil.openFileList(bean.pageHOME);
                     } else {
                         IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
-                        DownloadUtil.startResumeDownload(bean.pageURL);
+                        holder.circleProgress.setVisibility(View.VISIBLE);
+                        DownloadUtil.startForceDownload(bean.pageURL);
                     }
                 }
             });
