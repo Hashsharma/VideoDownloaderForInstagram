@@ -29,6 +29,7 @@ import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
 import com.zxmark.videodownloader.DownloaderBean;
 import com.imobapp.videodownloaderforinstagram.R;
+import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
@@ -331,7 +332,35 @@ public class VideoHistoryFragment extends Fragment {
         }
     }
 
-
+    public void publishProgress(final String pageURL, final int filePosition, final int progress) {
+        if (getActivity() != null && isAdded()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    DownloadContentItem bean = new DownloadContentItem();
+                    bean.pageURL = pageURL;
+                    if (mDataList != null) {
+                        int index = mDataList.indexOf(bean);
+                        if (index > -1) {
+                            DownloadContentItem downloadContentItem = mDataList.get(index);
+                            RecyclerView.ViewHolder viewHolder = mListView.findViewHolderForAdapterPosition(index);
+                            if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
+                                ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
+                                itemHolder.circleProgress.setVisibility(View.VISIBLE);
+                                int count = downloadContentItem.fileCount * 100;
+                                int position = filePosition;
+                                int totalProgress = position * 100 + progress;
+                                int newProgrees = totalProgress * 100 / count;
+                                if (newProgrees >= itemHolder.circleProgress.getProgress() && newProgrees <= 100) {
+                                    itemHolder.circleProgress.setProgress(newProgrees);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
     @Override
     public void onDestroy() {
         unRegisterLocalBroadcast();

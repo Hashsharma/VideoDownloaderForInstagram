@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -42,6 +43,7 @@ import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
 import com.zxmark.videodownloader.util.ShareActionUtil;
 import com.zxmark.videodownloader.util.Utils;
+import com.zxmark.videodownloader.widget.IToast;
 
 import java.io.File;
 import java.util.List;
@@ -93,7 +95,12 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     EventUtil.getDefault().onEvent("history", "openFileList");
-                    DownloadUtil.openFileList(bean.pageHOME);
+                    if (new File(bean.pageHOME).exists()) {
+                        DownloadUtil.openFileList(bean.pageHOME);
+                    } else {
+                        IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
+                        DownloadUtil.startResumeDownload(bean.pageURL);
+                    }
                 }
             });
 
@@ -149,7 +156,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     PopWindowUtils.showVideoMoreOptionWindow(v, new IPopWindowClickCallback() {
                         @Override
                         public void onCopyAll() {
-
                             EventUtil.getDefault().onEvent("history", "copyAll");
                             String title = bean.pageTitle;
                             String hashTags = bean.pageTags;
@@ -168,7 +174,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void onCopyHashTags() {
-
                             EventUtil.getDefault().onEvent("history", "copyHashTags");
                             String hashTags = bean.pageTags;
                             StringBuilder sb = new StringBuilder();
@@ -190,7 +195,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void onPasteSharedUrl() {
-
                             EventUtil.getDefault().onEvent("history", "pasteURL");
                             if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
                                 Utils.copyText2Clipboard(bean.pageURL);
@@ -200,6 +204,12 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void onShare() {
+                        }
+
+                        @Override
+                        public void onStartDownload() {
+                            IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
+                            DownloadUtil.startForceDownload(bean.pageURL);
                         }
                     });
                 }
@@ -231,7 +241,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             } else if (bean.duNativeAd != null) {
                 if (bean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
-                    AdChoicesView adChoicesView = new AdChoicesView(mContext,(NativeAd)bean.duNativeAd.getRealSource().getRealData(), true);
+                    AdChoicesView adChoicesView = new AdChoicesView(mContext, (NativeAd) bean.duNativeAd.getRealSource().getRealData(), true);
                     if (holder.adChoiceView.getChildCount() == 0) {
                         holder.adChoiceView.addView(adChoicesView);
                     }
@@ -275,6 +285,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         void launchAppByUrl();
 
         void onPasteSharedUrl();
+
+        void onStartDownload();
 
     }
 

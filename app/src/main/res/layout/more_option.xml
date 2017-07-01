@@ -56,6 +56,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:background="@color/divider_color" />
+            <TextView
+                android:id="@+id/redownload"
+                style="@style/PopWindowTextStyle"
+                android:text="@string/tab_title_downloading" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

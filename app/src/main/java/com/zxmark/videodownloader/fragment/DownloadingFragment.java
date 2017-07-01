@@ -350,8 +350,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
                 ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
                 itemHolder.progressBar.setVisibility(View.GONE);
-                // mAdapter.notifyItemRemoved(mDataList.indexOf(bean));
-                // mDataList.remove(bean);
+                itemHolder.operationBtn.setVisibility(View.GONE);
             }
         }
     }

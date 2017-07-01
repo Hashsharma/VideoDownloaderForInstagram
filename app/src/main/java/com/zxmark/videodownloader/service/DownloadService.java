@@ -32,6 +32,7 @@ import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.NetWorkUtil;
 import com.zxmark.videodownloader.widget.IToast;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +53,7 @@ public class DownloadService extends Service {
     public static final String REQUEST_VIDEO_URL_ACTION = "request_video_url_action";
     public static final String REQUEST_DOWNLOAD_VIDEO_ACTION = "request_download_video_action";
     public static final String EXTRAS_FLOAT_VIEW = "extras_float_view";
+    public static final String EXTRAS_FORCE_DOWNLOAD = "extras_force_download";
     public static final String DOWNLOAD_URL = "download_url";
 
     public static final int MSG_DOWNLOAD_SUCCESS = 0;
@@ -151,12 +153,16 @@ public class DownloadService extends Service {
                     return super.onStartCommand(intent, flags, startId);
                 }
                 final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
-                if (DownloaderDBHelper.SINGLETON.isExistDownloadedPageURL(url)) {
-                    mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
-                    return super.onStartCommand(intent, flags, startId);
+                String pageHome = DownloaderDBHelper.SINGLETON.getDownloadedPageHomeByURL(url);
+                final boolean forceDownload = intent.getBooleanExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD, false);
+                if (!forceDownload) {
+                    if (pageHome != null && new File(pageHome).exists()) {
+                        mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
+                        return super.onStartCommand(intent, flags, startId);
+                    }
                 }
 
-
+                DownloadUtil.checkDownloadBaseHomeDirectory();
                 DownloadingTaskList.SINGLETON.setHandler(mHandler);
                 DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
                     @Override
@@ -174,6 +180,10 @@ public class DownloadService extends Service {
                             LogUtil.e("download", "startDownload:existHome=" + pageHome);
                             if (!TextUtils.isEmpty(pageHome)) {
                                 downloadContentItem.pageHOME = pageHome;
+                                File targetHome = new File(pageHome);
+                                if (!targetHome.exists()) {
+                                    targetHome.mkdir();
+                                }
                                 downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
                             }
                             DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);

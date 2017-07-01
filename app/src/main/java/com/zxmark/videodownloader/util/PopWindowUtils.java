@@ -80,6 +80,17 @@ public class PopWindowUtils {
             }
         });
 
+        contentView.findViewById(R.id.redownload).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onStartDownload();
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+
 
         int windowPos[] = calculatePopWindowPos(trigerView, contentView);
 

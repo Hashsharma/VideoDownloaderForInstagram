@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.imobapp.videodownloaderforinstagram.R;
 
 /*
@@ -29,6 +30,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public View albumView;
     public TextView taskCountView;
     public TextView hashTagView;
+    public CircleProgress  circleProgress;
 
     public ItemViewHolder(View itemView) {
         super(itemView);
@@ -44,5 +46,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         albumView = itemView.findViewById(R.id.album_icon);
         taskCountView = (TextView) itemView.findViewById(R.id.download_task_info);
         hashTagView = (TextView) itemView.findViewById(R.id.hash_tag);
+
+        circleProgress = (CircleProgress) itemView.findViewById(R.id.circle_progress);
     }
 }

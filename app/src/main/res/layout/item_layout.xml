@@ -42,6 +42,18 @@
                 android:layout_gravity="right|top"
                 android:visibility="gone"
                 />
+
+            <com.github.lzyzsd.circleprogress.CircleProgress
+                android:id="@+id/circle_progress"
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:layout_gravity="center"
+                app:circle_unfinished_color="#FF000000"
+                app:circle_finished_color="#10000000"
+                app:circle_text_color="@android:color/white"
+                app:circle_max="100"
+                android:visibility="gone"
+                app:circle_progress="0"/>
         </FrameLayout>
 
 

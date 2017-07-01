@@ -40,6 +40,16 @@ public class DownloadUtil {
         context.startService(intent);
     }
 
+    public static void startForceDownload(String pageURL) {
+        final Context context = MainApplication.getInstance().getApplicationContext();
+        Intent intent = new Intent(context, DownloadService.class);
+        intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
+        intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, false);
+        intent.putExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD,true);
+        intent.putExtra(Globals.EXTRAS, pageURL);
+        context.startService(intent);
+    }
+
     public static void startRequest(String pageUrl) {
         final Context context = MainApplication.getInstance().getApplicationContext();
         Intent intent = new Intent(context, DownloadService.class);
@@ -96,6 +106,12 @@ public class DownloadUtil {
         }
         targetDir.mkdir();
         return targetDir.getAbsolutePath() + File.separator + getFileNameByUrl(url);
+    }
+
+    public static void checkDownloadBaseHomeDirectory() {
+        if(!DownloadUtil.getHomeDirectory().exists()) {
+            DownloadUtil.getHomeDirectory().mkdir();
+        }
     }
 
     /**

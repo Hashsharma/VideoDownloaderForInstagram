@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity
 
     private boolean showedRatingDialog;
 
+    private int mCurrentPagePosition = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
-
+                mCurrentPagePosition = position;
             }
 
             @Override
@@ -347,9 +349,17 @@ public class MainActivity extends AppCompatActivity
     private IDownloadCallback.Stub mRemoteCallback = new IDownloadCallback.Stub() {
         @Override
         public void onPublishProgress(final String pageURL, final int filePostion, final int progress) throws RemoteException {
-            if (mViewPagerAdapter != null && mViewPagerAdapter.getDownloadingFragment() != null) {
-                mViewPagerAdapter.getDownloadingFragment().publishProgress(pageURL, filePostion, progress);
+
+            if (mCurrentPagePosition == 0) {
+                if (mViewPagerAdapter != null && mViewPagerAdapter.getDownloadingFragment() != null) {
+                    mViewPagerAdapter.getDownloadingFragment().publishProgress(pageURL, filePostion, progress);
+                }
+            } else if (mCurrentPagePosition == 1) {
+                if (mViewPagerAdapter != null && mViewPagerAdapter.getVideoHistoryFragment() != null) {
+                    mViewPagerAdapter.getVideoHistoryFragment().publishProgress(pageURL, filePostion, progress);
+                }
             }
+
         }
 
         @Override

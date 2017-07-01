@@ -105,6 +105,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
         if (baseHolder instanceof ItemViewHolder) {
             final ItemViewHolder holder = (ItemViewHolder) baseHolder;
+
             holder.operationBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
