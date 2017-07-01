@@ -62,7 +62,6 @@
             <TextView
                 android:id="@+id/redownload"
                 style="@style/PopWindowTextStyle"
-                android:visibility="gone"
                 android:text="@string/option_redownload" />
 
         </LinearLayout>
