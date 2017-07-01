@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.duapps.ad.DuNativeAd;
@@ -165,7 +166,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             holder.taskCountView.setText(String.format(mLeftDownloadFileString, bean.fileCount));
             holder.playView.setVisibility(bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
             try {
-                imageLoader.load(bean.pageThumb).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+                imageLoader.load(bean.pageThumb).centerCrop().priority(Priority.HIGH).thumbnail(0.1f).crossFade().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             } catch (OutOfMemoryError error) {
                 System.gc();
                 System.gc();
@@ -250,8 +251,8 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     holder.adChoiceView.addView(adChoicesView);
                 }
                 try {
-                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).into(holder.adCoverView);
-                    imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).into(holder.adIconView);
+                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).thumbnail(0.1f).priority(Priority.HIGH).crossFade().into(holder.adCoverView);
+                    imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).priority(Priority.HIGH).crossFade().into(holder.adIconView);
                 } catch (OutOfMemoryError error) {
                     System.gc();
                     System.gc();
@@ -272,7 +273,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 try {
                     LogUtil.e("main", "duNativeAd.getImageUrl=" + bean.duNativeAd.getImageUrl());
                     LogUtil.e("main", "duNativeAd.getIconUrl=" + bean.duNativeAd.getImageUrl());
-                    imageLoader.load(bean.duNativeAd.getImageUrl()).into(holder.adCoverView);
+                    imageLoader.load(bean.duNativeAd.getImageUrl()).priority(Priority.HIGH).thumbnail(0.1f).crossFade().into(holder.adCoverView);
                     imageLoader.load(bean.duNativeAd.getIconUrl()).into(holder.adIconView);
                 } catch (OutOfMemoryError error) {
                     System.gc();

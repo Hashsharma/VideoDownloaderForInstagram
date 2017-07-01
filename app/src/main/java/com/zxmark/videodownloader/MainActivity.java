@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.umeng.analytics.MobclickAgent;
@@ -431,6 +432,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         unbindService(mConnection);
+        Glide.get(this).clearMemory();
+
         super.onDestroy();
     }
 

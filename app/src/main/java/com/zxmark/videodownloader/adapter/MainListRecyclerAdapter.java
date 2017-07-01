@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.Request;
@@ -90,7 +91,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         final DownloadContentItem bean = mDataList.get(position);
 
         if (baseHolder instanceof ItemViewHolder) {
-           final  ItemViewHolder holder = (ItemViewHolder) baseHolder;
+            final ItemViewHolder holder = (ItemViewHolder) baseHolder;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -126,7 +127,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     }
 
                 } else {
-                    imageLoader.load(bean.pageThumb).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+                    imageLoader.load(bean.pageThumb).thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.SOURCE).crossFade().priority(Priority.IMMEDIATE).into(holder.thumbnailView);
                 }
             } catch (OutOfMemoryError error) {
                 System.gc();
@@ -155,7 +156,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.moreIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopWindowUtils.showVideoMoreOptionWindow(v,false,new IPopWindowClickCallback() {
+                    PopWindowUtils.showVideoMoreOptionWindow(v, false, new IPopWindowClickCallback() {
                         @Override
                         public void onCopyAll() {
                             EventUtil.getDefault().onEvent("history", "copyAll");
@@ -225,7 +226,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
 
                 try {
-                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
+                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).asBitmap().priority(Priority.IMMEDIATE).into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             holder.adCoverView.setBackgroundDrawable(new BitmapDrawable(resource));
