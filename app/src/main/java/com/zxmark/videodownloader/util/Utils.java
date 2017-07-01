@@ -38,7 +38,9 @@ public class Utils {
 
     public static final String HOST_91 = "91porn.com";
     public static final String HOST_FACEBOOK = "facebook.com";
-    public static final String EXPIRE_SUFFIX_ARRAY [] = new String[]{HOST_91,HOST_FACEBOOK};
+    public static final String HOST_XVIDEOS = "xvideos.com";
+    public static final String HOST_YOUJI = "youjizz.com";
+    public static final String EXPIRE_SUFFIX_ARRAY [] = new String[]{HOST_91,HOST_FACEBOOK,HOST_XVIDEOS,HOST_YOUJI};
 
     public static void openInstagramByUrl(String url) {
 
@@ -248,6 +250,14 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public  static String replaceEscapteSequence(String rawUrl) {
+        if (TextUtils.isEmpty(rawUrl)) {
+            return rawUrl;
+        }
+        return rawUrl.replace("&amp;", "&");
     }
 
 }

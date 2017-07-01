@@ -78,6 +78,14 @@ public final class VideoDownloadFactory {
             return new Nine1VideoDownloader();
         }
 
+        if (url.contains(Utils.HOST_XVIDEOS)) {
+            return new XVideosDownloader();
+        }
+
+        if (url.contains(Utils.HOST_YOUJI)) {
+            return new YoujiVideoDownloader();
+        }
+
         return null;
     }
 
@@ -94,14 +102,11 @@ public final class VideoDownloadFactory {
             return true;
         }
 
-        if (url.contains(Utils.HOST_FACEBOOK)) {
-            return true;
+        for (String hostKey : Utils.EXPIRE_SUFFIX_ARRAY) {
+            if (url.contains(hostKey)) {
+                return true;
+            }
         }
-
-        if(url.contains(Utils.HOST_91)) {
-            return true;
-        }
-
         return false;
     }
 

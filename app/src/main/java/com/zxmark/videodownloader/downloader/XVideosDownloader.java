@@ -13,66 +13,69 @@ import java.util.regex.Pattern;
  * Created by fanlitao on 7/1/17.
  */
 
-public class Nine1VideoDownloader extends BaseDownloader {
-
-
+public class XVideosDownloader extends BaseDownloader {
+    @Override
     public String getVideoUrl(String content) {
+
         String regex;
         String videoUrl = null;
-        regex = "<source src=\"(.*?)\"";
+        regex = "html5player.setVideoUrlHigh\\(\'(.*?)\'\\)";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
 
         if (ma.find()) {
             videoUrl = ma.group(1);
-            LogUtil.e("91", "videoUrl=" + videoUrl);
+            LogUtil.e("xv", "videoUrl=" + videoUrl);
         }
 
         return videoUrl;
     }
 
-    public String getThumbnailURL(String content) {
+    public String getThumbnailByPageURL(String content) {
         String regex;
         String videoUrl = null;
-        regex = "<video.*poster=\"(.*?)\"";
+        regex = "html5player.setThumbUrl\\(\'(.*?)\'\\)";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
-        LogUtil.e("91", "getThumbnailURL=" + ma);
+
         if (ma.find()) {
             videoUrl = ma.group(1);
-            LogUtil.e("91", "getThumbnailURL=" + videoUrl);
+            LogUtil.e("xv", "videoUrl=" + videoUrl);
         }
 
         return videoUrl;
     }
 
     public String getPageTitle(String content) {
+        //<meta name="description" content="XVIDEOS Pinay tight pussy creampy Full-mangpopoy.com 免費的" />
         String regex;
-        String pageTitle = null;
-        regex = "<meta name=\"title\" content=\"(.*?)\"";
+        String videoUrl = null;
+        regex = "<meta name=\"description\" content=\"(.*?)\" />";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
+
         if (ma.find()) {
-            pageTitle = ma.group(1);
+            videoUrl = ma.group(1);
         }
+        return videoUrl;
 
-        return pageTitle;
     }
-
 
     @Override
     public DownloadContentItem startSpideThePage(String htmlUrl) {
+        LogUtil.e("xv","url=" + htmlUrl);
         String content = startRequest(htmlUrl);
-        DownloadContentItem downloadContentItem = new DownloadContentItem();
-        downloadContentItem.pageURL = htmlUrl;
-        final String videoURL = getVideoUrl(content);
-        if(!TextUtils.isEmpty(videoURL)) {
-            downloadContentItem.addVideo(videoURL);
-            downloadContentItem.pageThumb = getThumbnailURL(content);
+        if(!TextUtils.isEmpty(content)) {
+            DownloadContentItem downloadContentItem = new DownloadContentItem();
+            downloadContentItem.pageURL = htmlUrl;
+            String video = getVideoUrl(content);
+            downloadContentItem.addVideo(video);
+            downloadContentItem.pageThumb = getThumbnailByPageURL(content);
             downloadContentItem.pageTitle = getPageTitle(content);
+            return downloadContentItem;
         }
-
-        return downloadContentItem;
+        LogUtil.e("xv","page=" + content);
+       // Utils.writeFile(content);
+        return null;
     }
-
 }

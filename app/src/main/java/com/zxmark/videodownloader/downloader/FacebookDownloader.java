@@ -8,6 +8,7 @@ import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.Utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -44,7 +45,7 @@ public class FacebookDownloader extends BaseDownloader {
             Log.v("fan2", "" + ma.group());
             videoUrl = ma.group(1);
             if (!TextUtils.isEmpty(videoUrl)) {
-                videoUrl = replaceEscapteSequence(videoUrl);
+                videoUrl = Utils.replaceEscapteSequence(videoUrl);
                 LogUtil.e("facebook", "encode=videoUrl=" + videoUrl);
             }
             LogUtil.e("facebook", "videoUrl=" + videoUrl);
@@ -65,7 +66,7 @@ public class FacebookDownloader extends BaseDownloader {
             imageUrl = ma.group(1);
             LogUtil.e("facebook", "imageUrl=" + imageUrl);
             if (!TextUtils.isEmpty(imageUrl)) {
-                String url = replaceEscapteSequence(imageUrl);
+                String url = Utils.replaceEscapteSequence(imageUrl);
                 LogUtil.e("facebook", "encode=imageUrl=" + url);
                 item.addImage(imageUrl);
             }
@@ -86,7 +87,7 @@ public class FacebookDownloader extends BaseDownloader {
             Log.v("fan2", "" + ma.group());
             videoUrl = ma.group(1);
             if (!TextUtils.isEmpty(videoUrl)) {
-                videoUrl = replaceEscapteSequence(videoUrl);
+                videoUrl = Utils.replaceEscapteSequence(videoUrl);
                 item.addVideo(videoUrl);
                 LogUtil.e("facebook", "encode=videoUrl=" + videoUrl);
             }
@@ -116,7 +117,7 @@ public class FacebookDownloader extends BaseDownloader {
 
                     }
                 }
-                videoUrl = replaceEscapteSequence(videoUrl);
+                videoUrl = Utils.replaceEscapteSequence(videoUrl);
                 item.addVideo(videoUrl);
             }
             LogUtil.e("facebook", "videoUrl=" + videoUrl);
@@ -125,12 +126,6 @@ public class FacebookDownloader extends BaseDownloader {
     }
 
 
-    public String replaceEscapteSequence(String rawUrl) {
-        if (TextUtils.isEmpty(rawUrl)) {
-            return rawUrl;
-        }
-        return rawUrl.replace("&amp;", "&");
-    }
 
     @Override
     public DownloadContentItem startSpideThePage(String htmlUrl) {
@@ -168,23 +163,11 @@ public class FacebookDownloader extends BaseDownloader {
 
                     }
                 }
-                videoUrl = replaceEscapteSequence(videoUrl);
+                videoUrl = Utils.replaceEscapteSequence(videoUrl);
             }
             LogUtil.e("facebook", "thumbnail=" + videoUrl);
         }
         return videoUrl;
     }
 
-    private void writeFile(String content) {
-        File writename = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "facebook.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
-        try {
-            writename.createNewFile(); // 创建新文件
-            BufferedWriter out = new BufferedWriter(new FileWriter(writename));
-            out.write(content); // \r\n即为换行
-            out.flush(); // 把缓存区内容压入文件
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
