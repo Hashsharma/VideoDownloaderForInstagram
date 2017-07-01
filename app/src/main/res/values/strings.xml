@@ -132,4 +132,6 @@
 
 
     <!-- -->
+
+    <string name="option_redownload">Download Again</string>
 </resources>

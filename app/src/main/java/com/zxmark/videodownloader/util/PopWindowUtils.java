@@ -26,7 +26,7 @@ public class PopWindowUtils {
         View contentView = LayoutInflater.from(context).inflate(R.layout.more_option, null);
 
         final PopupWindow popupWindow = new PopupWindow(contentView,
-                DimensUtil.dip2px(120), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                DimensUtil.dip2px(100), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setTouchable(true);
         popupWindow.setTouchInterceptor(new View.OnTouchListener() {
@@ -35,7 +35,6 @@ public class PopWindowUtils {
                 return false;
             }
         });
-
 
         contentView.findViewById(R.id.copy_all).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,13 +89,8 @@ public class PopWindowUtils {
                 popupWindow.dismiss();
             }
         });
-
-
         int windowPos[] = calculatePopWindowPos(trigerView, contentView);
-
-        float positon  = trigerView.getY() - DimensUtil.dip2px(15) + DimensUtil.dip2px(100);
-
-        popupWindow.showAsDropDown(trigerView,  -DimensUtil.dip2px(118) + trigerView.getWidth() / 2,windowPos[1]);
+        popupWindow.showAsDropDown(trigerView,  -DimensUtil.dip2px(100) + trigerView.getWidth() / 2,windowPos[1]);
     }
 
 
