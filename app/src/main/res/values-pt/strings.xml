@@ -6,15 +6,15 @@
     <string name="how_to">Como</string>
     <string name="action_settings">Configurações</string>
 
-    <string name="tab_title_downloading">Download</string>
+    <string name="tab_title_downloading">Baixar</string>
     <string name="tab_title_history">História</string>
 
     <string name="option_delete">Excluir</string>
     <string name="option_launch">aberto Instagram</string>
     <string name="option_copy">Link de cópia</string>
     <string name="option_share">Compartilhar</string>
-    <string name="menu_download_video">Baixar video</string>
-    <string name="menu_download_image">Baixar imagem</string>
+    <string name="menu_download_video">Baixar</string>
+    <string name="menu_download_image">baixar Miniaturas</string>
     <string name="menu_delete">Excluir</string>
     <string-array name="fan_labels">
         <item>@string/menu_download_video</item>
@@ -80,4 +80,7 @@
     <string name="option_copy_tags">Copiar HashTags</string>
         
     <string name="btn_check_url">Verificar URL</string>
+
+    <string name="option_redownload">re-download</string>
+
 </resources>

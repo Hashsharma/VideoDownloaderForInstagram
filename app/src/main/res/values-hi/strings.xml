@@ -14,10 +14,10 @@
 	<string name="option_copy">प्रतिरूप जोड़ना</string>
 	<string name="option_share">शेयर</string>
 	<string name="menu_download_video">वीडियो डाउनलोड करें</string>
-	<string name="menu_download_image">छवि डाउनलोड करें</string>
+	<string name="menu_download_image">डाउनलोड थंबनेल</string>
 	<string name="menu_delete">हटाना</string>
 	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
+		<item>@string/tab_title_downloading</item>
 		<item>@string/menu_download_image</item>
 		<item>@string/menu_delete</item>
 	</string-array>
@@ -66,4 +66,7 @@
 	<string name="option_copy_all">सभी को कॉपी करें</string>
 	<string name="option_copy_tags">हैशटैग कॉपी करें</string>
 	<string name="btn_check_url">URL जांचें</string>
+
+
+	<string name="option_redownload">फिर से डाउनलोड</string>
 </resources>

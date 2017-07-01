@@ -13,8 +13,8 @@
 	<string name="option_launch">Buka Instagram</string>
 	<string name="option_copy">Salin tautan</string>
 	<string name="option_share">Bagikan</string>
-	<string name="menu_download_video">Video DownLoad</string>
-	<string name="menu_download_image">Download Gambar</string>
+	<string name="menu_download_video">DownLoad</string>
+	<string name="menu_download_image">Unduh Thumbnail</string>
 	<string name="menu_delete">Menghapus</string>
 	<string-array name="fan_labels">
 		<item>@string/menu_download_video</item>
@@ -65,4 +65,5 @@
 	<string name="option_copy_all">Salin semua</string>
 	<string name="option_copy_tags">Salin HashTags</string>
 	<string name="btn_check_url">Periksa URL</string>
+	<string name="option_redownload">Re-Download</string>
 </resources>

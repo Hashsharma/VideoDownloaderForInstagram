@@ -13,8 +13,8 @@
 	<string name="option_launch">เปิด Instagram</string>
 	<string name="option_copy">คัดลอกลิงค์</string>
 	<string name="option_share">หุ้น</string>
-	<string name="menu_download_video">DownLoad Video</string>
-	<string name="menu_download_image">ภาพ DownLoad</string>
+	<string name="menu_download_video">ดาวน์โหลด</string>
+	<string name="menu_download_image">ดาวน์โหลดภาพขนาดย่อ</string>
 	<string name="menu_delete">ลบ</string>
 	<string-array name="fan_labels">
 		<item>@string/menu_download_video</item>
@@ -68,4 +68,5 @@
 	<string name = "option_copy_tags">คัดลอก HashTags</string>
 	<string name = "btn_check_url">ตรวจสอบ URL</string>
 
+	<string name="option_redownload">Re-ดาวน์โหลด</string>
 </resources>

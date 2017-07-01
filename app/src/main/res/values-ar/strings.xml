@@ -14,10 +14,10 @@
 	<string name="option_copy">انسخ الرابط</string>
 	<string name="option_share">شارك</string>
 	<string name="menu_download_video">تحميل الفيديو</string>
-	<string name="menu_download_image">تحميل الصورة</string>
+	<string name="menu_download_image">تحميل صورة مصغرة</string>
 	<string name="menu_delete">حذف</string>
 	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
+		<item>@string/tab_title_downloading</item>
 		<item>@string/menu_download_image</item>
 		<item>@string/menu_delete</item>
 	</string-array>
@@ -66,5 +66,8 @@
 	<string name="option_copy_all">نسخ جميع</string>
 	<string name="option_copy_tags">نسخ علامات التصنيف</string>
 	<string name="btn_check_url">تحقق من عنوان ورل</string>
+
+
+	<string name="option_redownload">إعادة تحميل</string>
 
 </resources>

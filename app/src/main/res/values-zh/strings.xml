@@ -68,4 +68,5 @@
     <string name="option_copy_all">复制全部</string>
     <string name="option_copy_tags">复制HashTags</string>
     <string name="btn_check_url">解析URL</string>
+    <string name="option_redownload">重新下载</string>
 </resources>

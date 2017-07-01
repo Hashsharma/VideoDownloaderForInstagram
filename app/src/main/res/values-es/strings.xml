@@ -10,8 +10,8 @@
 	<string name="option_launch">Instagram abierto</string>
 	<string name="option_copy">Copiar link</string>
 	<string name="option_share">Compartir</string>
-	<string name="menu_download_video">Descargar video</string>
-	<string name="menu_download_image">Descargar imagen</string>
+	<string name="menu_download_video">Descargar</string>
+	<string name="menu_download_image">descarga Miniaturas</string>
 	<string name="menu_delete">Borrar</string>
 	<string-array name="fan_labels">
 		<item>@string/menu_download_video</item>
@@ -64,4 +64,7 @@
 	<string name="option_copy_tags">Copiar HashTags</string>
 	<string name="btn_check_url">Comprobar URL</string>
 
+
+
+	<string name="option_redownload">re-descargar</string>
 </resources>

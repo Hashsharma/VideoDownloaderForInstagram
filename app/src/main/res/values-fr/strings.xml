@@ -13,8 +13,8 @@
 	<string name="option_launch">Open Instagram</string>
 	<string name="option_copy">Copier le lien</string>
 	<string name="option_share">Partager</string>
-	<string name="menu_download_video">Télécharger la video</string>
-	<string name="menu_download_image">mage DownLoad</string>
+	<string name="menu_download_video">Télécharger</string>
+	<string name="menu_download_image">télécharger les vignettes</string>
 	<string name="menu_delete">Effacer</string>
 	<string-array name="fan_labels">
 		<item>@string/menu_download_video</item>
@@ -66,5 +66,9 @@
 	<string name="option_copy_all">Copier tout</string>
 	<string name="option_copy_tags">Copy HashTags</string>
 	<string name="btn_check_url">Vérifier l\'URL</string>
+
+
+
+	<string name="option_redownload">Retéléchargement</string>
 
 </resources>

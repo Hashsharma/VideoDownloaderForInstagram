@@ -14,7 +14,7 @@
     <string name="option_copy">Linki kopyala</string>
     <string name="option_share">Pay</string>
     <string name="menu_download_video">Video indir</string>
-    <string name="menu_download_image">Resmi İndir</string>
+    <string name="menu_download_image">Küçük Resimleri İndir</string>
     <string name="menu_delete">silmek</string>
     <string-array name="fan_labels">
         <item>@string/menu_download_video</item>
@@ -80,4 +80,6 @@
     <string name="option_copy_tags"> HashTag\'ları Kopyala</string>
         
     <string name="btn_check_url"> URL\'yi kontrol et</string>
+
+    <string name="option_redownload">Yeniden indir</string>
 </resources>

@@ -13,8 +13,8 @@
     <string name="option_launch">Відкрийте Instagram</string>
     <string name="option_copy">Скопіювати посилання</string>
     <string name="option_share">Поділитися</string>
-    <string name="menu_download_video">Відеоролик DownLoad</string>
-    <string name="menu_download_image">Завантажити зображення</string>
+    <string name="menu_download_video">Завантажити</string>
+    <string name="menu_download_image">завантажити Ескізи</string>
     <string name="menu_delete">Видалити</string>
     <string-array name="fan_labels">
         <item>@string/menu_download_video</item>
@@ -79,4 +79,6 @@
     <string name="option_copy_tags">Копіювати HashTags</string>
         
     <string name="btn_check_url">Перевірити URL-адресу</string>
+
+    <string name="option_redownload">перезавантаження</string>
 </resources>

@@ -13,8 +13,8 @@
     <string name="option_launch">Mở Instagram</string>
     <string name="option_copy">Sao chép đường dẫn</string>
     <string name="option_share">Chia sẻ</string>
-    <string name="menu_download_video">DownLoad Video</string>
-    <string name="menu_download_image">Download Image</string>
+    <string name="menu_download_video">Tải về</string>
+    <string name="menu_download_image">tải Thumbnail</string>
     <string name="menu_delete">Xóa bỏ</string>
     <string-array name="fan_labels">
         <item>@string/menu_download_video</item>
@@ -80,4 +80,6 @@
     <string name="option_copy_tags">Sao chép HashTags</string>
         
     <string name="btn_check_url">Kiểm tra URL</string>
+
+    <string name="option_redownload">tái tải</string>
 </resources>
