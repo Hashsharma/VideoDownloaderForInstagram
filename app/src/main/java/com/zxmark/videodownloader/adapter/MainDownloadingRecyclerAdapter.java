@@ -182,7 +182,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             holder.moreIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopWindowUtils.showVideoMoreOptionWindow(v, false, new MainListRecyclerAdapter.IPopWindowClickCallback() {
+                    PopWindowUtils.showVideoMoreOptionWindow(v, true, new MainListRecyclerAdapter.IPopWindowClickCallback() {
                         @Override
                         public void onCopyAll() {
                             EventUtil.getDefault().onEvent("downloading", "copyAll");

@@ -30,6 +30,8 @@
             android:name="com.zxmark.videodownloader.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:allowTaskReparenting="false"
+            android:clearTaskOnLaunch="true"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
