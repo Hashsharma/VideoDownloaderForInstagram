@@ -126,7 +126,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 @Override
                 public void onFanButtonClicked(int index) {
                     holder.fanMenuButtons.toggleShow();
-                    LogUtil.e("downloading","onFanButtonClicked:"  + bean.pageTitle);
                     if (index == 0) {
                         EventUtil.getDefault().onEvent("downloading", "startDownload");
                         holder.progressBar.setProgress(0);

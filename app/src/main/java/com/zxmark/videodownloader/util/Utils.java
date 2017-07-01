@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Looper;
 import android.text.Html;
 import android.text.TextUtils;
@@ -21,7 +22,10 @@ import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.widget.IToast;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -31,6 +35,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Utils {
 
+
+    public static final String HOST_91 = "91porn.com";
+    public static final String HOST_FACEBOOK = "facebook.com";
+    public static final String EXPIRE_SUFFIX_ARRAY [] = new String[]{HOST_91,HOST_FACEBOOK};
 
     public static void openInstagramByUrl(String url) {
 
@@ -227,5 +235,19 @@ public class Utils {
         return System.currentTimeMillis();
     }
 
+
+
+    public static  void writeFile(String content) {
+        File writename = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "91.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
+        try {
+            writename.createNewFile(); // 创建新文件
+            BufferedWriter out = new BufferedWriter(new FileWriter(writename));
+            out.write(content); // \r\n即为换行
+            out.flush(); // 把缓存区内容压入文件
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

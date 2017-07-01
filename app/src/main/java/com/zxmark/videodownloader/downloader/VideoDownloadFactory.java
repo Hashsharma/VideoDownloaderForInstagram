@@ -70,8 +70,12 @@ public final class VideoDownloadFactory {
             return new KuaiVideoDownloader();
         }
 
-        if (url.contains("facebook.com")) {
+        if (url.contains(Utils.HOST_FACEBOOK)) {
             return new FacebookDownloader();
+        }
+
+        if (url.contains(Utils.HOST_91)) {
+            return new Nine1VideoDownloader();
         }
 
         return null;
@@ -90,7 +94,11 @@ public final class VideoDownloadFactory {
             return true;
         }
 
-        if(url.contains("facebook.com")) {
+        if (url.contains(Utils.HOST_FACEBOOK)) {
+            return true;
+        }
+
+        if(url.contains(Utils.HOST_91)) {
             return true;
         }
 

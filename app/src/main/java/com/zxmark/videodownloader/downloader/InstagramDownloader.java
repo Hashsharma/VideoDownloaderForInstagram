@@ -32,10 +32,6 @@ public class InstagramDownloader extends BaseDownloader {
 
     public static final String CDN_IMAGE_SUFFIX = "cdninstagram.com";
 
-    public String startRequest(String htmlUrl) {
-        return HttpRequestSpider.getInstance().request(htmlUrl);
-    }
-
     public String getVideoUrl(String content) {
         String regex;
         String videoUrl = null;
@@ -46,8 +42,6 @@ public class InstagramDownloader extends BaseDownloader {
         if (ma.find()) {
             videoUrl = ma.group(1);
         }
-
-        String thumbnail = getImageUrl(content);
         return videoUrl;
     }
 

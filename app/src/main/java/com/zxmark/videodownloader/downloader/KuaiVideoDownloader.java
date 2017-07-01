@@ -17,10 +17,6 @@ import java.util.regex.Pattern;
  */
 
 public class KuaiVideoDownloader extends BaseDownloader {
-    @Override
-    public String startRequest(String htmlUrl) {
-        return HttpRequestSpider.getInstance().request(htmlUrl);
-    }
 
     @Override
     public String getVideoUrl(String content) {

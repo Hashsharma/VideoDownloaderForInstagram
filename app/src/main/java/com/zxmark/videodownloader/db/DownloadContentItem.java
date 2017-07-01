@@ -12,6 +12,7 @@ import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -252,20 +253,25 @@ public class DownloadContentItem implements BaseColumns {
         return DownloadUtil.getDownloadTargetDir(getPageHome(), childDirectory);
     }
 
-    public String getTargetDirectory(String pageURL,String fileURL) {
+    public String getTargetDirectory(String pageURL, String fileURL) {
         String childDirectory = "";
-        if (pageURL.contains("facebook.com")) {
-            String targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
-            if (fileURL.contains(".mp4")) {
-                String mp4Array[] = fileURL.split(".mp4");
-                if (mp4Array.length > 0) {
-                    targetFileName = mp4Array[0].substring(mp4Array[0].lastIndexOf("/")) + ".mp4";
+
+        if (!TextUtils.isEmpty(pageURL)) {
+            for (String hostKeyWords : Utils.EXPIRE_SUFFIX_ARRAY) {
+                if (pageURL.contains(hostKeyWords)) {
+                    String targetFileName = null;
+                    if (fileURL.contains(".mp4")) {
+                        targetFileName =  String.valueOf(System.currentTimeMillis()) + ".mp4";
+                    } else if(fileURL.contains(".jpg")) {
+                        targetFileName =  String.valueOf(System.currentTimeMillis()) + ".jpg";
+                    }
+                    childDirectory = targetFileName;
                 }
             }
-            childDirectory = targetFileName;
         } else {
             childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
         }
+
         return DownloadUtil.getDownloadTargetDir(getPageHome(), childDirectory);
     }
 

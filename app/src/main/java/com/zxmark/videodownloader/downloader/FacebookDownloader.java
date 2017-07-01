@@ -29,10 +29,6 @@ import java.util.regex.Pattern;
 public class FacebookDownloader extends BaseDownloader {
 
 
-    @Override
-    protected String startRequest(String htmlUrl) {
-        return HttpRequestSpider.getInstance().request(htmlUrl);
-    }
 
     @Override
     public String getVideoUrl(String content) {
@@ -140,7 +136,6 @@ public class FacebookDownloader extends BaseDownloader {
     public DownloadContentItem startSpideThePage(String htmlUrl) {
         LogUtil.e("facebook", "startSpideThePage:" + htmlUrl);
         String content = startRequest(htmlUrl);
-
         LogUtil.e("facebook", "content:" + content);
         DownloadContentItem data = new DownloadContentItem();
         getVideoUrl2(content, data);

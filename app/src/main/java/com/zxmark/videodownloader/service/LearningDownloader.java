@@ -82,7 +82,7 @@ public class LearningDownloader {
             mFilePos = filePos;
             LogUtil.e(TAG, "startDownload:" + pageURL);
             LogUtil.e(TAG, "targetPath=" + tagetPath);
-            LogUtil.v(TAG,"fileURL=" + fileUrl);
+            LogUtil.v(TAG, "fileURL=" + fileUrl);
             long start = System.currentTimeMillis();
             download(filePos, fileUrl, tagetPath, THREAD_COUNT, 0, true);
             LogUtil.e(TAG, "time = " + (System.currentTimeMillis() - start));
@@ -204,6 +204,9 @@ public class LearningDownloader {
         LogUtil.e(TAG, "codeStatus:" + codeStatus);
         if (notifyCallback) {
             if (mCallback != null) {
+                if (mInternalErrorInterupted.get()) {
+                    codeStatus = CODE_DOWNLOAD_CANCELED;
+                }
                 mCallback.onFinish(codeStatus, mCurrentTaskId, filePos, targetPath);
             }
 
@@ -215,10 +218,10 @@ public class LearningDownloader {
 
     private void retryLearningDownload(int retryTime) {
 
-        if(mInternalErrorInterupted.get()) {
+        if (mInternalErrorInterupted.get()) {
             return;
         }
-        if(retryTime > MAX_RETRY_TIMES) {
+        if (retryTime > MAX_RETRY_TIMES) {
             return;
         }
         try {
@@ -278,7 +281,7 @@ public class LearningDownloader {
 
     private boolean startDownloadBySingleThread(URL requestUrl, File targetFile, final int filePos, final int retryTimes) {
 
-        if(mInternalErrorInterupted.get()) {
+        if (mInternalErrorInterupted.get()) {
             return false;
         }
         if (retryTimes > MAX_RETRY_TIMES) {
