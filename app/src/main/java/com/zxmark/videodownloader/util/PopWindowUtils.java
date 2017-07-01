@@ -6,11 +6,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.zxmark.videodownloader.MainApplication;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.db.DownloadContentItem;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by fanlitao on 17/6/14.
@@ -19,7 +22,7 @@ import com.zxmark.videodownloader.db.DownloadContentItem;
 public class PopWindowUtils {
 
 
-    public static void showVideoMoreOptionWindow(View trigerView, boolean showRedownloadBtn, final MainListRecyclerAdapter.IPopWindowClickCallback callback) {
+    public static void showVideoMoreOptionWindow(View trigerView, boolean showDelete, final MainListRecyclerAdapter.IPopWindowClickCallback callback) {
         Context context = MainApplication.getInstance().getApplicationContext();
         View contentView = LayoutInflater.from(context).inflate(R.layout.more_option, null);
 
@@ -76,9 +79,11 @@ public class PopWindowUtils {
                 popupWindow.dismiss();
             }
         });
-        if (showRedownloadBtn) {
-            contentView.findViewById(R.id.redownload).setVisibility(View.VISIBLE);
+        if (showDelete) {
+            TextView deleteTv = (TextView) contentView.findViewById(R.id.redownload);
+            deleteTv.setText(R.string.menu_delete);
         }
+
         contentView.findViewById(R.id.redownload).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

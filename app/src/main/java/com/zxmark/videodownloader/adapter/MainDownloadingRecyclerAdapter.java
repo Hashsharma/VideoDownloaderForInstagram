@@ -235,9 +235,9 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
                         @Override
                         public void onStartDownload() {
-                            IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
-                            DownloadUtil.startForceDownload(bean.pageURL);
-                            holder.circleProgress.setVisibility(View.VISIBLE);
+                            EventUtil.getDefault().onEvent("downloading", "delete");
+                            deleteDownloadingVideo(bean, position);
+                            sendDeleteVideoBroadcast(bean.pageURL);
                         }
                     });
                 }

@@ -155,7 +155,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.moreIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopWindowUtils.showVideoMoreOptionWindow(v,true,new IPopWindowClickCallback() {
+                    PopWindowUtils.showVideoMoreOptionWindow(v,false,new IPopWindowClickCallback() {
                         @Override
                         public void onCopyAll() {
                             EventUtil.getDefault().onEvent("history", "copyAll");
