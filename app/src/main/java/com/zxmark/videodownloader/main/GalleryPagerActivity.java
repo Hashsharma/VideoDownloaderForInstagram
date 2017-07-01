@@ -337,6 +337,11 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                     bean.file = new File(filePath);
                     mAdapter.deleteItem(bean, itemView);
                     mMainViewPager.setAdapter(mAdapter);
+
+                    if(mDataList.size() == 0) {
+                        GalleryPagerActivity.this.finish();
+                        return;
+                    }
                     if (mDataList.size() == 1) {
                         mCountInfoView.setVisibility(View.GONE);
                     }
