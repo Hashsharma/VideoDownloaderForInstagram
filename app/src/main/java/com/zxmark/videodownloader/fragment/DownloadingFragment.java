@@ -352,6 +352,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 itemHolder.progressBar.setVisibility(View.GONE);
                 itemHolder.operationBtn.setVisibility(View.GONE);
                 itemHolder.taskCountView.setVisibility(View.GONE);
+                itemHolder.moreIv.setVisibility(View.VISIBLE);
             }
         }
     }

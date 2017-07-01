@@ -98,6 +98,16 @@
                 android:padding="10dip"
                 android:src="@drawable/ic_file_download_black_48dp" />
 
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="5dip"
+                android:padding="10dip"
+                android:src="@drawable/ic_more_vert_white_24dp" />
+
         </FrameLayout>
 
         <TextView

@@ -19,9 +19,7 @@ import com.zxmark.videodownloader.db.DownloadContentItem;
 public class PopWindowUtils {
 
 
-
-
-    public static void showVideoMoreOptionWindow(View trigerView, final MainListRecyclerAdapter.IPopWindowClickCallback callback) {
+    public static void showVideoMoreOptionWindow(View trigerView, boolean showRedownloadBtn, final MainListRecyclerAdapter.IPopWindowClickCallback callback) {
         Context context = MainApplication.getInstance().getApplicationContext();
         View contentView = LayoutInflater.from(context).inflate(R.layout.more_option, null);
 
@@ -78,7 +76,9 @@ public class PopWindowUtils {
                 popupWindow.dismiss();
             }
         });
-
+        if (showRedownloadBtn) {
+            contentView.findViewById(R.id.redownload).setVisibility(View.VISIBLE);
+        }
         contentView.findViewById(R.id.redownload).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,11 +90,11 @@ public class PopWindowUtils {
             }
         });
         int windowPos[] = calculatePopWindowPos(trigerView, contentView);
-        popupWindow.showAsDropDown(trigerView,  -DimensUtil.dip2px(100) + trigerView.getWidth() / 2,windowPos[1]);
+        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(100) + trigerView.getWidth() / 2, windowPos[1]);
     }
 
 
-    public static void showPlayVideoMorePopWindow(View trigerView,final IPopWindowCallback callback) {
+    public static void showPlayVideoMorePopWindow(View trigerView, final IPopWindowCallback callback) {
         Context context = MainApplication.getInstance().getApplicationContext();
         View contentView = LayoutInflater.from(context).inflate(R.layout.videoplay_more_option, null);
         View deleteView = contentView.findViewById(R.id.share);
@@ -163,22 +163,22 @@ public class PopWindowUtils {
                 popupWindow.dismiss();
             }
         });
-        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(100) + trigerView.getWidth() / 2,-DimensUtil.dip2px(15));
+        popupWindow.showAsDropDown(trigerView, -DimensUtil.dip2px(100) + trigerView.getWidth() / 2, -DimensUtil.dip2px(15));
     }
-
 
 
     /**
      * 计算出来的位置，y方向就在anchorView的上面和下面对齐显示，x方向就是与屏幕右边对齐显示
      * 如果anchorView的位置有变化，就可以适当自己额外加入偏移来修正
+     *
      * @param anchorView  呼出window的view
-     * @param contentView   window的内容布局
-     * @return window显示的左上角的xOff,yOff坐标
+     * @param contentView window的内容布局
+     * @return window显示的左上角的xOff, yOff坐标
      */
     private static int[] calculatePopWindowPos(final View anchorView, final View contentView) {
         final int windowPos[] = new int[2];
         final int anchorLoc[] = new int[2];
-         // 获取锚点View在屏幕上的左上角坐标位置
+        // 获取锚点View在屏幕上的左上角坐标位置
         anchorView.getLocationOnScreen(anchorLoc);
         final int anchorHeight = anchorView.getHeight();
         // 获取屏幕的高宽
@@ -191,20 +191,24 @@ public class PopWindowUtils {
         // 判断需要向上弹出还是向下弹出显示
         final boolean isNeedShowUp = (anchorLoc[1] + windowHeight > screenHeight);
         if (isNeedShowUp) {
-            windowPos[1] = (int)anchorView.getY() - windowHeight - anchorView.getHeight();
+            windowPos[1] = (int) anchorView.getY() - windowHeight - anchorView.getHeight();
         } else {
             windowPos[1] = -DimensUtil.dip2px(10);
         }
-        windowPos[0] = (int)anchorView.getX() - windowWidth - windowWidth;
+        windowPos[0] = (int) anchorView.getX() - windowWidth - windowWidth;
         return windowPos;
     }
 
 
     public interface IPopWindowCallback {
         void onRepost();
+
         void onShare();
+
         void launchInstagram();
+
         void onPastePageUrl();
+
         void onDelete();
     }
 }

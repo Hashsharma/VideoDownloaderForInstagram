@@ -98,8 +98,6 @@
                 android:visibility="gone"
                 android:textColor="@android:color/black"
                 android:textSize="14dip" />
-
-
         </LinearLayout>
 
         <TextView
@@ -111,7 +109,6 @@
             android:paddingBottom="10dip"
             android:paddingRight="15dip"
             android:paddingLeft="10dip"
-
             android:text="@string/option_delete"
             android:textColor="@color/repost_background"
             android:textSize="15dip" />

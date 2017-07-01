@@ -95,7 +95,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     EventUtil.getDefault().onEvent("history", "openFileList");
-                    if (new File(bean.pageHOME).exists()) {
+                    File targetFile = new File(bean.pageHOME);
+                    if (targetFile.exists() && targetFile.listFiles() != null && targetFile.listFiles().length > 0) {
                         DownloadUtil.openFileList(bean.pageHOME);
                     } else {
                         IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
@@ -154,7 +155,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.moreIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopWindowUtils.showVideoMoreOptionWindow(v, new IPopWindowClickCallback() {
+                    PopWindowUtils.showVideoMoreOptionWindow(v,true,new IPopWindowClickCallback() {
                         @Override
                         public void onCopyAll() {
                             EventUtil.getDefault().onEvent("history", "copyAll");
@@ -178,7 +179,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                             EventUtil.getDefault().onEvent("history", "copyHashTags");
                             String hashTags = bean.pageTags;
                             StringBuilder sb = new StringBuilder();
-
                             if (!TextUtils.isEmpty(hashTags)) {
                                 sb.append(hashTags);
                                 Utils.copyText2Clipboard(sb.toString());
@@ -211,6 +211,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                         public void onStartDownload() {
                             IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
                             DownloadUtil.startForceDownload(bean.pageURL);
+                            holder.circleProgress.setVisibility(View.VISIBLE);
                         }
                     });
                 }

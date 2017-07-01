@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && DownloaderDBHelper.SINGLETON.getDownloadingTaskCount() == 0) {
+                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 1) {
                             showRatingDialog();
                         }
                     }
@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity
 
 
                         //TODO:安装第三天后引导用户给评分
-                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 3 && DownloaderDBHelper.SINGLETON.getDownloadingTaskCount() == 0) {
+                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 1) {
                             if (PreferenceUtils.isRateUsOnGooglePlay()) {
                                 return;
                             }

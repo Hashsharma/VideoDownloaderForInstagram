@@ -15,8 +15,8 @@
     <string name="option_launch">打开 Instagram</string>
     <string name="option_copy">复制链接</string>
     <string name="option_share">分享</string>
-    <string name="menu_download_video">下载视频</string>
-    <string name="menu_download_image">下载图片</string>
+    <string name="menu_download_video">下载</string>
+    <string name="menu_download_image">下载缩略图</string>
     <string name="menu_delete">删除</string>
     <string-array name="fan_labels">
         <item>@string/menu_download_video</item>

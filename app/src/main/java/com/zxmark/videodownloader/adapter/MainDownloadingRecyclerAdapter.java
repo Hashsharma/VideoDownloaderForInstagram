@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.bumptech.glide.Glide;
@@ -39,7 +40,9 @@ import com.zxmark.videodownloader.util.FileUtils;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
+import com.zxmark.videodownloader.util.PopWindowUtils;
 import com.zxmark.videodownloader.util.Utils;
+import com.zxmark.videodownloader.widget.IToast;
 
 import java.io.File;
 import java.util.List;
@@ -174,6 +177,71 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 holder.titleTv.setText(bean.pageTitle);
                 holder.titleTv.setVisibility(View.VISIBLE);
             }
+
+            holder.moreIv.setVisibility(View.GONE);
+            holder.moreIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopWindowUtils.showVideoMoreOptionWindow(v, false, new MainListRecyclerAdapter.IPopWindowClickCallback() {
+                        @Override
+                        public void onCopyAll() {
+                            EventUtil.getDefault().onEvent("downloading", "copyAll");
+                            String title = bean.pageTitle;
+                            String hashTags = bean.pageTags;
+                            StringBuilder sb = new StringBuilder(bean.pageURL);
+                            if (!TextUtils.isEmpty(title)) {
+                                sb.append(title);
+                            }
+
+                            if (!TextUtils.isEmpty(hashTags)) {
+                                sb.append(hashTags);
+                            }
+
+                            Utils.copyText2Clipboard(sb.toString());
+
+                        }
+
+                        @Override
+                        public void onCopyHashTags() {
+                            EventUtil.getDefault().onEvent("downloading", "copyHashTags");
+                            String hashTags = bean.pageTags;
+                            StringBuilder sb = new StringBuilder();
+                            if (!TextUtils.isEmpty(hashTags)) {
+                                sb.append(hashTags);
+                                Utils.copyText2Clipboard(sb.toString());
+                            }
+                        }
+
+                        @Override
+                        public void launchAppByUrl() {
+                            EventUtil.getDefault().onEvent("downloading", "launchInstagramByURL");
+                            if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
+                                Utils.openInstagramByUrl(bean.pageURL);
+                            }
+                        }
+
+                        @Override
+                        public void onPasteSharedUrl() {
+                            EventUtil.getDefault().onEvent("downloading", "pasteURL");
+                            if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
+                                Utils.copyText2Clipboard(bean.pageURL);
+                            }
+
+                        }
+
+                        @Override
+                        public void onShare() {
+                        }
+
+                        @Override
+                        public void onStartDownload() {
+                            IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
+                            DownloadUtil.startForceDownload(bean.pageURL);
+                            holder.circleProgress.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            });
         } else if (baseHolder instanceof NativeAdItemHolder) {
             final NativeAdItemHolder holder = (NativeAdItemHolder) baseHolder;
             if (bean.facebookNativeAd != null) {
