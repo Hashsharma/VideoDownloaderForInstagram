@@ -126,6 +126,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 @Override
                 public void onFanButtonClicked(int index) {
                     holder.fanMenuButtons.toggleShow();
+                    LogUtil.e("downloading","onFanButtonClicked:"  + bean.pageTitle);
                     if (index == 0) {
                         EventUtil.getDefault().onEvent("downloading", "startDownload");
                         holder.progressBar.setProgress(0);
@@ -136,7 +137,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                         DownloadUtil.downloadThumbnail(bean.pageURL, bean.pageThumb);
                     } else if (index == 2) {
                         EventUtil.getDefault().onEvent("downloading", "delete");
-                        deleteDownloadingVideo(bean, position);
+                        deleteDownloadingVideo(bean);
                         sendDeleteVideoBroadcast(bean.pageURL);
                     }
                 }
@@ -237,7 +238,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                         @Override
                         public void onStartDownload() {
                             EventUtil.getDefault().onEvent("downloading", "delete");
-                            deleteDownloadingVideo(bean, position);
+                            deleteDownloadingVideo(bean);
                             sendDeleteVideoBroadcast(bean.pageURL);
                         }
                     });
@@ -331,12 +332,12 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     }
 
     //TODO:最后一个位置有问题
-    private void deleteDownloadingVideo(final DownloadContentItem bean, int positoin) {
-        mDataList.remove(bean);
-        if (mDataList.size() - 1 == positoin) {
-            notifyDataSetChanged();
-        } else {
-            notifyItemRemoved(positoin);
+    private void deleteDownloadingVideo(final DownloadContentItem bean) {
+
+        int index = mDataList.indexOf(bean);
+        if(index > -1) {
+            notifyItemRemoved(index);
+            mDataList.remove(index);
         }
         DownloadingTaskList.SINGLETON.intrupted(bean.pageURL);
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {

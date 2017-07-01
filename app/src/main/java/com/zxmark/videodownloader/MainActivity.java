@@ -404,7 +404,6 @@ public class MainActivity extends AppCompatActivity
                             mViewPagerAdapter.getVideoHistoryFragment().onAddNewDownloadedFile(path);
                         }
 
-
                         //TODO:安装第三天后引导用户给评分
                         if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 1) {
                             if (PreferenceUtils.isRateUsOnGooglePlay()) {

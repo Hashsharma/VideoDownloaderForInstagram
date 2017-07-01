@@ -239,7 +239,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     private void unRegisterLocalBroadcast() {
-        if(isAdded()) {
+        if (isAdded()) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mUpdateDataReceiver);
         }
     }
@@ -352,6 +352,9 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 itemHolder.progressBar.setVisibility(View.GONE);
                 itemHolder.operationBtn.setVisibility(View.GONE);
                 itemHolder.taskCountView.setVisibility(View.GONE);
+                if (itemHolder.fanMenuButtons.getVisibility() == View.VISIBLE) {
+                    itemHolder.fanMenuButtons.toggleShow();
+                }
                 itemHolder.moreIv.setVisibility(View.VISIBLE);
             }
         }
