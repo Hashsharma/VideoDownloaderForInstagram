@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -565,12 +566,21 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onDownloadFromClipboard() {
-        final ClipboardManager cb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        String pastUrl = cb.getText().toString();
-        if (!TextUtils.isEmpty(pastUrl)) {
-            startDownload(pastUrl);
+    public void onDownloadFromClipboard(View view, String inputURL) {
+        if (isAdded()) {
+
+            hideInputMethod(view, getActivity());
+            if (TextUtils.isEmpty(inputURL)) {
+                IToast.makeText(getActivity(), R.string.not_support_url, Toast.LENGTH_SHORT).show();
+            } else {
+                startDownload(inputURL);
+            }
         }
+    }
+
+    private void hideInputMethod(View view, Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 

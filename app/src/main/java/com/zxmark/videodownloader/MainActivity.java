@@ -351,6 +351,10 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onPublishProgress(final String pageURL, final int filePostion, final int progress) throws RemoteException {
 
+            if(isFinishing()) {
+                return;
+            }
+
             if (mCurrentPagePosition == 0) {
                 if (mViewPagerAdapter != null && mViewPagerAdapter.getDownloadingFragment() != null) {
                     mViewPagerAdapter.getDownloadingFragment().publishProgress(pageURL, filePostion, progress);
@@ -366,6 +370,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceiveNewTask(final String pageURL) throws RemoteException {
             LogUtil.v("main", "onReceiveNewTask:" + pageURL);
+            if(isFinishing()) {
+                return;
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -379,6 +386,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onStartDownload(final String path) throws RemoteException {
             LogUtil.v("start", "onStartDownload:" + path);
+            if(isFinishing()) {
+                return;
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -392,6 +402,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onDownloadSuccess(final String path) throws RemoteException {
+
+            if(isFinishing()) {
+                return;
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -416,8 +430,6 @@ public class MainActivity extends AppCompatActivity
                             showRatingDialog();
                         }
                     }
-
-
                 }
             });
         }

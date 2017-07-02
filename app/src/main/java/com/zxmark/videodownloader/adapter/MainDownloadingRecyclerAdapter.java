@@ -301,24 +301,15 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             holder.downloadBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.downloadBtn.setVisibility(View.GONE);
                     mClickedPasteBtn = true;
                     EventUtil.getDefault().onEvent("download", "Click Main Paste to Download");
                     if (callback != null) {
-                        callback.onDownloadFromClipboard();
+                        callback.onDownloadFromClipboard(holder.inputUrl,holder.inputUrl.getText().toString());
                     }
+
+                    holder.inputUrl.setText("");
                 }
             });
-
-            if (mClickedPasteBtn) {
-                holder.downloadBtn.setVisibility(View.GONE);
-            } else {
-                if (VideoDownloadFactory.getInstance().needShowPasteBtn()) {
-                    holder.downloadBtn.setVisibility(View.VISIBLE);
-                } else {
-                    holder.downloadBtn.setVisibility(View.GONE);
-                }
-            }
         }
 
     }
@@ -334,7 +325,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     private void deleteDownloadingVideo(final DownloadContentItem bean) {
 
         int index = mDataList.indexOf(bean);
-        if(index > -1) {
+        if (index > -1) {
             notifyItemRemoved(index);
             mDataList.remove(index);
         }
@@ -362,7 +353,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     public interface IBtnCallback {
         public void showHowTo();
 
-        void onDownloadFromClipboard();
+        void onDownloadFromClipboard(View view,String httpURL);
 
     }
 
