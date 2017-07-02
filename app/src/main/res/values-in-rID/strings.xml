@@ -66,4 +66,7 @@
 	<string name="option_copy_tags">Salin HashTags</string>
 	<string name="btn_check_url">Periksa URL</string>
 	<string name="option_redownload">Re-Download</string>
+
+	<string name="input_url">Silahkan masukan URLnya</string>
+	<string name="request_new_feature">Meminta Fitur Baru</string>
 </resources>

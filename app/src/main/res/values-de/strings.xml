@@ -71,4 +71,8 @@
 
 
 	<string name="option_redownload">Re-Download</string>
+
+
+	<string name="input_url">Bitte geben Sie die URL ein</string>
+	<string name="request_new_feature">Neues Feature anfordern</string>
 </resources>

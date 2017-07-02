@@ -69,4 +69,8 @@
 	<string name = "btn_check_url">ตรวจสอบ URL</string>
 
 	<string name="option_redownload">Re-ดาวน์โหลด</string>
+
+
+	<string name="input_url">โปรดใส่ URL</string>
+	<string name="request_new_feature">ขอรับคุณลักษณะใหม่</string>
 </resources>

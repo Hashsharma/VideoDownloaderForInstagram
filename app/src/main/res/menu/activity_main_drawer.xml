@@ -10,18 +10,24 @@
             android:id="@+id/nav_gallery"
             android:icon="@drawable/icon_howto"
             android:title="@string/how_to" />
-            <item
-                android:id="@+id/nav_rate"
-                android:icon="@drawable/icon_rate"
-                android:title="@string/nav_rate_us" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/nav_send" />
+
+        <item
+            android:id="@+id/nav_request_new_feature"
+            android:icon="@drawable/ic_report_black_24dp"
+            android:title="@string/request_new_feature" />
+
+        <item
+            android:id="@+id/nav_rate"
+            android:icon="@drawable/icon_rate"
+            android:title="@string/nav_rate_us" />
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/nav_send" />
 
         <item
             android:id="@+id/nav_change_language"
             android:icon="@drawable/ic_language_black_48dp"
             android:title="@string/nav_change_language" />
-</group>
+    </group>
 </menu>

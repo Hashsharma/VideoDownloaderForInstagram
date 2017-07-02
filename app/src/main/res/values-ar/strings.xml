@@ -70,4 +70,6 @@
 
 	<string name="option_redownload">إعادة تحميل</string>
 
+	<string name="input_url">الرجاء إدخال عنوان ورل</string>
+	<string name="request_new_feature">طلب ميزة جديدة</string>
 </resources>

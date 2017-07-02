@@ -80,9 +80,11 @@
     <string name="option_copy_tags">HashTags 복사</string>
         
     <string name="btn_check_url">URL 확인</string>
-
-
-
     <string name="option_redownload">다시 다운로드</string>
+
+
+    <string name="input_url">URL을 입력하십시오.</string>
+    <string name="request_new_feature">새로운 기능 요청</string>
+
 
 </resources>

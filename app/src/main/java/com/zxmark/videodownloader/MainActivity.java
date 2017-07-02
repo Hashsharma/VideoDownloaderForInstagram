@@ -223,6 +223,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_change_language) {
             EventUtil.getDefault().onEvent("main", "changeLanguage");
             showLocaleSelectDialog();
+        } else if (id == R.id.nav_request_new_feature) {
+            Utils.sendMeEmail();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

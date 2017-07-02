@@ -67,4 +67,8 @@
 
 
 	<string name="option_redownload">re-descargar</string>
+
+
+	<string name="input_url">Por favor ingrese la URL</string>
+	<string name="request_new_feature">Solicitar nueva característica</string>
 </resources>

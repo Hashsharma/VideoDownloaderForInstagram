@@ -82,4 +82,9 @@
     <string name="btn_check_url">Kiểm tra URL</string>
 
     <string name="option_redownload">tái tải</string>
+
+
+
+    <string name="input_url">Vui lòng nhập URL</string>
+    <string name="request_new_feature">Yêu cầu tính năng mới</string>
 </resources>

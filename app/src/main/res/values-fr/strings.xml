@@ -71,4 +71,8 @@
 
 	<string name="option_redownload">Retéléchargement</string>
 
+
+	<string name="input_url">Veuillez saisir l\'URL</string>
+	<string name="request_new_feature">Demander une nouvelle fonctionnalité</string>
+
 </resources>

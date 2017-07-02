@@ -82,4 +82,9 @@
     <string name="btn_check_url"> URL\'yi kontrol et</string>
 
     <string name="option_redownload">Yeniden indir</string>
+
+
+    <string name="input_url">Lütfen URL\'yi giriniz</string>
+    <string name="request_new_feature">Yeni Özellik İste</string>
+
 </resources>

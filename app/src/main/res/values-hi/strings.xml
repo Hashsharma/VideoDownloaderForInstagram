@@ -69,4 +69,7 @@
 
 
 	<string name="option_redownload">फिर से डाउनलोड</string>
+
+	<string name="input_url">कृपया यूआरएल इनपुट करें</string>
+	<string name="request_new_feature">नई सुविधा का अनुरोध करें</string>
 </resources>

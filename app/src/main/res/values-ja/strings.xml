@@ -68,10 +68,11 @@
 	<string name="option_copy_all">すべてをコピー</string>
 	<string name="option_copy_tags">コピー HashTags</string>
 	<string name="btn_check_url">URLを確認する</string>
-
-
-
-
 	<string name="option_redownload">再ダウンロード</string>
+
+
+	<string name="input_url">URLを入力してください</string>
+	<string name="request_new_feature">新しい機能をリクエストする</string>
+
 
 </resources>

@@ -81,4 +81,9 @@
     <string name="btn_check_url">Перевірити URL-адресу</string>
 
     <string name="option_redownload">перезавантаження</string>
+
+
+    <string name="input_url">Введіть URL-адресуL</string>
+    <string name="request_new_feature">Запитати нову функцію</string>
+
 </resources>

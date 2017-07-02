@@ -82,4 +82,9 @@
 
     <string name="option_redownload">Повторная загрузка</string>
 
+    <string name="input_url">Введите URL-адрес</string>
+    <string name="request_new_feature">Запросить новую функцию</string>
+
+
+
 </resources>

@@ -69,4 +69,8 @@
     <string name="option_copy_tags">复制HashTags</string>
     <string name="btn_check_url">解析URL</string>
     <string name="option_redownload">重新下载</string>
+
+
+    <string name="input_url">请输入网址</string>
+    <string name="request_new_feature">请求添加新功能</string>
 </resources>

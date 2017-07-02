@@ -134,4 +134,9 @@
     <!-- -->
 
     <string name="option_redownload">Download Again</string>
+
+
+    <!-- -->
+    <string name="input_url">Please input the URL</string>
+    <string name="request_new_feature">Request New Feature</string>
 </resources>

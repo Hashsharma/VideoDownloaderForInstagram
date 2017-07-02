@@ -66,8 +66,9 @@
 	<string name="option_copy_all">Copia tutto</string>
 	<string name="option_copy_tags">Copia HashTags</string>
 	<string name="btn_check_url">Controlla URL</string>
-
-
-
 	<string name="option_redownload">Re-download</string>
+
+
+	<string name="input_url">Inserisci l\'URL</string>
+	<string name="request_new_feature">Richiedi nuova funzionalità</string>
 </resources>

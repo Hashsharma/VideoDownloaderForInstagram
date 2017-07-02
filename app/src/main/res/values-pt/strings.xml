@@ -83,4 +83,8 @@
 
     <string name="option_redownload">re-download</string>
 
+    <string name="input_url">Digite o URL</string>
+    <string name="request_new_feature">Solicitar novo recurso</string>
+
+
 </resources>

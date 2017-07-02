@@ -84,4 +84,8 @@
     <string name="btn_check_url">檢查URL</string>
 
     <string name="option_redownload">重新下載</string>
+
+
+    <string name="input_url">請輸入網址</string>
+    <string name="request_new_feature">請求添加新功能</string>
 </resources>
