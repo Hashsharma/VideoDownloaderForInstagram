@@ -268,6 +268,10 @@ public class DownloadContentItem implements BaseColumns {
                     childDirectory = targetFileName;
                 }
             }
+
+            if(TextUtils.isEmpty(childDirectory)) {
+                childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
+            }
         } else {
             childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
         }
