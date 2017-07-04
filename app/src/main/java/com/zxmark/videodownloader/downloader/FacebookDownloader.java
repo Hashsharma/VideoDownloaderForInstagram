@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 public class FacebookDownloader extends BaseDownloader {
 
 
-
     @Override
     public String getVideoUrl(String content) {
 
@@ -62,7 +61,6 @@ public class FacebookDownloader extends BaseDownloader {
         Log.v("fan2", "ma=" + ma);
 
         if (ma.find()) {
-            Log.v("fan2", "" + ma.group());
             imageUrl = ma.group(1);
             LogUtil.e("facebook", "imageUrl=" + imageUrl);
             if (!TextUtils.isEmpty(imageUrl)) {
@@ -97,7 +95,6 @@ public class FacebookDownloader extends BaseDownloader {
     }
 
     public String getVideoUrl2(String content, DownloadContentItem item) {
-
         String regex;
         String videoUrl = null;
         regex = "href=\"/video_redirect/\\?src=(.*?)\"";
@@ -109,9 +106,9 @@ public class FacebookDownloader extends BaseDownloader {
             LogUtil.e("facebook", "" + ma.group());
             videoUrl = ma.group(1);
             if (!TextUtils.isEmpty(videoUrl)) {
-                if(videoUrl.startsWith("http")) {
+                if (videoUrl.startsWith("http")) {
                     try {
-                        videoUrl =  URLDecoder.decode(videoUrl,"utf-8");
+                        videoUrl = URLDecoder.decode(videoUrl, "utf-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
 
@@ -126,14 +123,44 @@ public class FacebookDownloader extends BaseDownloader {
     }
 
 
+    public String getVideoUrl3(String content, DownloadContentItem item) {
+        String regex;
+        String videoUrl = null;
+        regex = "src(.*?mp4?.*?)&quot;";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+        while (ma.find()) {
+            videoUrl = ma.group(1);
+            if (!TextUtils.isEmpty(videoUrl)) {
+                if (videoUrl.contains(".mp4?")) {
+                    try {
+                        videoUrl = URLDecoder.decode(videoUrl, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+
+                    }
+
+                    videoUrl = videoUrl.substring(videoUrl.indexOf("http"));
+                    videoUrl = Utils.replaceEscapteSequence(videoUrl);
+                    LogUtil.e("facebook:", "videoUrl:" + videoUrl);
+                    item.addVideo(videoUrl);
+                }
+
+            }
+        }
+        return videoUrl;
+    }
+
 
     @Override
     public DownloadContentItem startSpideThePage(String htmlUrl) {
         LogUtil.e("facebook", "startSpideThePage:" + htmlUrl);
         String content = startRequest(htmlUrl);
         LogUtil.e("facebook", "content:" + content);
+        // Utils.writeFile(content);
         DownloadContentItem data = new DownloadContentItem();
         getVideoUrl2(content, data);
+        getVideoUrl3(content, data);
         getImageURL(content, data);
         data.pageURL = htmlUrl;
         data.pageTitle = DownloadUtil.getFileNameByUrl(htmlUrl);
@@ -146,7 +173,7 @@ public class FacebookDownloader extends BaseDownloader {
     private String getVideoThumbnail(String content) {
         String regex;
         String videoUrl = null;
-        regex = "<div class=\"bl\"><img src=\"(.*?)\"";
+        regex = "\"background: url\\(&quot;(.*?)&quot;\\)";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
         LogUtil.e("facebook", "ma=" + ma);
@@ -155,17 +182,15 @@ public class FacebookDownloader extends BaseDownloader {
             LogUtil.e("facebook", "" + ma.group());
             videoUrl = ma.group(1);
             if (!TextUtils.isEmpty(videoUrl)) {
-                if(videoUrl.startsWith("http")) {
-                    try {
-                        videoUrl =  URLDecoder.decode(videoUrl,"utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                try {
+                    videoUrl = URLDecoder.decode(videoUrl, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
 
-                    }
                 }
                 videoUrl = Utils.replaceEscapteSequence(videoUrl);
             }
-            LogUtil.e("facebook", "thumbnail=" + videoUrl);
+
         }
         return videoUrl;
     }

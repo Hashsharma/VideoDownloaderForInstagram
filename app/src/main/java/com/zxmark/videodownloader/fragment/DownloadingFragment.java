@@ -269,9 +269,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                                 int newProgrees = totalProgress * 100 / count;
                                 if (newProgrees >= itemHolder.progressBar.getProgress() && newProgrees <= 100) {
                                     itemHolder.progressBar.setProgress(newProgrees);
-                                    //if (newProgrees >= 100) {
-                                    //  itemHolder.progressBar.setVisibility(View.GONE);
-                                    //}
                                 }
                             }
                         }

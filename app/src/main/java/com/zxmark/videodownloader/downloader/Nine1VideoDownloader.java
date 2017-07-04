@@ -63,6 +63,8 @@ public class Nine1VideoDownloader extends BaseDownloader {
     @Override
     public DownloadContentItem startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
+        LogUtil.e("91","startSpideThePage:" + content);
+        Utils.writeFile(content);
         DownloadContentItem downloadContentItem = new DownloadContentItem();
         downloadContentItem.pageURL = htmlUrl;
         final String videoURL = getVideoUrl(content);

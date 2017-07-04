@@ -40,7 +40,7 @@ public class Utils {
     public static final String HOST_FACEBOOK = "facebook.com";
     public static final String HOST_XVIDEOS = "xvideos.com";
     public static final String HOST_YOUJI = "youjizz.com";
-    public static final String EXPIRE_SUFFIX_ARRAY [] = new String[]{HOST_91,HOST_FACEBOOK,HOST_XVIDEOS,HOST_YOUJI};
+    public static final String EXPIRE_SUFFIX_ARRAY[] = new String[]{HOST_91, HOST_FACEBOOK, HOST_XVIDEOS, HOST_YOUJI};
 
     public static void openInstagramByUrl(String url) {
 
@@ -238,8 +238,7 @@ public class Utils {
     }
 
 
-
-    public static  void writeFile(String content) {
+    public static void writeFile(String content) {
         File writename = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "91.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
         try {
             writename.createNewFile(); // 创建新文件
@@ -253,13 +252,12 @@ public class Utils {
     }
 
 
-    public  static String replaceEscapteSequence(String rawUrl) {
+    public static String replaceEscapteSequence(String rawUrl) {
         if (TextUtils.isEmpty(rawUrl)) {
             return rawUrl;
         }
-        return rawUrl.replace("&amp;", "&");
+        rawUrl = rawUrl.replace("&amp;", "&");
+        rawUrl = rawUrl.replace("\\/", "/");
+        return rawUrl;
     }
-
-
-
 }
