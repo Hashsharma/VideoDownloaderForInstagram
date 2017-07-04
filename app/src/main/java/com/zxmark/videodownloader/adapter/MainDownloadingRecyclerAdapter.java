@@ -92,7 +92,9 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
         if (baseHolder instanceof ItemViewHolder) {
             final ItemViewHolder holder = (ItemViewHolder) baseHolder;
-
+            if (holder.fanMenuButtons.getVisibility() == View.VISIBLE) {
+                holder.fanMenuButtons.toggleShow();
+            }
             holder.operationBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -162,70 +164,77 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 holder.titleTv.setVisibility(View.VISIBLE);
             }
 
-            holder.moreIv.setVisibility(View.GONE);
-            holder.moreIv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PopWindowUtils.showVideoMoreOptionWindow(v, true, new MainListRecyclerAdapter.IPopWindowClickCallback() {
-                        @Override
-                        public void onCopyAll() {
-                            EventUtil.getDefault().onEvent("downloading", "copyAll");
-                            String title = bean.pageTitle;
-                            String hashTags = bean.pageTags;
-                            StringBuilder sb = new StringBuilder(bean.pageURL);
-                            if (!TextUtils.isEmpty(title)) {
-                                sb.append(title);
-                            }
+            if (bean.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED) {
+                holder.moreIv.setVisibility(View.VISIBLE);
+                holder.taskCountView.setVisibility(View.GONE);
+                holder.progressBar.setVisibility(View.GONE);
+                holder.operationBtn.setVisibility(View.GONE);
+            } else {
+                holder.moreIv.setVisibility(View.GONE);
+                holder.moreIv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PopWindowUtils.showVideoMoreOptionWindow(v, true, new MainListRecyclerAdapter.IPopWindowClickCallback() {
+                            @Override
+                            public void onCopyAll() {
+                                EventUtil.getDefault().onEvent("downloading", "copyAll");
+                                String title = bean.pageTitle;
+                                String hashTags = bean.pageTags;
+                                StringBuilder sb = new StringBuilder(bean.pageURL);
+                                if (!TextUtils.isEmpty(title)) {
+                                    sb.append(title);
+                                }
 
-                            if (!TextUtils.isEmpty(hashTags)) {
-                                sb.append(hashTags);
-                            }
+                                if (!TextUtils.isEmpty(hashTags)) {
+                                    sb.append(hashTags);
+                                }
 
-                            Utils.copyText2Clipboard(sb.toString());
-
-                        }
-
-                        @Override
-                        public void onCopyHashTags() {
-                            EventUtil.getDefault().onEvent("downloading", "copyHashTags");
-                            String hashTags = bean.pageTags;
-                            StringBuilder sb = new StringBuilder();
-                            if (!TextUtils.isEmpty(hashTags)) {
-                                sb.append(hashTags);
                                 Utils.copyText2Clipboard(sb.toString());
-                            }
-                        }
 
-                        @Override
-                        public void launchAppByUrl() {
-                            EventUtil.getDefault().onEvent("downloading", "launchInstagramByURL");
-                            if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
-                                Utils.openInstagramByUrl(bean.pageURL);
-                            }
-                        }
-
-                        @Override
-                        public void onPasteSharedUrl() {
-                            EventUtil.getDefault().onEvent("downloading", "pasteURL");
-                            if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
-                                Utils.copyText2Clipboard(bean.pageURL);
                             }
 
-                        }
+                            @Override
+                            public void onCopyHashTags() {
+                                EventUtil.getDefault().onEvent("downloading", "copyHashTags");
+                                String hashTags = bean.pageTags;
+                                StringBuilder sb = new StringBuilder();
+                                if (!TextUtils.isEmpty(hashTags)) {
+                                    sb.append(hashTags);
+                                    Utils.copyText2Clipboard(sb.toString());
+                                }
+                            }
 
-                        @Override
-                        public void onShare() {
-                        }
+                            @Override
+                            public void launchAppByUrl() {
+                                EventUtil.getDefault().onEvent("downloading", "launchInstagramByURL");
+                                if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
+                                    Utils.openInstagramByUrl(bean.pageURL);
+                                }
+                            }
 
-                        @Override
-                        public void onStartDownload() {
-                            EventUtil.getDefault().onEvent("downloading", "delete");
-                            deleteDownloadingVideo(bean);
-                            sendDeleteVideoBroadcast(bean.pageURL);
-                        }
-                    });
-                }
-            });
+                            @Override
+                            public void onPasteSharedUrl() {
+                                EventUtil.getDefault().onEvent("downloading", "pasteURL");
+                                if (bean != null && !TextUtils.isEmpty(bean.pageURL)) {
+                                    Utils.copyText2Clipboard(bean.pageURL);
+                                }
+
+                            }
+
+                            @Override
+                            public void onShare() {
+                            }
+
+                            @Override
+                            public void onStartDownload() {
+                                EventUtil.getDefault().onEvent("downloading", "delete");
+                                deleteDownloadingVideo(bean);
+                                sendDeleteVideoBroadcast(bean.pageURL);
+                            }
+                        });
+                    }
+                });
+            }
         } else if (baseHolder instanceof NativeAdItemHolder) {
             final NativeAdItemHolder holder = (NativeAdItemHolder) baseHolder;
             if (bean.facebookNativeAd != null) {

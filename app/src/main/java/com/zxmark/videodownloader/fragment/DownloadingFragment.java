@@ -386,42 +386,44 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
     private void startLoadFacebookAd() {
         if (getActivity() != null && isAdded()) {
-            nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
-            nativeAd.setAdListener(new AdListener() {
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    LogUtil.v("facebook", "onError:" + adError);
-                }
+            if (mFirstAdBean == null) {
+                nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
+                nativeAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onError(Ad ad, AdError adError) {
+                        LogUtil.v("facebook", "onError:" + adError);
+                    }
 
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    onFacebookAdLoaded(ad);
-                }
+                    @Override
+                    public void onAdLoaded(Ad ad) {
+                        onFacebookAdLoaded(ad);
+                    }
 
-                @Override
-                public void onAdClicked(Ad ad) {
-                    LogUtil.e("facebook", "onAdClicked");
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_DOWNLOADING_VIDEO);
-                            final int position = mDataList.indexOf(mFirstAdBean);
-                            if (position >= 0) {
-                                mDataList.remove(position);
-                                mAdapter.notifyItemRemoved(position);
-                                mFirstAdBean = null;
+                    @Override
+                    public void onAdClicked(Ad ad) {
+                        LogUtil.e("facebook", "onAdClicked");
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_DOWNLOADING_VIDEO);
+                                final int position = mDataList.indexOf(mFirstAdBean);
+                                if (position >= 0) {
+                                    mDataList.remove(position);
+                                    mAdapter.notifyItemRemoved(position);
+                                    mFirstAdBean = null;
+                                }
                             }
-                        }
-                    }, 1000);
-                }
+                        }, 1000);
+                    }
 
-                @Override
-                public void onLoggingImpression(Ad ad) {
+                    @Override
+                    public void onLoggingImpression(Ad ad) {
 
-                }
-            });
+                    }
+                });
 
-            nativeAd.loadAd();
+                nativeAd.loadAd();
+            }
         }
     }
 
