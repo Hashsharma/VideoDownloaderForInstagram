@@ -73,8 +73,13 @@ public class DownloadService extends Service {
             super.handleMessage(msg);
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
                 if (msg.obj != null) {
-                    IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
-                    DownloadService.this.notifyDownloadFinished((String) msg.obj);
+                    String pageURL = (String) msg.obj;
+                    boolean isExistURL = DownloaderDBHelper.SINGLETON.isExistPageURL(pageURL);
+                    LogUtil.e("download", "isExistURL:" + isExistURL);
+                    if (isExistURL) {
+                        IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
+                        DownloadService.this.notifyDownloadFinished((String) msg.obj);
+                    }
                 }
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();

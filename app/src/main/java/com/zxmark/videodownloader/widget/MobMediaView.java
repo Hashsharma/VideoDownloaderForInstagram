@@ -135,8 +135,7 @@ public class MobMediaView extends FrameLayout {
                     playVideo(videoPath);
                 }
             });
-            LogUtil.v("view", "getTag=" + getTag() + ":" + getTag().equals(0));
-            if (getTag().equals(0)) {
+            if ("0".equals(getTag())) {
                 playVideo(videoPath);
             }
         } else {

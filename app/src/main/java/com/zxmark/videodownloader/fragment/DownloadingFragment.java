@@ -448,15 +448,23 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
         ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_DOWNLOADING_VIDEO, mFirstAdBean);
 
-        int lastPosition = mLayoutManager.findLastVisibleItemPosition();
-        LogUtil.e("facebook", "insert1FacebookAd");
-        int insertADPosition = lastPosition + 1;
-        if (insertADPosition <= mDataList.size() - 1) {
-            mDataList.add(insertADPosition, mFirstAdBean);
-            mAdapter.notifyItemInserted(insertADPosition);
-        } else {
+//        int lastPosition = mLayoutManager.findLastVisibleItemPosition();
+//        LogUtil.e("facebook", "insert1FacebookAd");
+//        int insertADPosition = lastPosition + 1;
+//        if (insertADPosition <= mDataList.size() - 1) {
+//            mDataList.add(insertADPosition, mFirstAdBean);
+//            mAdapter.notifyItemInserted(insertADPosition);
+//        } else {
+//            mDataList.add(mFirstAdBean);
+//            mAdapter.notifyItemInserted(insertADPosition);
+//        }
+
+        if(mDataList.size() == 1) {
             mDataList.add(mFirstAdBean);
-            mAdapter.notifyItemInserted(insertADPosition);
+            mAdapter.notifyItemInserted(1);
+        } else if(mDataList.size() > 1){
+            mDataList.add(1,mFirstAdBean);
+            mAdapter.notifyItemInserted(1);
         }
     }
 
