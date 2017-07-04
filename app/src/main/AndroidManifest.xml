@@ -117,17 +117,6 @@
         <meta-data
             android:name="app_license"
             android:value="60f54548c2b2621c7b323b8020efc46a" />
-        <provider
-            android:name="com.duapps.ad.stats.DuAdCacheProvider"
-            android:authorities="com.imobapp.videodownloaderforinstagram.DuAdCacheProvider"
-            android:exported="false"></provider>
-        <receiver android:name="com.duapps.ad.base.PackageAddReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

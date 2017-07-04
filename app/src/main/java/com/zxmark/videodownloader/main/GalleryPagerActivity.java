@@ -2,18 +2,13 @@ package com.zxmark.videodownloader.main;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.model.GenericLoaderFactory;
-import com.duapps.ad.DuAdListener;
-import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
@@ -22,14 +17,11 @@ import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.BaseActivity;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.adapter.ImageGalleryPagerAdapter;
-import com.zxmark.videodownloader.bean.VideoBean;
-import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.EventUtil;
-import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
@@ -145,13 +137,12 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                                 }
                                 if (item != null) {
                                     mAdBean = new PagerBean();
-                                    if (item.duNativeAd != null) {
-                                        mAdBean.duNativeAd = item.duNativeAd;
-                                    } else {
+                                    if (item.facebookNativeAd != null) {
                                         mAdBean.facebookNativeAd = item.facebookNativeAd;
+                                        mDataList.add(mAdBean);
                                     }
-                                    mDataList.add(mAdBean);
-                                }
+                                    }
+
                             } else {
 
                             }
@@ -165,7 +156,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                                 if (!ADCache.SHOW_AD) {
                                     return;
                                 }
-                                showNativeAd();
+                                startLoadFacebookAd();
                             }
                         }
                     }
@@ -197,34 +188,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
             }
         }
 
-    }
-
-    private DuNativeAd mDuNativeAd;
-
-    private void showNativeAd() {
-        if (mAdBean == null) {
-            mDuNativeAd = new DuNativeAd(this, PID, 2);
-            mDuNativeAd.setMobulaAdListener(new DuAdListener() {
-                @Override
-                public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
-                    LogUtil.e("facebook", "DuNative:OnError:" + adError);
-                    startLoadFacebookAd();
-                }
-
-                @Override
-                public void onAdLoaded(DuNativeAd duNativeAd) {
-                    LogUtil.e("main", "DuAdLoaded.onAdLoaded" + duNativeAd);
-                    onDuNativeAdLoaded(duNativeAd);
-                }
-
-                @Override
-                public void onClick(DuNativeAd duNativeAd) {
-
-                }
-            });
-            mDuNativeAd.load();
-//
-        }
     }
 
 
@@ -277,21 +240,10 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         mAdapter.notifyDataSetChanged();
     }
 
-    private void onDuNativeAdLoaded(DuNativeAd duNativeAd) {
-        PagerBean adBean = new PagerBean();
-        adBean.duNativeAd = duNativeAd;
-        DownloadContentItem downloadContentItem = new DownloadContentItem();
-        downloadContentItem.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
-        downloadContentItem.duNativeAd = duNativeAd;
-        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_GALLERY, downloadContentItem);
-        mDataList.add(adBean);
-        mAdapter.notifyDataSetChanged();
-    }
 
     public static class PagerBean {
         public File file;
         public NativeAd facebookNativeAd;
-        public DuNativeAd duNativeAd;
 
 
         @Override

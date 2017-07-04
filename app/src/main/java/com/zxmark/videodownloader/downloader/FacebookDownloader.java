@@ -157,7 +157,6 @@ public class FacebookDownloader extends BaseDownloader {
         LogUtil.e("facebook", "startSpideThePage:" + htmlUrl);
         String content = startRequest(htmlUrl);
         LogUtil.e("facebook", "content:" + content);
-        // Utils.writeFile(content);
         DownloadContentItem data = new DownloadContentItem();
         getVideoUrl2(content, data);
         getVideoUrl3(content, data);

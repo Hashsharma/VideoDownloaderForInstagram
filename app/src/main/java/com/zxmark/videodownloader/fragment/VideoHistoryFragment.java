@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,32 +19,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.duapps.ad.DuAdListener;
-import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
-import com.zxmark.videodownloader.DownloaderBean;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.adapter.ItemViewHolder;
-import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
-import com.zxmark.videodownloader.bean.VideoBean;
-import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
-import com.zxmark.videodownloader.db.DownloaderContentProvider;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.ADCache;
-import com.zxmark.videodownloader.util.DownloadUtil;
-import com.zxmark.videodownloader.util.FileComparator;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -199,8 +185,6 @@ public class VideoHistoryFragment extends Fragment {
     }
 
 
-    private DuNativeAd mDuNativeAd;
-
     private void showNativeAd() {
         if (!ADCache.SHOW_AD) {
             return;
@@ -208,58 +192,12 @@ public class VideoHistoryFragment extends Fragment {
         LogUtil.e("history", "showNativeAd:" + mAdVideoBean);
         if (mAdVideoBean == null) {
             if (isAdded()) {
-                mDuNativeAd = new DuNativeAd(getActivity(), PID, 2);
-                mDuNativeAd.setMobulaAdListener(new DuAdListener() {
-                    @Override
-                    public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
-                        LogUtil.e("history", "onError:" + adError.getErrorMessage());
-                        startLoadFacebookAd();
-                    }
-
-                    @Override
-                    public void onAdLoaded(DuNativeAd duNativeAd) {
-                        LogUtil.e("history", "DuAdLoaded.onAdLoaded" + duNativeAd);
-                        onDuNativeAdLoaded(duNativeAd);
-                    }
-
-                    @Override
-                    public void onClick(DuNativeAd duNativeAd) {
-
-                    }
-                });
-                mDuNativeAd.load();
+                startLoadFacebookAd();
             }
         }
     }
 
 
-    private void onDuNativeAdLoaded(DuNativeAd duNativeAd) {
-        if (getActivity() == null || isDetached()) {
-            return;
-        }
-
-        if (mAdVideoBean == null) {
-            mAdVideoBean = new DownloadContentItem();
-            mAdVideoBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
-            mAdVideoBean.duNativeAd = duNativeAd;
-            mAdVideoBean.createdTime = System.currentTimeMillis();
-
-            ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, mAdVideoBean);
-
-            if (mDataList != null) {
-                if (mDataList.size() == 0) {
-                    mDataList.add(mAdVideoBean);
-                    mAdapter.notifyItemInserted(0);
-                } else {
-                    int adPosition = mLayoutManager.findFirstVisibleItemPosition() + 1;
-                    if (adPosition < mDataList.size()) {
-                        mDataList.add(adPosition, mAdVideoBean);
-                        mAdapter.notifyItemInserted(adPosition);
-                    }
-                }
-            }
-        }
-    }
 
     private void startLoadFacebookAd() {
         if (getActivity() != null && isAdded()) {

@@ -6,10 +6,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
-import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.NativeAd;
-import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
-import com.zxmark.videodownloader.bean.VideoBean;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.Utils;
@@ -317,5 +314,4 @@ public class DownloadContentItem implements BaseColumns {
     }
 
     public NativeAd facebookNativeAd;
-    public DuNativeAd duNativeAd;
 }

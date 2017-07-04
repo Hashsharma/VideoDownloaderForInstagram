@@ -3,49 +3,32 @@ package com.zxmark.videodownloader.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bcgdv.asia.lib.fanmenu.FanMenuButtons;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.duapps.ad.DuNativeAd;
-import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
-import com.zxmark.videodownloader.bean.VideoBean;
-import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
-import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
-import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.EventUtil;
-import com.zxmark.videodownloader.util.FileUtils;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
-import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
 import com.zxmark.videodownloader.util.Utils;
-import com.zxmark.videodownloader.widget.IToast;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -263,28 +246,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 // Register the native ad view with the native ad instance
                 holder.adButton.setText(bean.facebookNativeAd.getAdCallToAction());
                 bean.facebookNativeAd.registerViewForInteraction(holder.itemView);
-            } else if (bean.duNativeAd != null) {
-                if (bean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
-                    AdChoicesView adChoicesView = new AdChoicesView(mContext, (NativeAd) bean.duNativeAd.getRealSource().getRealData(), true);
-                    if (holder.adChoiceView.getChildCount() == 0) {
-                        holder.adChoiceView.addView(adChoicesView);
-                    }
-                }
-                try {
-                    LogUtil.e("main", "duNativeAd.getImageUrl=" + bean.duNativeAd.getImageUrl());
-                    LogUtil.e("main", "duNativeAd.getIconUrl=" + bean.duNativeAd.getImageUrl());
-                    imageLoader.load(bean.duNativeAd.getImageUrl()).priority(Priority.HIGH).thumbnail(0.1f).crossFade().into(holder.adCoverView);
-                    imageLoader.load(bean.duNativeAd.getIconUrl()).into(holder.adIconView);
-                } catch (OutOfMemoryError error) {
-                    System.gc();
-                    System.gc();
-                    System.gc();
-                }
-                holder.adBodyView.setText(bean.duNativeAd.getShortDesc());
-                holder.adTitleView.setText(bean.duNativeAd.getTitle());
-                // Register the native ad view with the native ad instance
-                holder.adButton.setText(bean.duNativeAd.getCallToAction());
-                bean.duNativeAd.registerViewForInteraction(holder.itemView);
             }
         } else if (baseHolder instanceof ItemHeaderHolder) {
             final ItemHeaderHolder holder = (ItemHeaderHolder) baseHolder;
@@ -304,7 +265,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     mClickedPasteBtn = true;
                     EventUtil.getDefault().onEvent("download", "Click Main Paste to Download");
                     if (callback != null) {
-                        callback.onDownloadFromClipboard(holder.inputUrl,holder.inputUrl.getText().toString());
+                        callback.onDownloadFromClipboard(holder.inputUrl, holder.inputUrl.getText().toString());
                     }
 
                     holder.inputUrl.setText("");
@@ -353,7 +314,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     public interface IBtnCallback {
         public void showHowTo();
 
-        void onDownloadFromClipboard(View view,String httpURL);
+        void onDownloadFromClipboard(View view, String httpURL);
 
     }
 

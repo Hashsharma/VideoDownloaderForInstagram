@@ -86,6 +86,10 @@ public final class VideoDownloadFactory {
             return new YoujiVideoDownloader();
         }
 
+        if (url.contains(Utils.HOST_YG)) {
+            return new TouVideoDownloader();
+        }
+
         return null;
     }
 

@@ -2,12 +2,8 @@ package com.zxmark.videodownloader.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.provider.MediaStore;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -20,29 +16,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.util.Util;
-import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.NativeAd;
-import com.zxmark.videodownloader.DownloaderBean;
-import com.zxmark.videodownloader.MainApplication;
 import com.imobapp.videodownloaderforinstagram.R;
-import com.zxmark.videodownloader.bean.VideoBean;
+import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.Globals;
-import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
-import com.zxmark.videodownloader.util.ShareActionUtil;
 import com.zxmark.videodownloader.util.Utils;
 import com.zxmark.videodownloader.widget.IToast;
 
@@ -242,30 +229,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 // Register the native ad view with the native ad instance
                 bean.facebookNativeAd.registerViewForInteraction(holder.itemView);
 
-            } else if (bean.duNativeAd != null) {
-                if (bean.duNativeAd.getAdChannelType() == DuNativeAd.CHANNEL_TYPE_FB) {
-                    AdChoicesView adChoicesView = new AdChoicesView(mContext, (NativeAd) bean.duNativeAd.getRealSource().getRealData(), true);
-                    if (holder.adChoiceView.getChildCount() == 0) {
-                        holder.adChoiceView.addView(adChoicesView);
-                    }
-                }
-
-                try {
-                    imageLoader.load(bean.duNativeAd.getImageUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            holder.adCoverView.setBackgroundDrawable(new BitmapDrawable(resource));
-                        }
-                    });
-                } catch (OutOfMemoryError error) {
-                    System.gc();
-                    System.gc();
-                    System.gc();
-                }
-                holder.adBtn.setText(bean.duNativeAd.getCallToAction());
-                holder.adTitle.setText(bean.duNativeAd.getTitle());
-                // Register the native ad view with the native ad instance
-                bean.duNativeAd.registerViewForInteraction(holder.itemView);
             }
         }
     }

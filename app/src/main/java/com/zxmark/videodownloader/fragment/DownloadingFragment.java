@@ -2,7 +2,6 @@ package com.zxmark.videodownloader.fragment;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,14 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.duapps.ad.DuAdListener;
-import com.duapps.ad.DuNativeAd;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
@@ -34,8 +29,6 @@ import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
-import com.zxmark.videodownloader.bean.VideoBean;
-import com.zxmark.videodownloader.db.DBHelper;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
@@ -80,9 +73,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private boolean isShowHowToPage;
 
     private String mFormatLeftFileString;
-
-    private DuNativeAd mDuNativeAd;
-
 
     private Handler mHandler = new Handler() {
 
@@ -391,71 +381,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (!ADCache.SHOW_AD) {
             return;
         }
-        if (isAdded()) {
-            if (mFirstAdBean != null) {
-                return;
-            }
-            if (mDataList != null && (mDataList.size() == 1 || mDataList.size() > 3)) {
-
-                mDuNativeAd = new DuNativeAd(getActivity(), AD_PID, 2);
-                mDuNativeAd.setMobulaAdListener(new DuAdListener() {
-                    @Override
-                    public void onError(DuNativeAd duNativeAd, com.duapps.ad.AdError adError) {
-                        LogUtil.e("main", "DuAdLoaded.onError" + adError.getErrorMessage());
-                        startLoadFacebookAd();
-
-                    }
-
-                    @Override
-                    public void onAdLoaded(DuNativeAd duNativeAd) {
-                        LogUtil.e("main", "DuAdLoaded.onAdLoaded" + duNativeAd);
-                        onDuNativeAdLoaded(duNativeAd);
-                    }
-
-                    @Override
-                    public void onClick(DuNativeAd duNativeAd) {
-
-                    }
-                });
-                mDuNativeAd.load();
-//                nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
-//                nativeAd.setAdListener(new AdListener() {
-//                    @Override
-//                    public void onError(Ad ad, AdError adError) {
-//                        LogUtil.v("facebook", "onError:" + adError);
-//                    }
-//
-//                    @Override
-//                    public void onAdLoaded(Ad ad) {
-//                        onFacebookAdLoaded(ad);
-//                    }
-//
-//                    @Override
-//                    public void onAdClicked(Ad ad) {
-//                        LogUtil.e("facebook", "onAdClicked");
-//                        mHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                               // ADCache.getDefault().removeClickedAd(mFirstAdBean);
-//                                final int position = mDataList.indexOf(mFirstAdBean);
-//                                if (position >= 0) {
-//                                    mDataList.remove(position);
-//                                    mAdapter.notifyItemRemoved(position);
-//                                    mFirstAdBean = null;
-//                                }
-//                            }
-//                        }, 1000);
-//                    }
-//
-//                    @Override
-//                    public void onLoggingImpression(Ad ad) {
-//
-//                    }
-//                });
-//
-//                nativeAd.loadAd();
-            }
-        }
+        startLoadFacebookAd();
     }
 
     private void startLoadFacebookAd() {
@@ -530,32 +456,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void onDuNativeAdLoaded(DuNativeAd duNativeAd) {
-        if (getActivity() == null || isDetached()) {
-            return;
-        }
-
-        mFirstAdBean = new DownloadContentItem();
-        mFirstAdBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
-        mFirstAdBean.duNativeAd = duNativeAd;
-        mFirstAdBean.createdTime = System.currentTimeMillis();
-
-        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_DOWNLOADING_VIDEO, mFirstAdBean);
-
-        int lastPosition = mLayoutManager.findLastVisibleItemPosition();
-        LogUtil.e("facebook", "insert1FacebookAd");
-
-        if (mDataList != null && mDataList.size() <= 1) {
-            mDataList.add(mFirstAdBean);
-            mAdapter.notifyDataSetChanged();
-        } else {
-            int insertADPosition = lastPosition + 1;
-            if (insertADPosition <= mDataList.size() - 1) {
-                mDataList.add(insertADPosition, mFirstAdBean);
-                mAdapter.notifyItemInserted(insertADPosition);
-            }
-        }
-    }
 
     @Override
     public void showHowTo() {
@@ -565,12 +465,12 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     @Override
     public void onDownloadFromClipboard(View view, String inputURL) {
         if (isAdded()) {
-
             hideInputMethod(view, getActivity());
-            if (TextUtils.isEmpty(inputURL)) {
+            String handledUrl = URLMatcher.getHttpURL(inputURL);
+            if (TextUtils.isEmpty(handledUrl)) {
                 IToast.makeText(getActivity(), R.string.not_support_url, Toast.LENGTH_SHORT).show();
             } else {
-                startDownload(inputURL);
+                startDownload(handledUrl);
             }
         }
     }

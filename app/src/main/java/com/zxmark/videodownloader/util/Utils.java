@@ -40,7 +40,8 @@ public class Utils {
     public static final String HOST_FACEBOOK = "facebook.com";
     public static final String HOST_XVIDEOS = "xvideos.com";
     public static final String HOST_YOUJI = "youjizz.com";
-    public static final String EXPIRE_SUFFIX_ARRAY[] = new String[]{HOST_91, HOST_FACEBOOK, HOST_XVIDEOS, HOST_YOUJI};
+    public static final String HOST_YG = "365yg.com";
+    public static final String EXPIRE_SUFFIX_ARRAY[] = new String[]{HOST_91, HOST_FACEBOOK, HOST_XVIDEOS, HOST_YOUJI,HOST_YG};
 
     public static void openInstagramByUrl(String url) {
 
@@ -239,7 +240,7 @@ public class Utils {
 
 
     public static void writeFile(String content) {
-        File writename = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "91.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
+        File writename = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tou.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
         try {
             writename.createNewFile(); // 创建新文件
             BufferedWriter out = new BufferedWriter(new FileWriter(writename));

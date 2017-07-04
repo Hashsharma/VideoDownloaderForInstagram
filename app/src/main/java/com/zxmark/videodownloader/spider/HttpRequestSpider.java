@@ -84,7 +84,7 @@ public class HttpRequestSpider {
             try {
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("User-Agent",
-                        UA_1);
+                        USER_AGENT);
                 if (method == RequestMethod.GET) {
                     conn.setRequestMethod(METHOD_GET);
                 } else {
