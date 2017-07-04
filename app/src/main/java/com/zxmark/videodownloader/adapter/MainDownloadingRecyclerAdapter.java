@@ -16,7 +16,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.ads.AdChoicesView;
-import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.db.DownloadContentItem;
@@ -25,7 +24,6 @@ import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.Globals;
-import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PopWindowUtils;
 import com.zxmark.videodownloader.util.Utils;
 
@@ -51,9 +49,9 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     private Resources mResources;
     private String mLeftDownloadFileString;
 
-    public MainDownloadingRecyclerAdapter(List<DownloadContentItem> dataList, boolean isFullImage, IBtnCallback callback) {
+    public MainDownloadingRecyclerAdapter(RequestManager requestManager,List<DownloadContentItem> dataList, boolean isFullImage, IBtnCallback callback) {
         mDataList = dataList;
-        imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
+        imageLoader = requestManager;
         mFullImageState = isFullImage;
         mContext = MainApplication.getInstance().getApplicationContext();
         this.callback = callback;

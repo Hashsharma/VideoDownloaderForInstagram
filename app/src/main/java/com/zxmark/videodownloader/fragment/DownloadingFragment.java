@@ -21,7 +21,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
@@ -66,13 +68,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private NativeAd nativeAd;
 
     private View mFacebookAdViewContainer;
-    private RequestManager mGlide;
     private DownloadContentItem mFirstAdBean;
     private DownloadContentItem mHowToBean = null;
 
     private boolean isShowHowToPage;
 
     private String mFormatLeftFileString;
+    private RequestManager mRequestMangager;
 
     private Handler mHandler = new Handler() {
 
@@ -110,7 +112,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         registerLocalBroadcast();
-        mGlide = Glide.with(getActivity());
+        mRequestMangager = Glide.with(getActivity());
 
         mFacebookAdViewContainer = findViewById(R.id.main_ad_container);
         mListView = (RecyclerView) findViewById(R.id.downloading_list);
@@ -147,7 +149,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mAdapter = new MainDownloadingRecyclerAdapter(mDataList, true, DownloadingFragment.this);
+                            mAdapter = new MainDownloadingRecyclerAdapter(mRequestMangager, mDataList, true, DownloadingFragment.this);
                             mListView.setAdapter(mAdapter);
                             showNativeAd();
                         }

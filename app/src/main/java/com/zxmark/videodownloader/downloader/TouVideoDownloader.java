@@ -21,7 +21,6 @@ public class TouVideoDownloader extends BaseDownloader {
         LogUtil.e("tou","startSpideThePaage:" + htmlUrl);
         String content = startRequest(htmlUrl);
         LogUtil.e("tou","content=" + content);
-        Utils.writeFile(content);
         return null;
     }
 
