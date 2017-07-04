@@ -463,8 +463,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             mDataList.add(mFirstAdBean);
             mAdapter.notifyItemInserted(1);
         } else if(mDataList.size() > 1){
-            mDataList.add(1,mFirstAdBean);
-            mAdapter.notifyItemInserted(1);
+            mDataList.add(mFirstAdBean);
+            mAdapter.notifyItemInserted(mDataList.size()-1);
         }
     }
 
