@@ -24,7 +24,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dip"
+                android:layout_height="1px"
                 android:background="@color/divider_color" />
 
 
@@ -35,7 +35,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dip"
+                android:layout_height="1px"
                 android:background="@color/divider_color" />
 
 
@@ -46,7 +46,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dip"
+                android:layout_height="1px"
                 android:background="@color/divider_color" />
 
 
@@ -57,7 +57,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dip"
+                android:layout_height="1px"
                 android:background="@color/divider_color" />
             <TextView
                 android:id="@+id/redownload"
