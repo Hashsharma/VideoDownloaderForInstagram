@@ -97,14 +97,24 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     EventUtil.getDefault().onEvent("history", "openFileList");
-                    File targetFile = new File(bean.pageHOME);
-                    if (targetFile.exists() && targetFile.listFiles() != null && targetFile.listFiles().length > 0) {
-                        DownloadUtil.openFileList(bean.pageHOME);
+                    if (holder.checkBox.getVisibility() == View.VISIBLE) {
+                        if (mSelectList.contains(bean)) {
+                            mSelectList.remove(bean);
+                            holder.checkBox.setChecked(false);
+                        } else {
+                            mSelectList.add(bean);
+                            holder.checkBox.setChecked(true);
+                        }
                     } else {
-                        IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
-                        holder.circleProgress.setVisibility(View.VISIBLE);
-                        bean.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
-                        DownloadUtil.startForceDownload(bean.pageURL);
+                        File targetFile = new File(bean.pageHOME);
+                        if (targetFile.exists() && targetFile.listFiles() != null && targetFile.listFiles().length > 0) {
+                            DownloadUtil.openFileList(bean.pageHOME);
+                        } else {
+                            IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
+                            holder.circleProgress.setVisibility(View.VISIBLE);
+                            bean.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
+                            DownloadUtil.startForceDownload(bean.pageURL);
+                        }
                     }
                 }
             });
@@ -343,7 +353,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private void notifyUIChanged() {
         final int firstPosition = mLayoutManager.findFirstVisibleItemPosition();
         final int lastPosition = mLayoutManager.findLastVisibleItemPosition();
-        notifyItemRangeChanged(firstPosition, lastPosition - firstPosition + 1);
+        notifyItemRangeChanged(0, mDataList.size());
     }
 
     public boolean isSelectMode() {
@@ -360,7 +370,9 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public HashSet<DownloadContentItem> getSelectList() {
-        return new HashSet<>(mSelectList);
+        HashSet hashSet = new HashSet<>(mSelectList);
+        mSelectList.clear();
+        return hashSet;
     }
 
     public void setISelectChangedListener(ISelectChangedListener listener) {
