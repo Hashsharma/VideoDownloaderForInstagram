@@ -459,12 +459,12 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 //            mAdapter.notifyItemInserted(insertADPosition);
 //        }
 
-        if(mDataList.size() == 1) {
+        if (mDataList.size() == 1) {
             mDataList.add(mFirstAdBean);
             mAdapter.notifyItemInserted(1);
-        } else if(mDataList.size() > 1){
+        } else if (mDataList.size() > 1) {
             mDataList.add(mFirstAdBean);
-            mAdapter.notifyItemInserted(mDataList.size()-1);
+            mAdapter.notifyItemInserted(mDataList.size() - 1);
         }
     }
 
@@ -498,4 +498,14 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         unRegisterLocalBroadcast();
         super.onDestroy();
     }
+
+    public void deleteDownloadFinishedItem(DownloadContentItem downloadContentItem) {
+        final int index = mDataList.indexOf(downloadContentItem);
+        if (index > -1) {
+            mAdapter.notifyItemRemoved(index);
+            mDataList.remove(index);
+
+        }
+    }
+
 }

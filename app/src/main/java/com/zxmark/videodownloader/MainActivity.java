@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
                     if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
                         mViewPagerAdapter.getVideoHistoryFragment().setISelectChangedListener(MainActivity.this);
 
-                        if(mViewPagerAdapter.getVideoHistoryFragment().isSelectMode()) {
+                        if (mViewPagerAdapter.getVideoHistoryFragment().isSelectMode()) {
                             mInstagramIcon.setVisibility(View.GONE);
                             mSelectedContainer.setVisibility(View.VISIBLE);
                         }
@@ -540,5 +540,18 @@ public class MainActivity extends AppCompatActivity
     public void onEnterSelectMode() {
         mInstagramIcon.setVisibility(View.GONE);
         mSelectedContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onQuitSelectMode() {
+        mInstagramIcon.setVisibility(View.VISIBLE);
+        mSelectedContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDeleteDownloadItem(DownloadContentItem downloadContentItem) {
+        if (mViewPagerAdapter.getDownloadingFragment() != null) {
+            mViewPagerAdapter.getDownloadingFragment().deleteDownloadFinishedItem(downloadContentItem);
+        }
     }
 }

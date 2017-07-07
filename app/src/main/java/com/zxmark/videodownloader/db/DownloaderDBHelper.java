@@ -246,7 +246,7 @@ public class DownloaderDBHelper {
                     return cursor.getString(cursor.getColumnIndexOrThrow(DownloadContentItem.PAGE_HOME));
                 }
             }
-            return  null;
+            return null;
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -289,16 +289,18 @@ public class DownloaderDBHelper {
         DownloadContentItem item = getDownloadItemByPageURL(pageURL);
         if (item != null) {
             String dir = item.pageHOME;
-            File dirFile = new File(dir);
-            Context context = MainApplication.getInstance().getApplicationContext();
-            if (dirFile.isDirectory()) {
-                for (File meidaFile : dirFile.listFiles()) {
-                    meidaFile.delete();
-                    deleteMediaDB(context, meidaFile.getAbsolutePath());
+            if (!TextUtils.isEmpty(dir)) {
+                File dirFile = new File(dir);
+                Context context = MainApplication.getInstance().getApplicationContext();
+                if (dirFile.isDirectory() && dirFile.listFiles() != null) {
+                    for (File meidaFile : dirFile.listFiles()) {
+                        meidaFile.delete();
+                        deleteMediaDB(context, meidaFile.getAbsolutePath());
+                    }
+                    dirFile.delete();
+                } else {
+                    dirFile.delete();
                 }
-                dirFile.delete();
-            } else {
-                dirFile.delete();
             }
         }
 
@@ -308,17 +310,19 @@ public class DownloaderDBHelper {
     public int deleteDownloadContentItem(DownloadContentItem downloadContentItem) {
         if (downloadContentItem != null) {
             String dir = downloadContentItem.pageHOME;
-            File dirFile = new File(dir);
-            Context context = MainApplication.getInstance().getApplicationContext();
-            if(dirFile != null) {
-                if (dirFile.isDirectory()) {
-                    for (File meidaFile : dirFile.listFiles()) {
-                        meidaFile.delete();
-                        deleteMediaDB(context, meidaFile.getAbsolutePath());
+            if (!TextUtils.isEmpty(dir)) {
+                File dirFile = new File(dir);
+                Context context = MainApplication.getInstance().getApplicationContext();
+                if (dirFile != null) {
+                    if (dirFile.isDirectory() && dirFile.listFiles() != null) {
+                        for (File meidaFile : dirFile.listFiles()) {
+                            meidaFile.delete();
+                            deleteMediaDB(context, meidaFile.getAbsolutePath());
+                        }
+                        dirFile.delete();
+                    } else {
+                        dirFile.delete();
                     }
-                    dirFile.delete();
-                } else {
-                    dirFile.delete();
                 }
             }
         }

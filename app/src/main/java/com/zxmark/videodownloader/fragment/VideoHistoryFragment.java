@@ -57,15 +57,29 @@ public class VideoHistoryFragment extends Fragment {
     private boolean mHaveDeletedUselessFiles = false;
     private DownloadContentItem mAdVideoBean;
 
+    private MainListRecyclerAdapter.ISelectChangedListener mListener;
+
     private Handler mMainLooperHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            DownloadContentItem downloadContentItem = (DownloadContentItem) msg.obj;
-            final int index = mDataList.indexOf(downloadContentItem);
-            if (index > -1) {
-                mAdapter.notifyItemRemoved(index);
-                mDataList.remove(index);
+            if (msg.what == 0) {
+                DownloadContentItem downloadContentItem = (DownloadContentItem) msg.obj;
+                if (mListener != null) {
+                    mListener.onDeleteDownloadItem(downloadContentItem);
+                }
+                final int index = mDataList.indexOf(downloadContentItem);
+                if (index > -1) {
+                    mAdapter.notifyItemRemoved(index);
+                    mDataList.remove(index);
+                }
+            } else if (msg.what == 1) {
+                if (mDataList.size() == 0) {
+                    mAdapter.quitSelectMode();
+                    if (mListener != null) {
+                        mListener.onQuitSelectMode();
+                    }
+                }
             }
         }
     };
@@ -332,6 +346,7 @@ public class VideoHistoryFragment extends Fragment {
 
 
     public void setISelectChangedListener(MainListRecyclerAdapter.ISelectChangedListener listener) {
+        mListener = listener;
         if (mAdapter != null) {
             mAdapter.setISelectChangedListener(listener);
         }
@@ -358,17 +373,19 @@ public class VideoHistoryFragment extends Fragment {
     }
 
     public void deleteSelectItems() {
-        final HashSet<DownloadContentItem> dataList = mAdapter.getSelectList();
+        final HashSet<DownloadContentItem> selectDataList = mAdapter.getSelectList();
         final DownloaderDBHelper dbHelper = DownloaderDBHelper.SINGLETON;
+
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
-                Iterator<DownloadContentItem> itemIterator = dataList.iterator();
+                Iterator<DownloadContentItem> itemIterator = selectDataList.iterator();
                 while (itemIterator.hasNext()) {
                     DownloadContentItem downloadContentItem = itemIterator.next();
                     dbHelper.deleteDownloadContentItem(downloadContentItem);
                     mMainLooperHandler.obtainMessage(0, downloadContentItem).sendToTarget();
                 }
+                mMainLooperHandler.sendEmptyMessage(1);
             }
         });
 

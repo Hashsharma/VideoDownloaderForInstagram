@@ -309,6 +309,8 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public interface ISelectChangedListener {
         void onEnterSelectMode();
+        void onQuitSelectMode();
+        void onDeleteDownloadItem(DownloadContentItem downloadContentItem);
     }
 
     @Override
