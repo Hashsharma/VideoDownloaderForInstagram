@@ -309,7 +309,9 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public interface ISelectChangedListener {
         void onEnterSelectMode();
+
         void onQuitSelectMode();
+
         void onDeleteDownloadItem(DownloadContentItem downloadContentItem);
     }
 
@@ -349,7 +351,11 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void selectAll() {
-        mSelectList.addAll(mDataList);
+        if (mSelectList.size() == mDataList.size()) {
+            mSelectList.clear();
+        } else {
+            mSelectList.addAll(mDataList);
+        }
         notifyUIChanged();
     }
 

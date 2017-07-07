@@ -336,17 +336,19 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (index > -1) {
             DownloadContentItem downloadContentItem = mDataList.get(index);
             downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED;
-            RecyclerView.ViewHolder viewHolder = mListView.findViewHolderForAdapterPosition(index);
-            if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
-                ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
-                itemHolder.progressBar.setVisibility(View.GONE);
-                itemHolder.operationBtn.setVisibility(View.GONE);
-                itemHolder.taskCountView.setVisibility(View.GONE);
-                if (itemHolder.fanMenuButtons.getVisibility() == View.VISIBLE) {
-                    itemHolder.fanMenuButtons.toggleShow();
-                }
-                itemHolder.moreIv.setVisibility(View.VISIBLE);
-            }
+            mAdapter.notifyItemChanged(index);
+//            RecyclerView.ViewHolder viewHolder = mListView.findViewHolderForAdapterPosition(index);
+//            if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
+//                ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
+//                itemHolder.progressBar.setVisibility(View.GONE);
+//                itemHolder.operationBtn.setVisibility(View.GONE);
+//                itemHolder.taskCountView.setVisibility(View.GONE);
+//                if (itemHolder.fanMenuButtons.getVisibility() == View.VISIBLE) {
+//                    itemHolder.fanMenuButtons.toggleShow();
+//                }
+//                itemHolder.moreIv.setVisibility(View.VISIBLE);
+//
+//            }
         }
     }
 
