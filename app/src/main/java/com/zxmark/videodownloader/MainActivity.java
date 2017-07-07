@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.umeng.analytics.MobclickAgent;
+import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
@@ -49,7 +50,7 @@ import javax.microedition.khronos.opengles.GL;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, MainListRecyclerAdapter.ISelectChangedListener {
 
 
     public static final String KEY = "main";
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity
     private boolean showedRatingDialog;
 
     private int mCurrentPagePosition = 0;
+
+    private View mInstagramIcon;
+    private View mSelectedContainer;
 
 
     @Override
@@ -83,7 +87,12 @@ public class MainActivity extends AppCompatActivity
 
         //TODO: dismiss float view
         FloatViewManager.getDefault().dismissFloatView();
-        findViewById(R.id.ins_icon).setOnClickListener(this);
+        mInstagramIcon = findViewById(R.id.ins_icon);
+        mInstagramIcon.setOnClickListener(this);
+        mSelectedContainer = findViewById(R.id.select_container);
+        findViewById(R.id.ic_delete).setOnClickListener(this);
+        findViewById(R.id.ic_select).setOnClickListener(this);
+        findViewById(R.id.ic_undo).setOnClickListener(this);
         mMainViewPager = (ViewPager) findViewById(R.id.viewPager);
         mMainViewPager.setOffscreenPageLimit(2);
         FragmentManager fm = getSupportFragmentManager();
@@ -107,6 +116,22 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 mCurrentPagePosition = position;
+                if (position == 1) {
+                    if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
+                        mViewPagerAdapter.getVideoHistoryFragment().setISelectChangedListener(MainActivity.this);
+
+                        if(mViewPagerAdapter.getVideoHistoryFragment().isSelectMode()) {
+                            mInstagramIcon.setVisibility(View.GONE);
+                            mSelectedContainer.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+
+                } else {
+                    mInstagramIcon.setVisibility(View.VISIBLE);
+                    mSelectedContainer.setVisibility(View.GONE);
+                }
+
             }
 
             @Override
@@ -310,6 +335,20 @@ public class MainActivity extends AppCompatActivity
         if (v.getId() == R.id.ins_icon) {
             EventUtil.getDefault().onEvent("main", "openInsByTitle");
             Utils.openInstagram();
+        } else if (v.getId() == R.id.ic_select) {
+            if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
+                mViewPagerAdapter.getVideoHistoryFragment().selectAll();
+            }
+        } else if (v.getId() == R.id.ic_undo) {
+            mSelectedContainer.setVisibility(View.GONE);
+            mInstagramIcon.setVisibility(View.VISIBLE);
+            if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
+                mViewPagerAdapter.getVideoHistoryFragment().quitSelectMode();
+            }
+        } else if (v.getId() == R.id.ic_delete) {
+            if (mViewPagerAdapter.getVideoHistoryFragment() != null) {
+                mViewPagerAdapter.getVideoHistoryFragment().deleteSelectItems();
+            }
         }
     }
 
@@ -495,5 +534,11 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         });
+    }
+
+    @Override
+    public void onEnterSelectMode() {
+        mInstagramIcon.setVisibility(View.GONE);
+        mSelectedContainer.setVisibility(View.VISIBLE);
     }
 }

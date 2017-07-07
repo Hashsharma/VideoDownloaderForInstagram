@@ -305,6 +305,27 @@ public class DownloaderDBHelper {
         return mContentResolver.delete(DownloadContentItem.CONTENT_URI, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL});
     }
 
+    public int deleteDownloadContentItem(DownloadContentItem downloadContentItem) {
+        if (downloadContentItem != null) {
+            String dir = downloadContentItem.pageHOME;
+            File dirFile = new File(dir);
+            Context context = MainApplication.getInstance().getApplicationContext();
+            if(dirFile != null) {
+                if (dirFile.isDirectory()) {
+                    for (File meidaFile : dirFile.listFiles()) {
+                        meidaFile.delete();
+                        deleteMediaDB(context, meidaFile.getAbsolutePath());
+                    }
+                    dirFile.delete();
+                } else {
+                    dirFile.delete();
+                }
+            }
+        }
+
+        return mContentResolver.delete(DownloadContentItem.CONTENT_URI, DownloadContentItem._ID + " = ? ", new String[]{String.valueOf(downloadContentItem.pageId)});
+    }
+
 
     private void deleteMediaDB(Context context, String path) {
         try {
@@ -337,4 +358,6 @@ public class DownloaderDBHelper {
             }
         });
     }
+
+
 }

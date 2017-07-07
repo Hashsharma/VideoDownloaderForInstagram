@@ -18,6 +18,8 @@
         <item name="colorAccent">@color/rating_bar_color</item>
     </style>
 
+
+
     <style name="GalleryWindowStyle" parent="AppTheme.NoActionBar">
         <item name="colorAccent">@android:color/white</item>
         <item name="colorPrimary">@color/black</item>

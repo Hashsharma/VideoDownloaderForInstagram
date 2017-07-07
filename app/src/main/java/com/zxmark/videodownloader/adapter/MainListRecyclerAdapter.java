@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,7 +20,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.facebook.ads.AdChoicesView;
-import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.db.DBHelper;
@@ -34,6 +34,8 @@ import com.zxmark.videodownloader.util.Utils;
 import com.zxmark.videodownloader.widget.IToast;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -48,12 +50,23 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context mContext;
     private DBHelper mDBHelper;
 
+    private LinearLayoutManager mLayoutManager;
+
+    private HashSet<DownloadContentItem> mSelectList;
+    private boolean mIsSelectMode = false;
+    private ISelectChangedListener mListener;
+
     public MainListRecyclerAdapter(List<DownloadContentItem> dataList, boolean isFullImage) {
         mDataList = dataList;
         imageLoader = Glide.with(MainApplication.getInstance().getApplicationContext());
         mFullImageState = isFullImage;
         mDBHelper = DBHelper.getDefault();
         mContext = MainApplication.getInstance().getApplicationContext();
+        mSelectList = new HashSet<>();
+    }
+
+    public void setLayoutManager(LinearLayoutManager layoutManager) {
+        this.mLayoutManager = layoutManager;
     }
 
     @Override
@@ -74,11 +87,12 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, final int position) {
         final DownloadContentItem bean = mDataList.get(position);
 
         if (baseHolder instanceof ItemViewHolder) {
             final ItemViewHolder holder = (ItemViewHolder) baseHolder;
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,11 +103,49 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     } else {
                         IToast.makeText(mContext, R.string.download_result_start, Toast.LENGTH_SHORT).show();
                         holder.circleProgress.setVisibility(View.VISIBLE);
+                        bean.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
                         DownloadUtil.startForceDownload(bean.pageURL);
                     }
                 }
             });
 
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    if (!mIsSelectMode) {
+                        setSelectMode();
+                        //holder.checkBox.setVisibility(View.VISIBLE);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            if (mIsSelectMode) {
+                holder.checkBox.setVisibility(View.VISIBLE);
+                holder.checkBox.setChecked(mSelectList.contains(bean));
+            } else {
+                holder.checkBox.setVisibility(View.GONE);
+            }
+
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mSelectList.contains(bean)) {
+                        mSelectList.remove(bean);
+                        holder.checkBox.setChecked(false);
+                    } else {
+                        mSelectList.add(bean);
+                        holder.checkBox.setChecked(true);
+                    }
+                }
+            });
+            if (bean.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOADING) {
+                holder.circleProgress.setVisibility(View.VISIBLE);
+            } else {
+                holder.circleProgress.setVisibility(View.GONE);
+            }
             holder.titleTv.setText(bean.pageTitle);
             final boolean isVideo = bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO;
             if (isVideo) {
@@ -253,7 +305,10 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         void onPasteSharedUrl();
 
         void onStartDownload();
+    }
 
+    public interface ISelectChangedListener {
+        void onEnterSelectMode();
     }
 
     @Override
@@ -265,4 +320,43 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public int getItemViewType(int position) {
         return mDataList.get(position).itemType;
     }
+
+    private void setSelectMode() {
+        if (mListener != null) {
+            mListener.onEnterSelectMode();
+        }
+        mIsSelectMode = true;
+        mSelectList.clear();
+        notifyUIChanged();
+    }
+
+    public void quitSelectMode() {
+        mIsSelectMode = false;
+        mSelectList.clear();
+        notifyUIChanged();
+    }
+
+    private void notifyUIChanged() {
+        final int firstPosition = mLayoutManager.findFirstVisibleItemPosition();
+        final int lastPosition = mLayoutManager.findLastVisibleItemPosition();
+        notifyItemRangeChanged(firstPosition, lastPosition - firstPosition + 1);
+    }
+
+    public boolean isSelectMode() {
+        return mIsSelectMode;
+    }
+
+    public void selectAll() {
+        mSelectList.addAll(mDataList);
+        notifyUIChanged();
+    }
+
+    public HashSet<DownloadContentItem> getSelectList() {
+        return new HashSet<>(mSelectList);
+    }
+
+    public void setISelectChangedListener(ISelectChangedListener listener) {
+        this.mListener = listener;
+    }
+
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -33,6 +34,9 @@ import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -53,7 +57,18 @@ public class VideoHistoryFragment extends Fragment {
     private boolean mHaveDeletedUselessFiles = false;
     private DownloadContentItem mAdVideoBean;
 
-    private Handler mMainLooperHandler = new Handler();
+    private Handler mMainLooperHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            DownloadContentItem downloadContentItem = (DownloadContentItem) msg.obj;
+            final int index = mDataList.indexOf(downloadContentItem);
+            if (index > -1) {
+                mAdapter.notifyItemRemoved(index);
+                mDataList.remove(index);
+            }
+        }
+    };
 
     private BroadcastReceiver mUpdateDataReceiver;
 
@@ -114,6 +129,7 @@ public class VideoHistoryFragment extends Fragment {
                         @Override
                         public void run() {
                             mAdapter = new MainListRecyclerAdapter(mDataList, false);
+                            mAdapter.setLayoutManager(mLayoutManager);
                             mListView.setAdapter(mAdapter);
                             showNativeAd();
                         }
@@ -140,6 +156,8 @@ public class VideoHistoryFragment extends Fragment {
                     if (viewHolder != null && viewHolder instanceof ItemViewHolder) {
                         ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
                         itemHolder.circleProgress.setVisibility(View.GONE);
+                        DownloadContentItem downloadContentItem = mDataList.get(index);
+                        downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED;
                     }
                 }
             }
@@ -196,7 +214,6 @@ public class VideoHistoryFragment extends Fragment {
             }
         }
     }
-
 
 
     private void startLoadFacebookAd() {
@@ -311,5 +328,49 @@ public class VideoHistoryFragment extends Fragment {
     public void onDestroy() {
         unRegisterLocalBroadcast();
         super.onDestroy();
+    }
+
+
+    public void setISelectChangedListener(MainListRecyclerAdapter.ISelectChangedListener listener) {
+        if (mAdapter != null) {
+            mAdapter.setISelectChangedListener(listener);
+        }
+    }
+
+    public void selectAll() {
+        if (mAdapter != null) {
+            mAdapter.selectAll();
+        }
+    }
+
+    public void quitSelectMode() {
+        if (mAdapter != null) {
+            mAdapter.quitSelectMode();
+        }
+    }
+
+    public boolean isSelectMode() {
+        if (mAdapter != null) {
+            return mAdapter.isSelectMode();
+        }
+
+        return false;
+    }
+
+    public void deleteSelectItems() {
+        final HashSet<DownloadContentItem> dataList = mAdapter.getSelectList();
+        final DownloaderDBHelper dbHelper = DownloaderDBHelper.SINGLETON;
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                Iterator<DownloadContentItem> itemIterator = dataList.iterator();
+                while (itemIterator.hasNext()) {
+                    DownloadContentItem downloadContentItem = itemIterator.next();
+                    dbHelper.deleteDownloadContentItem(downloadContentItem);
+                    mMainLooperHandler.obtainMessage(0, downloadContentItem).sendToTarget();
+                }
+            }
+        });
+
     }
 }
