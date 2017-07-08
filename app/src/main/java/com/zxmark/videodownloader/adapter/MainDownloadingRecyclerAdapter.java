@@ -167,8 +167,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 holder.taskCountView.setVisibility(View.GONE);
                 holder.progressBar.setVisibility(View.GONE);
                 holder.operationBtn.setVisibility(View.GONE);
-            } else {
-                holder.moreIv.setVisibility(View.GONE);
                 holder.moreIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -232,6 +230,8 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                         });
                     }
                 });
+            } else {
+                holder.moreIv.setVisibility(View.GONE);
             }
         } else if (baseHolder instanceof NativeAdItemHolder) {
             final NativeAdItemHolder holder = (NativeAdItemHolder) baseHolder;
