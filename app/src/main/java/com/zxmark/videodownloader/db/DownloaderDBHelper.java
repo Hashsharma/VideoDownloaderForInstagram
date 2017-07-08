@@ -38,7 +38,9 @@ public class DownloaderDBHelper {
 
     public void saveNewDownloadTask(DownloadContentItem item) {
         if (item != null && !TextUtils.isEmpty(item.pageURL)) {
-            if (getPageIdByPageURL(item.pageURL) > -1) {
+            int pageId = getPageIdByPageURL(item.pageURL);
+            if (pageId > -1) {
+                updateDownloadTaskStatus(pageId,DownloadContentItem.PAGE_STATUS_DOWNLOADING);
                 return;
             }
             Uri id = mContentResolver.insert(DownloadContentItem.CONTENT_URI, DownloadContentItem.from(item));
