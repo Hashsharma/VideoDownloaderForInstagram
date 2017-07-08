@@ -179,7 +179,7 @@ public class DownloaderDBHelper {
         if (TextUtils.isEmpty(pageURL)) {
             return -1;
         }
-        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? and " + DownloadContentItem.PAGE_STATUS + " = ?", new String[]{pageURL, String.valueOf(DownloadContentItem.PAGE_STATUS_DOWNLOADING)}, null);
+        Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ?", new String[]{pageURL}, null);
         try {
             if (cursor != null) {
                 if (cursor.moveToNext()) {
