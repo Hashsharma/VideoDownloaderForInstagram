@@ -234,8 +234,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 holder.moreIv.setVisibility(View.GONE);
                 holder.operationBtn.setVisibility(View.VISIBLE);
                 holder.taskCountView.setVisibility(View.VISIBLE);
-                holder.progressBar.setVisibility(View.VISIBLE);
-
             }
         } else if (baseHolder instanceof NativeAdItemHolder) {
             final NativeAdItemHolder holder = (NativeAdItemHolder) baseHolder;
