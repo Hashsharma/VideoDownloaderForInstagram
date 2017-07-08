@@ -371,8 +371,11 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public HashSet<DownloadContentItem> getSelectList() {
         HashSet hashSet = new HashSet<>(mSelectList);
-        mSelectList.clear();
         return hashSet;
+    }
+
+    public void clearSelectedList() {
+        mSelectList.clear();
     }
 
     public void setISelectChangedListener(ISelectChangedListener listener) {

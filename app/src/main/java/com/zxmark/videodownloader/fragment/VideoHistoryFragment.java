@@ -74,6 +74,7 @@ public class VideoHistoryFragment extends Fragment {
                     mDataList.remove(index);
                 }
             } else if (msg.what == 1) {
+                mAdapter.clearSelectedList();
                 if (mDataList.size() == 0) {
                     mAdapter.quitSelectMode();
                     if (mListener != null) {
