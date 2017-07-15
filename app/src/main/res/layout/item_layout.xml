@@ -23,7 +23,8 @@
                 android:layout_width="100dip"
                 android:layout_height="match_parent"
                 android:background="@color/image_default_bg"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@color/image_default_bg" />
 
             <ImageView
                 android:id="@+id/play_view"
@@ -37,34 +38,33 @@
                 android:id="@+id/album_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
                 android:scaleType="center"
                 android:src="@drawable/feed_album_icon"
-                android:layout_gravity="right|top"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <com.github.lzyzsd.circleprogress.CircleProgress
                 android:id="@+id/circle_progress"
                 android:layout_width="70dip"
                 android:layout_height="70dip"
                 android:layout_gravity="center"
-                app:circle_unfinished_color="#FF000000"
-                app:circle_finished_color="#10000000"
-                app:circle_text_color="@android:color/white"
-                app:circle_max="100"
                 android:visibility="gone"
-                app:circle_progress="0"/>
+                app:circle_finished_color="#10000000"
+                app:circle_max="100"
+                app:circle_progress="0"
+                app:circle_text_color="@android:color/white"
+                app:circle_unfinished_color="#FF000000" />
         </FrameLayout>
 
 
         <CheckBox
+            android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:id="@+id/checkbox"
-            android:visibility="gone"
             android:layout_marginRight="5dip"
-            />
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/more"
             android:layout_width="wrap_content"
@@ -78,13 +78,13 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="15dip"
             android:layout_marginLeft="110dip"
             android:layout_marginRight="35dip"
             android:layout_marginTop="15dip"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
@@ -100,12 +100,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:layout_marginTop="5dip"
                 android:fontFamily="sans-serif-medium"
                 android:maxLines="2"
-                android:layout_marginTop="5dip"
-                android:visibility="gone"
                 android:textColor="@android:color/black"
-                android:textSize="14dip" />
+                android:textSize="14dip"
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView
@@ -115,8 +115,8 @@
             android:layout_gravity="bottom|right"
             android:fontFamily="sans-serif-medium"
             android:paddingBottom="10dip"
-            android:paddingRight="15dip"
             android:paddingLeft="10dip"
+            android:paddingRight="15dip"
             android:text="@string/option_delete"
             android:textColor="@color/repost_background"
             android:textSize="15dip" />

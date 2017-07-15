@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -141,7 +142,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                                         mAdBean.facebookNativeAd = item.facebookNativeAd;
                                         mDataList.add(mAdBean);
                                     }
-                                    }
+                                }
 
                             } else {
 
@@ -285,19 +286,21 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                 public void onDelete() {
                     MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(mSelectedPosition);
                     String filePath = itemView.getMediaSource();
-                    PagerBean bean = new PagerBean();
-                    bean.file = new File(filePath);
-                    mAdapter.deleteItem(bean, itemView);
-                    mMainViewPager.setAdapter(mAdapter);
+                    if (!TextUtils.isEmpty(filePath)) {
+                        PagerBean bean = new PagerBean();
+                        bean.file = new File(filePath);
+                        mAdapter.deleteItem(bean, itemView);
+                        mMainViewPager.setAdapter(mAdapter);
 
-                    if(mDataList.size() == 0) {
-                        GalleryPagerActivity.this.finish();
-                        return;
+                        if (mDataList.size() == 0) {
+                            GalleryPagerActivity.this.finish();
+                            return;
+                        }
+                        if (mDataList.size() == 1) {
+                            mCountInfoView.setVisibility(View.GONE);
+                        }
+                        mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
                     }
-                    if (mDataList.size() == 1) {
-                        mCountInfoView.setVisibility(View.GONE);
-                    }
-                    mCountInfoView.setText(getResources().getString(R.string.file_count_format, 1, mDataList.size()));
                 }
 
                 @Override

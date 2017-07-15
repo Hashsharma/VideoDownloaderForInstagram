@@ -75,6 +75,7 @@ public class MobMediaView extends FrameLayout {
     public void setAdSource(GalleryPagerActivity.PagerBean adBean) {
         if (adBean != null) {
             if (adBean.facebookNativeAd != null) {
+                mMediaSource = null;
                 LogUtil.v("view", "setAdSource=" + adBean.facebookNativeAd);
                 mAdContainer.setVisibility(View.VISIBLE);
                 mImageView.setVisibility(View.GONE);
