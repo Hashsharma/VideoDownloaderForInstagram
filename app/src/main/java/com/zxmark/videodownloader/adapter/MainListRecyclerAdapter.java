@@ -171,12 +171,12 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if (file != null && file.listFiles() != null && file.listFiles().length > 0) {
                         String path = file.listFiles()[0].getAbsolutePath();
                         if (MimeTypeUtil.isVideoType(path)) {
-                            imageLoader.load(path).into(holder.thumbnailView);
+                            imageLoader.load(path).priority(Priority.IMMEDIATE).into(holder.thumbnailView);
                         }
                     }
 
                 } else {
-                    imageLoader.load(bean.pageThumb).thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.SOURCE).crossFade().priority(Priority.IMMEDIATE).into(holder.thumbnailView);
+                    imageLoader.load(bean.pageThumb).diskCacheStrategy(DiskCacheStrategy.SOURCE).priority(Priority.IMMEDIATE).into(holder.thumbnailView);
                 }
             } catch (OutOfMemoryError error) {
                 System.gc();

@@ -149,7 +149,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
             holder.taskCountView.setText(String.format(mLeftDownloadFileString, bean.fileCount));
             holder.playView.setVisibility(bean.mimeType == bean.PAGE_MIME_TYPE_VIDEO ? View.VISIBLE : View.GONE);
             try {
-                imageLoader.load(bean.pageThumb).centerCrop().priority(Priority.HIGH).thumbnail(0.1f).crossFade().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
+                imageLoader.load(bean.pageThumb).centerCrop().priority(Priority.IMMEDIATE).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnailView);
             } catch (OutOfMemoryError error) {
                 System.gc();
                 System.gc();
@@ -243,8 +243,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     holder.adChoiceView.addView(adChoicesView);
                 }
                 try {
-                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).thumbnail(0.1f).priority(Priority.HIGH).crossFade().into(holder.adCoverView);
-                    imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).priority(Priority.HIGH).crossFade().into(holder.adIconView);
+                    imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).priority(Priority.IMMEDIATE).crossFade().into(holder.adIconView);
                 } catch (OutOfMemoryError error) {
                     System.gc();
                     System.gc();

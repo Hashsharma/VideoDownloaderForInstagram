@@ -380,6 +380,7 @@ public class LearningDownloader {
             thread.url = url;
             mDownloadingTaskMap.put(threadId, thread);
             filePositon = filePos;
+            setPriority(Thread.NORM_PRIORITY);
         }
 
         public DownloadThread(DownloadingThread downloadingThread, final int filePos, CountDownLatch latch) {

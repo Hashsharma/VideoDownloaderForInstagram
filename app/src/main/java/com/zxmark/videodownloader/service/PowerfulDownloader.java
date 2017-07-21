@@ -96,6 +96,8 @@ public class PowerfulDownloader {
         if (threadNum > 1) {
             latch = new CountDownLatch(threadNum);
         }
+
+        Thread.currentThread().setPriority(Thread.NORM_PRIORITY);
         mSepcDownloadThreadError.set(false);
         mInternalErrorInterupted.set(false);
         mReadBytesCount = 0;
