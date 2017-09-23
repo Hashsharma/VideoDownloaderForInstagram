@@ -3,9 +3,13 @@ package com.zxmark.videodownloader.downloader;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.imobapp.videodownloaderforinstagram.R;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
@@ -59,6 +63,9 @@ public class DownloadingTaskList {
 
     }
 
+    public boolean isEmpty() {
+        return mFuturedTaskList.isEmpty();
+    }
     public void addNewDownloadTask(String taskId) {
         if (mFuturedTaskList.size() > 0) {
             if (mFuturedTaskList.contains(taskId)) {
@@ -123,7 +130,7 @@ public class DownloadingTaskList {
             List<String> futureDownloadedList = item.getDownloadContentList();
             downloadItem(futureDownloadedList, item);
             if(item.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED) {
-                mHandler.sendEmptyMessage(DownloadService.MSG_DOWNLOAD_ERROR);
+                mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_ERROR, 0, 0, item.pageURL).sendToTarget();
             } else {
                 DownloaderDBHelper.SINGLETON.finishDownloadTask(item.pageURL);
                 mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, 0, 0, item.pageURL).sendToTarget();
@@ -136,8 +143,51 @@ public class DownloadingTaskList {
         if (item.getVideoCount() > 0) {
             final String fileURL = item.getVideoList().remove(0);
             final int filePositon = totalDownloadedList.indexOf(fileURL);
-            LearningDownloader.getDefault().startDownload(filePositon, item.pageURL, fileURL, item.getTargetDirectory(item.pageURL,fileURL), new LearningDownloader.IPowerfulDownloadCallback() {
-                @Override
+
+            final String pageURL = item.pageURL;
+            LogUtil.v("task","fileURL=" + fileURL);
+//            FileDownloader.getImpl().create(fileURL).setPath(item.getTargetDirectory(item.pageURL,fileURL)).setAutoRetryTimes(3).setTag(item.pageURL)
+//                    .setListener(new FileDownloadListener() {
+//                        @Override
+//                        protected void pending(BaseDownloadTask baseDownloadTask, int i, int i1) {
+//
+//                        }
+//
+//                        @Override
+//                        protected void progress(BaseDownloadTask baseDownloadTask, int i, int i1) {
+//                            LogUtil.e("task","progress:" + i +  ":" + i1);
+//                        }
+//
+//                        @Override
+//                        protected void completed(BaseDownloadTask baseDownloadTask) {
+//                            LogUtil.v("fd","completed:" + baseDownloadTask);
+//                            Message msg = mHandler.obtainMessage();
+//                            msg.what = DownloadService.MSG_UPDATE_PROGRESS;
+//                            msg.arg1 = 100;
+//                            msg.arg2 = filePositon;
+//                            msg.obj = pageURL;
+//                            mHandler.sendMessage(msg);
+//
+//                            downloadItem(totalDownloadedList, item);
+//                        }
+//
+//                        @Override
+//                        protected void paused(BaseDownloadTask baseDownloadTask, int i, int i1) {
+//
+//                        }
+//
+//                        @Override
+//                        protected void error(BaseDownloadTask baseDownloadTask, Throwable throwable) {
+//
+//                        }
+//
+//                        @Override
+//                        protected void warn(BaseDownloadTask baseDownloadTask) {
+//
+//                        }
+//                    }).start();
+          LearningDownloader.getDefault().startDownload(filePositon, item.pageURL, fileURL, item.getTargetDirectory(item.pageURL,fileURL), new LearningDownloader.IPowerfulDownloadCallback() {
+               @Override
                 public void onStart(String path) {
 
                 }
@@ -146,7 +196,7 @@ public class DownloadingTaskList {
                 public void onFinish(int code, String pageURL, int filePosition, String path) {
                     LogUtil.e("download", "LearningDownloadercode:" + code + ":" + pageURL);
                     if (code == PowerfulDownloader.CODE_OK) {
-                        // mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, filePosition, 0, pageURL).sendToTarget();
+                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, filePosition, 0, pageURL).sendToTarget();
                         Message msg = mHandler.obtainMessage();
                         msg.what = DownloadService.MSG_UPDATE_PROGRESS;
                         msg.arg1 = 100;
@@ -168,15 +218,15 @@ public class DownloadingTaskList {
                 public void onError(int errorCode) {
                 }
 
-                @Override
-                public void onProgress(String pageURL, int filePosition, String path, int progress) {
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = DownloadService.MSG_UPDATE_PROGRESS;
-                    msg.arg1 = progress;
-                    msg.arg2 = filePosition;
-                    msg.obj = pageURL;
-                    mHandler.sendMessage(msg);
-                }
+               @Override
+               public void onProgress(String pageURL, int filePosition, String path, int progress) {
+                   Message msg = mHandler.obtainMessage();
+                   msg.what = DownloadService.MSG_UPDATE_PROGRESS;
+                   msg.arg1 = progress;
+                   msg.arg2 = filePosition;
+                   msg.obj = pageURL;
+                   mHandler.sendMessage(msg);
+               }
             });
         } else if (item.getImageCount() > 0) {
             final String fileURL = item.getImageList().remove(0);

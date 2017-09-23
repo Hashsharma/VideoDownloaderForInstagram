@@ -118,6 +118,8 @@ public class LearningDownloader {
             conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
             conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+            conn.setDefaultUseCaches(false);
+            conn.setUseCaches(false);
             String acceptRanges = conn.getHeaderField("Accept-Ranges");
             LogUtil.e(TAG, "acceptRangs=" + acceptRanges);
             if (!TextUtils.isEmpty(acceptRanges) && "bytes".equals(acceptRanges)) {

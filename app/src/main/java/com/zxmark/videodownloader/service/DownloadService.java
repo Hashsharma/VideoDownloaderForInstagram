@@ -1,7 +1,10 @@
 package com.zxmark.videodownloader.service;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -64,8 +67,19 @@ public class DownloadService extends Service {
     public static final int MSG_HANDLE_SEND_ACTION = 5;
     public static final int MSG_REQUSET_URL_ERROR = 6;
 
+    private NotificationManager mNotifyManager;
+    private Notification.Builder mBuilder;
+
+    public static final int NOTIFICATION_ID_DOWNLOAD = 1000009;
+
 
     final RemoteCallbackList<IDownloadCallback> mCallbacks = new RemoteCallbackList<IDownloadCallback>();
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initNotification();
+    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -74,6 +88,7 @@ public class DownloadService extends Service {
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
                 if (msg.obj != null) {
                     String pageURL = (String) msg.obj;
+                    cancelNotification(pageURL);
                     boolean isExistURL = DownloaderDBHelper.SINGLETON.isExistPageURL(pageURL);
                     LogUtil.e("download", "isExistURL:" + isExistURL);
                     if (isExistURL) {
@@ -84,8 +99,11 @@ public class DownloadService extends Service {
             } else if (msg.what == MSG_DOWNLOAD_ERROR) {
                 IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
+                String pageURL = (String) msg.obj;
+                setNotificationContent(pageURL, pageURL);
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
+                //updateNotificationProgress((String) msg.obj, msg.arg1);
                 DownloadService.this.notifyDownloadProgress((String) msg.obj, msg.arg2, msg.arg1);
             } else if (msg.what == MSG_NOTIFY_DOWNLOADED) {
                 IToast.makeText(DownloadService.this, R.string.toast_downlaoded_video, Toast.LENGTH_SHORT).show();
@@ -217,6 +235,32 @@ public class DownloadService extends Service {
 
         return super.onStartCommand(intent, flags, startId);
 
+    }
+
+    private void initNotification() {
+        mNotifyManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new Notification.Builder(this);
+    }
+
+    private void setNotificationContent(String pageURL, String content) {
+        mBuilder.setContentTitle("Video Downloading")
+                .setSmallIcon(R.drawable.ins_icon);
+        mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
+        startForeground(pageURL.hashCode(), mBuilder.build());
+    }
+
+    private void updateNotificationProgress(String pageURL, int progress) {
+        mBuilder.setProgress(100, progress, false);
+        // Displays the progress bar for the first time.
+        mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
+    }
+
+    private void cancelNotification(String pageURL) {
+        mNotifyManager.cancel(pageURL.hashCode());
+        if (DownloadingTaskList.SINGLETON.isEmpty()) {
+            stopForeground(true);
+        }
     }
 
     /**

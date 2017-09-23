@@ -109,6 +109,7 @@ public class PowerfulDownloader {
             //设置连接的相关属性
             conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
             conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
+
             //判断连接是否正确。
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 // 获取文件大小。

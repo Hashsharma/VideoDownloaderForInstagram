@@ -6,8 +6,8 @@ android {
         applicationId "com.imobapp.videodownloaderforinstagram"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 25
-        versionName "2.5"
+        versionCode 40
+        versionName "2.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -33,6 +33,8 @@ android {
             shrinkResources true
             //签名
             signingConfig signingConfigs.release
+
+
         }
     }
 }
@@ -146,13 +148,14 @@ dependencies {
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
-    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile 'com.bcgdv.asia.lib:fanmenu:1.2'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
     compile(name: 'AudienceNetwork', ext: 'aar')
-    compile(name: 'DuappsAd-HW-v1.0.9.8-release', ext: 'aar')
     compile 'com.google.firebase:firebase-core:9.6.1'
+    compile 'com.github.lzyzsd:circleprogress:1.2.1'
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.liulishuo.filedownloader:library:1.6.5'
     testCompile 'junit:junit:4.12'
 }
 

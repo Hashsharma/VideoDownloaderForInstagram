@@ -8,10 +8,13 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.zxmark.videodownloader.service.TLRequestParserService;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
 
+import java.net.Proxy;
 import java.util.Locale;
 
 /**
@@ -28,8 +31,21 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApplication = this;
+       // initFileDownloader();
         initDefaultLocale();
         init();
+    }
+
+    private void initFileDownloader() {
+        FileDownloader.setupOnApplicationOnCreate(this)
+                .connectionCreator(new FileDownloadUrlConnection
+                        .Creator(new FileDownloadUrlConnection.Configuration()
+                        .connectTimeout(15_000) // set connection timeout.
+                        .readTimeout(15_000) // set read timeout.
+                        .proxy(Proxy.NO_PROXY) // set proxy
+                ))
+                .commit();
+
     }
 
     private void init() {

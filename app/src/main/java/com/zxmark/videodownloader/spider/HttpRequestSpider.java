@@ -19,7 +19,7 @@ public class HttpRequestSpider {
     public static final String ANDORID_USER_AGENT = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Mobile Safari/537.36";
 
     public static final String UA_1 = "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1";
-    public static int CONNECTION_TIMEOUT = 5000;
+    public static int CONNECTION_TIMEOUT = 10_000;
     public static final String METHOD_GET = "GET";
 
     public static final String METHOD_POST = "POST";

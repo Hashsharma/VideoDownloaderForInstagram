@@ -7,8 +7,11 @@ import java.util.HashMap;
 
 /**
  * Created by fanlitao on 6/25/17.
+ *
+ * 弃用广告Cache，观察广告收益
  */
 
+@Deprecated
 public class ADCache {
 
 
@@ -35,11 +38,11 @@ public class ADCache {
 
 
     public void setFacebookNativeAd(String key, DownloadContentItem itemAd) {
-        if (mAdCacheMap == null) {
-            mAdCacheMap = new HashMap<>();
-        }
-
-        mAdCacheMap.put(key, itemAd);
+//        if (mAdCacheMap == null) {
+//            mAdCacheMap = new HashMap<>();
+//        }
+//
+//        mAdCacheMap.put(key, itemAd);
     }
 
     public DownloadContentItem getFacebookNativeAd(String key) {
