@@ -7,13 +7,20 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import com.duapps.ad.base.DuAdNetwork;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
+import com.swipe.SwipeMgr;
 import com.zxmark.videodownloader.service.TLRequestParserService;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.IOException;
 import java.net.Proxy;
 import java.util.Locale;
 
@@ -51,6 +58,10 @@ public class MainApplication extends Application {
     private void init() {
         Intent intent = new Intent(this, TLRequestParserService.class);
         startService(intent);
+
+        DuAdNetwork.init(this, getConfigJSON(getApplicationContext()));
+        SwipeMgr.onAppStart(this);
+        SwipeMgr.getInstance().setAdSid(146820);
     }
 
     private void initDefaultLocale() {
@@ -85,36 +96,38 @@ public class MainApplication extends Application {
         super.onConfigurationChanged(newConfig);
         LogUtil.e("config", "onConfigurationChanged:" + newConfig);
     }
+    private static String TOOLBOX_AD_CONFIG = "dxtoolbox.json";
 
-//    /*** 从assets中读取txt*/
-//    private String getConfigJSON(Context context) {
-//        BufferedInputStream bis = null;
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        try {
-//            bis = new BufferedInputStream(context.getAssets().open("ad.json"));
-//            byte[] buffer = new byte[4096];
-//            int readLen = -1;
-//            while ((readLen = bis.read(buffer)) > 0) {
-//                bos.write(buffer, 0, readLen);
-//            }
-//        } catch (IOException e) {
-//            Log.e("", "IOException :" + e.getMessage());
-//        } finally {
-//            closeQuietly(bis);
-//        }
-//        return bos.toString();
-//    }
-//
-//    private void closeQuietly(Closeable closeable) {
-//        if (closeable == null) {
-//            return;
-//        }
-//        try {
-//            closeable.close();
-//        } catch (IOException e) {
-//            // empty
-//        }
-//    }
+    private String getConfigJSON(Context context) {
+        BufferedInputStream bis = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            bis = new BufferedInputStream(context.getAssets().open(
+                    TOOLBOX_AD_CONFIG));
+            byte[] buffer = new byte[4096];
+            int readLen = -1;
+            while ((readLen = bis.read(buffer)) > 0) {
+                bos.write(buffer, 0, readLen);
+            }
+        } catch (IOException e) {
+            Log.e("", "IOException :" + e.getMessage());
+        } finally {
+            closeQuietly(bis);
+        }
+
+        return bos.toString();
+    }
+
+    private void closeQuietly(Closeable closeable) {
+        if (closeable == null) {
+            return;
+        }
+        try {
+            closeable.close();
+        } catch (IOException e) {
+            // empty
+        }
+    }
 
 
 }

@@ -19,6 +19,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -36,6 +38,8 @@ public class LearningDownloader {
     public static final int CODE_OK = 0;
     public static final int CODE_DOWNLOAD_FAILED = -1;
     public static final int CODE_DOWNLOAD_CANCELED = 100;
+
+    public static final String COOKIES_HEADER = "Set-Cookie";
     public volatile static LearningDownloader sInstance;
 
     public static final int MAX_RETRY_TIMES = 5;
@@ -117,6 +121,11 @@ public class LearningDownloader {
             //设置连接的相关属性
             conn.setRequestMethod(HttpRequestSpider.METHOD_GET);
             conn.setReadTimeout(HttpRequestSpider.CONNECTION_TIMEOUT);
+//            Map<String, List<String>> headerFields = conn.getHeaderFields();
+//            List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+//            for(String cookie: cookiesHeader) {
+//                LogUtil.v("download","cookie=" + cookie);
+//            }
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
             conn.setDefaultUseCaches(false);
             conn.setUseCaches(false);
@@ -128,6 +137,7 @@ public class LearningDownloader {
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     // 获取文件大小。
                     int fileSize = conn.getContentLength();
+
                     targetLength = fileSize;
                     if (fileSize <= 0) {
                         if (mCallback != null) {

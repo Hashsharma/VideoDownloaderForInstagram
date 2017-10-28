@@ -152,6 +152,9 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
     compile(name: 'AudienceNetwork', ext: 'aar')
+    compile(name:'DuappsAd-CW-v1.1.1.0-release',ext:'aar')
+    compile(name:'SwipeSDK-v1.0.1-release',ext:'aar')
+
     compile 'com.google.firebase:firebase-core:9.6.1'
     compile 'com.github.lzyzsd:circleprogress:1.2.1'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'

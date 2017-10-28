@@ -315,72 +315,87 @@ public class DownloadService extends Service {
     private Object sCallbackLock = new Object();
 
     private void notifyDownloadProgress(String pageUrl, int filePosition, int progress) {
-        synchronized (sCallbackLock) {
-            if (mCallbacks.getRegisteredCallbackCount() > 0) {
-                final int N = mCallbacks.beginBroadcast();
-                for (int i = 0; i < N; i++) {
-                    try {
-                        mCallbacks.getBroadcastItem(i).onPublishProgress(pageUrl, filePosition, progress);
-                    } catch (RemoteException e) {
-                        // The RemoteCallbackList will take care of removing
-                        // the dead object for us.
+        try {
+            synchronized (sCallbackLock) {
+                if (mCallbacks.getRegisteredCallbackCount() > 0) {
+                    final int N = mCallbacks.beginBroadcast();
+                    for (int i = 0; i < N; i++) {
+                        try {
+                            mCallbacks.getBroadcastItem(i).onPublishProgress(pageUrl, filePosition, progress);
+                        } catch (RemoteException e) {
+                            // The RemoteCallbackList will take care of removing
+                            // the dead object for us.
+                        }
                     }
+                    mCallbacks.finishBroadcast();
                 }
-                mCallbacks.finishBroadcast();
             }
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
     private void notifyReceiveNewTask(String pageURL) {
-        synchronized (sCallbackLock) {
-            if (mCallbacks.getRegisteredCallbackCount() > 0) {
-                final int N = mCallbacks.beginBroadcast();
-                for (int i = 0; i < N; i++) {
-                    try {
-                        mCallbacks.getBroadcastItem(i).onReceiveNewTask(pageURL);
-                    } catch (RemoteException e) {
-                        // The RemoteCallbackList will take care of removing
-                        // the dead object for us.
+        try {
+            synchronized (sCallbackLock) {
+                if (mCallbacks.getRegisteredCallbackCount() > 0) {
+                    final int N = mCallbacks.beginBroadcast();
+                    for (int i = 0; i < N; i++) {
+                        try {
+                            mCallbacks.getBroadcastItem(i).onReceiveNewTask(pageURL);
+                        } catch (RemoteException e) {
+                            // The RemoteCallbackList will take care of removing
+                            // the dead object for us.
+                        }
                     }
+                    mCallbacks.finishBroadcast();
                 }
-                mCallbacks.finishBroadcast();
             }
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
 
     private void notifyStartDownload(String filePath) {
-        if (mCallbacks.getRegisteredCallbackCount() > 0) {
-            final int N = mCallbacks.beginBroadcast();
-            for (int i = 0; i < N; i++) {
-                try {
-                    mCallbacks.getBroadcastItem(i).onStartDownload(filePath);
-                } catch (RemoteException e) {
-                    // The RemoteCallbackList will take care of removing
-                    // the dead object for us.
+        try {
+            if (mCallbacks.getRegisteredCallbackCount() > 0) {
+                final int N = mCallbacks.beginBroadcast();
+                for (int i = 0; i < N; i++) {
+                    try {
+                        mCallbacks.getBroadcastItem(i).onStartDownload(filePath);
+                    } catch (RemoteException e) {
+                        // The RemoteCallbackList will take care of removing
+                        // the dead object for us.
+                    }
                 }
+                mCallbacks.finishBroadcast();
             }
-            mCallbacks.finishBroadcast();
-        }
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void notifyDownloadFinished(String filePath) {
-        if (mCallbacks.getRegisteredCallbackCount() > 0) {
-            final int N = mCallbacks.beginBroadcast();
-            for (int i = 0; i < N; i++) {
-                try {
-                    mCallbacks.getBroadcastItem(i).onDownloadSuccess(filePath);
-                } catch (RemoteException e) {
-                    // The RemoteCallbackList will take care of removing
-                    // the dead object for us.
-                }
-            }
-            mCallbacks.finishBroadcast();
-        }
 
+        try {
+            if (mCallbacks.getRegisteredCallbackCount() > 0) {
+                final int N = mCallbacks.beginBroadcast();
+                for (int i = 0; i < N; i++) {
+                    try {
+                        mCallbacks.getBroadcastItem(i).onDownloadSuccess(filePath);
+                    } catch (RemoteException e) {
+                        // The RemoteCallbackList will take care of removing
+                        // the dead object for us.
+                    }
+                }
+                mCallbacks.finishBroadcast();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 

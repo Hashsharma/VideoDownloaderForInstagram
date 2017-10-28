@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +55,14 @@ public class VideoHistoryFragment extends Fragment {
     private List<DownloadContentItem> mDataList;
     private MainListRecyclerAdapter mAdapter;
     private NativeAd mNativeAd;
-    private boolean mHaveDeletedUselessFiles = false;
-    private DownloadContentItem mAdVideoBean;
 
     private MainListRecyclerAdapter.ISelectChangedListener mListener;
-
+    private boolean mInsertFacebookAdStatus = false;
+    private int mLastAdInsertedPosition = 0;
+    //多申请几个Facebook广告位
+    private static String[] FACEBOOK_IDS = new String[]{"2099565523604162_2099583463602368", "2099565523604162_2170925976468116"};
+    private HashMap<String, NativeAd> mNativeAdMap = new HashMap<String, NativeAd>();
+    private HashMap<Integer, DownloadContentItem> mBeanMap = new HashMap<>();
     private Handler mMainLooperHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -120,6 +124,65 @@ public class VideoHistoryFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
                 false);
         mListView.setLayoutManager(mLayoutManager);
+        mListView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        if (!mInsertFacebookAdStatus) {
+                            return;
+                        }
+                        int visibleItemCount = mLayoutManager.getChildCount();
+                        int totalItemCount = mLayoutManager.getItemCount();
+                        int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+
+                        int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+                        Log.v("fan", visibleItemCount + ":" + totalItemCount + ":" + firstVisibleItemPosition + ":" + lastVisibleItemPosition);
+                        if (firstVisibleItemPosition < 2) {
+                            return;
+                        }
+                        View view = null;
+                        boolean haveFacebookAdInScreen = false;
+                        for (int index = 0; index < visibleItemCount; index++) {
+                            view = mListView.getChildAt(index);
+                            if (view != null) {
+                                DownloadContentItem downloadContentItem = (DownloadContentItem) view.getTag();
+                                if (downloadContentItem != null) {
+                                    if (downloadContentItem.itemType == DownloadContentItem.TYPE_FACEBOOK_AD) {
+                                        haveFacebookAdInScreen = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!haveFacebookAdInScreen) {
+                            DownloadContentItem downloadContentItem = mBeanMap.get(mLastAdInsertedPosition % 2);
+                            if (downloadContentItem != null) {
+                                int adPosition = lastVisibleItemPosition - 1;
+                                mDataList.add(adPosition, downloadContentItem);
+                                mAdapter.notifyItemInserted(adPosition);
+                                mLastAdInsertedPosition += 1;
+                            }
+                        }
+
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) {
+
+                    mInsertFacebookAdStatus = true;
+                } else {
+                    mInsertFacebookAdStatus = false;
+                }
+            }
+        });
         initData();
     }
 
@@ -130,14 +193,14 @@ public class VideoHistoryFragment extends Fragment {
             public void run() {
                 mDataList = DownloaderDBHelper.SINGLETON.getDownloadedTask();
 
-                mAdVideoBean = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
-                if (mAdVideoBean != null) {
-                    if (mDataList.size() > 2) {
-                        mDataList.add(2, mAdVideoBean);
-                    } else {
-                        mDataList.add(mAdVideoBean);
-                    }
-                }
+//                mAdVideoBean = ADCache.getDefault().getFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO);
+//                if (mAdVideoBean != null) {
+//                    if (mDataList.size() > 2) {
+//                        mDataList.add(2, mAdVideoBean);
+//                    } else {
+//                        mDataList.add(mAdVideoBean);
+//                    }
+//                }
 
                 if (isAdded()) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -222,89 +285,93 @@ public class VideoHistoryFragment extends Fragment {
         if (!ADCache.SHOW_AD) {
             return;
         }
-        LogUtil.e("history", "showNativeAd:" + mAdVideoBean);
-        if (mAdVideoBean == null) {
-            if (isAdded()) {
-                startLoadFacebookAd();
-            }
+        //LogUtil.e("history", "showNativeAd:" + mAdVideoBean);
+        // if (mAdVideoBean == null) {
+        if (isAdded()) {
+            startLoadFacebookAd();
         }
+        //}
     }
 
 
     private void startLoadFacebookAd() {
         if (getActivity() != null && isAdded()) {
-            mNativeAd = new NativeAd(getActivity(), "2099565523604162_2099583463602368");
-            mNativeAd.setAdListener(new AdListener() {
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    LogUtil.v("facebook", "onError:" + adError);
-                }
+            if (mDataList.size() < 3) {
+                return;
+            }
+            for (int index = 0; index < FACEBOOK_IDS.length; index++) {
+                final int position = index;
+                NativeAd nativeAd = new NativeAd(getActivity(), FACEBOOK_IDS[index]);
+                nativeAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onError(Ad ad, AdError adError) {
+                        LogUtil.v("facebook", "onError:" + adError);
+                    }
 
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    onFacebookAdLoaded(ad);
-                }
+                    @Override
+                    public void onAdLoaded(Ad ad) {
+                        onFacebookAdLoaded(position, ad);
+                    }
 
-                @Override
-                public void onAdClicked(Ad ad) {
-                    LogUtil.e("facebook", "onAdClicked");
-                    mMainLooperHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mAdVideoBean != null) {
-                                ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_HISTORY_VIDEO);
-                                final int position = mDataList.indexOf(mAdVideoBean);
-                                LogUtil.e("facebook2", "position:" + position);
-                                if (position >= 0) {
-                                    mDataList.remove(position);
-                                    mAdapter.notifyItemRemoved(position);
-                                    mAdVideoBean = null;
-                                }
-                            }
-                        }
-                    }, 1000);
-                }
+                    @Override
+                    public void onAdClicked(Ad ad) {
+                        LogUtil.e("facebook", "onAdClicked");
+//                        mMainLooperHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                                if (mAdVideoBean != null) {
+//                                    ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_HISTORY_VIDEO);
+//                                    final int position = mDataList.indexOf(mAdVideoBean);
+//                                    LogUtil.e("facebook2", "position:" + position);
+//                                    if (position >= 0) {
+//                                        mDataList.remove(position);
+//                                        mAdapter.notifyItemRemoved(position);
+//                                        mAdVideoBean = null;
+//                                    }
+//                                }
+//                            }
+//                        }, 1000);
+                    }
 
-                @Override
-                public void onLoggingImpression(Ad ad) {
+                    @Override
+                    public void onLoggingImpression(Ad ad) {
 
-                }
-            });
+                    }
+                });
 
-            mNativeAd.loadAd();
+                nativeAd.loadAd();
+                mNativeAdMap.put(FACEBOOK_IDS[index], nativeAd);
+            }
         }
     }
+
 
     // The next step is to extract the ad metadata and use its properties
 // to build your customized native UI. Modify the onAdLoaded function
 // above to retrieve the ad properties. For example:
-    public void onFacebookAdLoaded(Ad ad) {
+    public void onFacebookAdLoaded(int position, Ad ad) {
         if (getActivity() == null || isDetached()) {
             return;
         }
-        if (ad != mNativeAd) {
+
+        NativeAd nativeAd = mNativeAdMap.get(FACEBOOK_IDS[position]);
+        if (ad != nativeAd) {
             return;
         }
 
-        if (mAdVideoBean == null) {
-            mAdVideoBean = new DownloadContentItem();
-            mAdVideoBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
-            mAdVideoBean.facebookNativeAd = mNativeAd;
-            mAdVideoBean.createdTime = System.currentTimeMillis();
+        DownloadContentItem mAdVideoBean = new DownloadContentItem();
+        mAdVideoBean.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
+        mAdVideoBean.facebookNativeAd = nativeAd;
+        mAdVideoBean.createdTime = System.currentTimeMillis();
+        mBeanMap.put(position, mAdVideoBean);
+        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, mAdVideoBean);
 
-            ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, mAdVideoBean);
-
-            if (mDataList != null) {
-                if (mDataList.size() == 0) {
-                    mDataList.add(mAdVideoBean);
-                    mAdapter.notifyItemInserted(0);
-                } else {
-                    int adPosition = mLayoutManager.findFirstVisibleItemPosition() + 1;
-                    if (adPosition < mDataList.size()) {
-                        mDataList.add(adPosition, mAdVideoBean);
-                        mAdapter.notifyItemInserted(adPosition);
-                    }
-                }
+        if (mDataList != null) {
+            int adPosition = position * 2 + 1;
+            if (adPosition < mDataList.size()) {
+                mDataList.add(adPosition, mAdVideoBean);
+                mAdapter.notifyItemInserted(adPosition);
             }
         }
     }

@@ -9,15 +9,26 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
     <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name="com.zxmark.videodownloader.MainApplication"
@@ -28,12 +39,12 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.zxmark.videodownloader.MainActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
             android:allowTaskReparenting="false"
             android:clearTaskOnLaunch="true"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -57,7 +68,7 @@
         </activity>
 
 
-        <activity android:name="com.zxmark.videodownloader.main.VideoPlayActivity" >
+        <activity android:name="com.zxmark.videodownloader.main.VideoPlayActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -65,7 +76,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.zxmark.videodownloader.main.ImageGalleryActivity" >
+        <activity android:name="com.zxmark.videodownloader.main.ImageGalleryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -73,27 +84,50 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.zxmark.videodownloader.main.GalleryPagerActivity"
-            android:theme="@style/GalleryWindowStyle"
-            />
+        <activity
+            android:name="com.zxmark.videodownloader.main.GalleryPagerActivity"
+            android:theme="@style/GalleryWindowStyle" />
 
-        <activity android:name="com.zxmark.videodownloader.main.RatingAppActivity"
+        <activity
+            android:name="com.zxmark.videodownloader.main.RatingAppActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog"
 
             />
+
+        <activity
+            android:name="com.swipe.BrightnessChangeActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.swipe.EmptyActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+
         <service
             android:name="com.zxmark.videodownloader.service.DownloadService"
             android:exported="true" />
         <service android:name="com.zxmark.videodownloader.service.TLRequestParserService" />
-        
+
         <provider
-            android:authorities="com.imobapp.videodownloaderforinstagram"
-            android:name="com.zxmark.videodownloader.db.DownloaderContentProvider"  />
+            android:name="com.zxmark.videodownloader.db.DownloaderContentProvider"
+            android:authorities="com.imobapp.videodownloaderforinstagram" />
 
 
-        <meta-data android:value="5941ea6f310c9331ee0004a1" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="GP" android:name="UMENG_CHANNEL"/>
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5941ea6f310c9331ee0004a1" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="GP" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
@@ -117,6 +151,18 @@
         <meta-data
             android:name="app_license"
             android:value="60f54548c2b2621c7b323b8020efc46a" />
+
+        <provider
+            android:name="com.duapps.ad.stats.DuAdCacheProvider"
+            android:authorities="com.imobapp.videodownloaderforinstagram.DuAdCacheProvider"
+            android:exported="false"></provider>
+
+        <receiver android:name="com.duapps.ad.base.PackageAddReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

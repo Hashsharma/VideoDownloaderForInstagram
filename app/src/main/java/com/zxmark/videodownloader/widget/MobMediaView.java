@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,11 +17,16 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.component.PinchImageView;
+import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.main.GalleryPagerActivity;
+import com.zxmark.videodownloader.util.ADCache;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.MimeTypeUtil;
 
@@ -170,14 +176,61 @@ public class MobMediaView extends FrameLayout {
 
         //  4.5  获取焦点
         mVideoView.requestFocus();
+
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 stop();
+                if (mCacheVideoAdBean != null) {
+                    //mVideoView.setVisibility(View.GONE);
+                    //mVideoIcon.setVisibility(View.GONE);
+                    setAdSource(mCacheVideoAdBean);
+                }
             }
         });
+        mCacheVideoAdBean = null;
+        mVideoNativeAd = null;
+        loadFaceBookAdAfterVideoCompeleted();
     }
 
+    private NativeAd mVideoNativeAd;
+    private GalleryPagerActivity.PagerBean mCacheVideoAdBean;
+
+    private void loadFaceBookAdAfterVideoCompeleted() {
+        LogUtil.v("fan", "loadFaceBookAfterVideoCompeleted");
+        mVideoNativeAd = new NativeAd(getContext(), "2099565523604162_2170561929837854");
+        mVideoNativeAd.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                LogUtil.e("facebook", "onError:" + adError);
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                onFacebookAdLoaded(ad);
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+
+        mVideoNativeAd.loadAd();
+    }
+
+
+    private void onFacebookAdLoaded(Ad ad) {
+        if (ad != mVideoNativeAd) {
+            return;
+        }
+        mCacheVideoAdBean = new GalleryPagerActivity.PagerBean();
+        mCacheVideoAdBean.facebookNativeAd = mVideoNativeAd;
+    }
 
     public void play() {
         if (mIsVideoMimeType) {

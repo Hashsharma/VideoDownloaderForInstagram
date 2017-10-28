@@ -89,7 +89,7 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, final int position) {
         final DownloadContentItem bean = mDataList.get(position);
-
+        baseHolder.itemView.setTag(bean);
         if (baseHolder instanceof ItemViewHolder) {
             final ItemViewHolder holder = (ItemViewHolder) baseHolder;
 

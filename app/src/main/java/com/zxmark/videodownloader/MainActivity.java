@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
+import com.swipe.SwipeMgr;
 import com.umeng.analytics.MobclickAgent;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
@@ -161,6 +162,8 @@ public class MainActivity extends AppCompatActivity
                 }, 100);
             }
         }
+
+        SwipeMgr.getInstance().setSwipeOpen(true);
     }
 
     private void handleSendIntent() {
