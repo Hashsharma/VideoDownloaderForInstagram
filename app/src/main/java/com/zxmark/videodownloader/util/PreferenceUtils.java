@@ -87,7 +87,7 @@ public class PreferenceUtils {
 
     public static long getLastLoadFullScreenAD() {
         getSharedPreferences();
-        return mMainSharedPreference.getLong(LAST_LOAD_FULL_AD,System.currentTimeMillis());
+        return mMainSharedPreference.getLong(LAST_LOAD_FULL_AD,0);
     }
 
 }

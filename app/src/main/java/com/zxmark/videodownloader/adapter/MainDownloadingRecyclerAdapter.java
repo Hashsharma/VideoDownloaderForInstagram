@@ -249,6 +249,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 }
                 try {
                     imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).priority(Priority.IMMEDIATE).crossFade().into(holder.adIconView);
+                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).priority(Priority.IMMEDIATE).crossFade().into(holder.adCoverView);
                 } catch (OutOfMemoryError error) {
                     System.gc();
                     System.gc();

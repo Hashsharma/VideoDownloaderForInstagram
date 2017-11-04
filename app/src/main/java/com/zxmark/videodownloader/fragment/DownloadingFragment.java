@@ -329,7 +329,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             }
             if (mIsPasteInMain) {
                 mIsPasteInMain = false;
-                if (PreferenceUtils.getLastLoadFullScreenAD() - System.currentTimeMillis() <= BuildConfig.LAST_LOAD_FULL_SCREEN_DELAYED) {
+                LogUtil.e("fan","showFullAD");
+                if (PreferenceUtils.getLastLoadFullScreenAD() - System.currentTimeMillis() >= BuildConfig.LAST_LOAD_FULL_SCREEN_DELAYED) {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -379,6 +380,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
 
     private void loadFullScreenAd(String facebookAd) {
+        LogUtil.e("fan","loadFullScreenAd:");
         final NativeAd fullScreenAd = new NativeAd(getActivity(), facebookAd);
         fullScreenAd.setAdListener(new AdListener() {
             @Override
