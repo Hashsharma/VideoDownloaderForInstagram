@@ -23,6 +23,7 @@ public class PreferenceUtils {
     public static final String SHOW_RATE_GUIDE = "show_rate_guide";
 
     public static final String RATE_US_BAD = "rate_us_bad";
+    public static final String LAST_LOAD_FULL_AD = "last_load_full_ad";
 
     private static SharedPreferences getSharedPreferences() {
         if (mMainSharedPreference == null) {
@@ -78,4 +79,15 @@ public class PreferenceUtils {
         getSharedPreferences();
         return mMainSharedPreference.getLong(RATE_US_BAD,0);
     }
+
+    public static void setLoadFullScreenAd() {
+        getSharedPreferences();
+        mMainSharedPreference.edit().putLong(LAST_LOAD_FULL_AD,System.currentTimeMillis()).commit();
+    }
+
+    public static long getLastLoadFullScreenAD() {
+        getSharedPreferences();
+        return mMainSharedPreference.getLong(LAST_LOAD_FULL_AD,System.currentTimeMillis());
+    }
+
 }

@@ -82,6 +82,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private String mFormatLeftFileString;
     private RequestManager mRequestMangager;
 
+    private boolean mIsPasteInMain = false;
     private Handler mHandler = new Handler() {
 
     };
@@ -326,6 +327,18 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
                 showNativeAd();
             }
+            if (mIsPasteInMain) {
+                mIsPasteInMain = false;
+                if (PreferenceUtils.getLastLoadFullScreenAD() - System.currentTimeMillis() <= BuildConfig.LAST_LOAD_FULL_SCREEN_DELAYED) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            PreferenceUtils.setLoadFullScreenAd();
+                            loadFullScreenAd("2099565523604162_2174397646120949");
+                        }
+                    });
+                }
+            }
         }
     }
 
@@ -352,12 +365,11 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 LogUtil.e("fan", "downloadedCount=" + DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() + ":" + DownloaderDBHelper.SINGLETON.getDownloadingTaskCount());
                 if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 0 && DownloaderDBHelper.SINGLETON.getDownloadingTaskCount() == 0) {
                     //显示一个全屏广告
-
                     EventUtil.getDefault().onEvent("AD", "full_screen_ad");
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            loadFullScreenAd();
+                            loadFullScreenAd("2099565523604162_2172062449687802");
                         }
                     });
                 }
@@ -365,8 +377,9 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void loadFullScreenAd() {
-        final NativeAd fullScreenAd = new NativeAd(getActivity(), "2099565523604162_2172062449687802");
+
+    private void loadFullScreenAd(String facebookAd) {
+        final NativeAd fullScreenAd = new NativeAd(getActivity(), facebookAd);
         fullScreenAd.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
@@ -518,6 +531,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             if (TextUtils.isEmpty(handledUrl)) {
                 IToast.makeText(getActivity(), R.string.not_support_url, Toast.LENGTH_SHORT).show();
             } else {
+                mIsPasteInMain = true;
                 startDownload(handledUrl);
             }
         }

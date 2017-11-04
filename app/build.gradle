@@ -36,12 +36,13 @@ android {
             //全屏幕广告
             buildConfigField("boolean", "HAVE_FULLSCREEN_AD", "true")
             buildConfigField("int", "FULLSCREEN_AD_DELAYED", "2 * 60 * 60 * 1000")
+            buildConfigField("long","LAST_LOAD_FULL_SCREEN_DELAYED","2 * 60 * 60 * 1000")
         }
 
         debug {
             buildConfigField("boolean", "HAVE_FULLSCREEN_AD", "true")
             buildConfigField("int", "FULLSCREEN_AD_DELAYED", "0")
-
+            buildConfigField("long","LAST_LOAD_FULL_SCREEN_DELAYED","2 * 60 * 60 * 1000")
         }
 
 
