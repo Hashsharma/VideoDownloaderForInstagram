@@ -16,12 +16,7 @@
 	<string name="menu_download_video">Scaricare</string>
 	<string name="menu_download_image">Scarica Miniature</string>
 	<string name="menu_delete">Elimina</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
-
+	<string name="menu_pause">pausa</string>
 	<string name="download_home_lable">File salvato in: /%s</string>
 	<string name="repost">REPOST</string>
 	<string name="spider_request_error">Impossibile ottenere il link di download!</string>

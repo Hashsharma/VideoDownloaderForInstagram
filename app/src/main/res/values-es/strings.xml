@@ -13,12 +13,7 @@
 	<string name="menu_download_video">Descargar</string>
 	<string name="menu_download_image">descarga Miniaturas</string>
 	<string name="menu_delete">Borrar</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
-
+	<string name="menu_pause">Pausa</string>
 	<string name="download_home_lable">Archivo guardado en: /%s</string>
 	<string name="repost">REPOST</string>
 	<string name="spider_request_error">No se pudo obtener el enlace de descarga!</string>

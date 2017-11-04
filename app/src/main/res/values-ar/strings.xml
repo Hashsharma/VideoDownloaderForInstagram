@@ -16,12 +16,7 @@
 	<string name="menu_download_video">تحميل الفيديو</string>
 	<string name="menu_download_image">تحميل صورة مصغرة</string>
 	<string name="menu_delete">حذف</string>
-	<string-array name="fan_labels">
-		<item>@string/tab_title_downloading</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
-
+	<string name="menu_pause">وقفة</string>
 	<string name="download_home_lable">تم حفظ الملف في:%s</string>
 	<string name="repost">بعد ثانية</string>
 	<string name="spider_request_error">أخفق الحصول على رابط التحميل!</string>

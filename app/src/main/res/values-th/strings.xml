@@ -16,12 +16,7 @@
 	<string name="menu_download_video">ดาวน์โหลด</string>
 	<string name="menu_download_image">ดาวน์โหลดภาพขนาดย่อ</string>
 	<string name="menu_delete">ลบ</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
-
+	<string name="menu_pause">หยุดชั่วคราว</string>
 	<string name="download_home_lable">เก็บไฟล์ไว้แล้ว: /%s</string>
 	<string name="repost">REPOST</string>
 	<string name="spider_request_error">ไม่สามารถดาวน์โหลด Link ได้!</string>

@@ -59,6 +59,7 @@ public class MainApplication extends Application {
         Intent intent = new Intent(this, TLRequestParserService.class);
         startService(intent);
 
+
         DuAdNetwork.init(this, getConfigJSON(getApplicationContext()));
         SwipeMgr.onAppStart(this);
         SwipeMgr.getInstance().setAdSid(146820);

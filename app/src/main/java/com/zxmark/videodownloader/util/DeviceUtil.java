@@ -307,4 +307,39 @@ public final class DeviceUtil {
     public static boolean isVivoX3t() {
         return "BBK+vivo X3t".equals(getPhoneType());
     }
+
+    public static boolean isDelayOneDay() {
+        try {
+            final Context context = MainApplication.getInstance().getApplicationContext();
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            //应用装时间
+            long firstInstallTime = packageInfo.firstInstallTime;
+            LogUtil.v("fan", "firstInstallTime=" + firstInstallTime + ":" + (System.currentTimeMillis() - firstInstallTime));
+            return (System.currentTimeMillis() - firstInstallTime) > 10 * 60 * 1000;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static long getInstalledTime() {
+        try {
+            final Context context = MainApplication.getInstance().getApplicationContext();
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            //应用装时间
+            long firstInstallTime = packageInfo.firstInstallTime;
+            return firstInstallTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return System.currentTimeMillis();
+    }
+
+    public static boolean isBeyondTime(long timeDelayed) {
+        return (System.currentTimeMillis() - getInstalledTime() >= timeDelayed);
+    }
 }

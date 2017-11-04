@@ -296,16 +296,17 @@ public class VideoHistoryFragment extends Fragment {
 
     private void startLoadFacebookAd() {
         if (getActivity() != null && isAdded()) {
-            if (mDataList.size() < 3) {
-                return;
-            }
+            boolean onlyOneAd = mDataList.size() <= 1;
             for (int index = 0; index < FACEBOOK_IDS.length; index++) {
+                if (onlyOneAd && (index == 1)) {
+                    break;
+                }
                 final int position = index;
                 NativeAd nativeAd = new NativeAd(getActivity(), FACEBOOK_IDS[index]);
                 nativeAd.setAdListener(new AdListener() {
                     @Override
                     public void onError(Ad ad, AdError adError) {
-                        LogUtil.v("facebook", "onError:" + adError);
+                        LogUtil.v("facebook", "onError:" + adError.getErrorMessage());
                     }
 
                     @Override
@@ -367,12 +368,15 @@ public class VideoHistoryFragment extends Fragment {
         mBeanMap.put(position, mAdVideoBean);
         ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_HISTORY_VIDEO, mAdVideoBean);
 
-        if (mDataList != null) {
+        if (mDataList != null && mDataList.size() > 1) {
             int adPosition = position * 2 + 1;
             if (adPosition < mDataList.size()) {
                 mDataList.add(adPosition, mAdVideoBean);
                 mAdapter.notifyItemInserted(adPosition);
             }
+        } else {
+            mDataList.add(mAdVideoBean);
+            mAdapter.notifyDataSetChanged();
         }
     }
 

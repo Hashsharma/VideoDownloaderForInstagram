@@ -6,8 +6,8 @@ android {
         applicationId "com.imobapp.videodownloaderforinstagram"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 40
-        versionName "2.8"
+        versionCode 47
+        versionName "2.8.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -33,20 +33,39 @@ android {
             shrinkResources true
             //签名
             signingConfig signingConfigs.release
+            //全屏幕广告
+            buildConfigField("boolean", "HAVE_FULLSCREEN_AD", "true")
+            buildConfigField("int", "FULLSCREEN_AD_DELAYED", "2 * 60 * 60 * 1000")
+        }
 
+        debug {
+            buildConfigField("boolean", "HAVE_FULLSCREEN_AD", "true")
+            buildConfigField("int", "FULLSCREEN_AD_DELAYED", "0")
 
         }
+
+
     }
+
+    productFlavors {
+        gp {
+            resValue("string", "facebook_app_id", "2099565523604162")
+            resValue("string","umeng_key","5941ea6f310c9331ee0004a1")
+            resValue("string","umeng_channel","GP")
+        }
+    }
+
+    lintOptions { disable 'MissingTranslation' }
 }
 
-task compressReleaseApp {
+task compressReleaseApp() {
     // 微信Android资源混淆打包工具
     def guardJarFile = file('../AndResGuard/AndResGuard-cli-1.1.9.jar')
     println("guardJarFile:");
     // 工具配置文件
     def guardConfigFile = file('../AndResGuard/config.xml')
     // 原始apk文件
-    def originApkFile = file("./build/outputs/apk/app-release.apk")
+    def originApkFile = file("./build/outputs/apk/app-gp-release.apk")
     // 新apk输出目录
     def outputDir = file("./build/outputs/apk/compressed/")
     // 签名文件
@@ -152,9 +171,8 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
     compile(name: 'AudienceNetwork', ext: 'aar')
-    compile(name:'DuappsAd-CW-v1.1.1.0-release',ext:'aar')
-    compile(name:'SwipeSDK-v1.0.1-release',ext:'aar')
-
+    compile(name: 'DuappsAd-CW-v1.1.1.0-release', ext: 'aar')
+    compile(name: 'SwipeSDK-v1.0.1-release', ext: 'aar')
     compile 'com.google.firebase:firebase-core:9.6.1'
     compile 'com.github.lzyzsd:circleprogress:1.2.1'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'

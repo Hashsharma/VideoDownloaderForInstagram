@@ -16,12 +16,7 @@
     <string name="menu_download_video">Tải về</string>
     <string name="menu_download_image">tải Thumbnail</string>
     <string name="menu_delete">Xóa bỏ</string>
-    <string-array name="fan_labels">
-        <item>@string/menu_download_video</item>
-        <item>@string/menu_download_image</item>
-        <item>@string/menu_delete</item>
-    </string-array>
-
+    <string name="menu_pause">Tạm dừng</string>
     <string name="download_home_lable">Đã lưu tệp: /%s</string>
     <string name="repost">REPOST</string>
     <string name="spider_request_error">Không thể tải liên kết tải xuống!</string>

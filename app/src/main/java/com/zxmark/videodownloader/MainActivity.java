@@ -39,6 +39,7 @@ import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
+import com.zxmark.videodownloader.util.DeviceUtil;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.GPDataGenerator;
 import com.zxmark.videodownloader.util.Globals;
@@ -46,8 +47,6 @@ import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.util.Utils;
-
-import javax.microedition.khronos.opengles.GL;
 
 
 public class MainActivity extends AppCompatActivity
@@ -163,7 +162,9 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        SwipeMgr.getInstance().setSwipeOpen(true);
+        if (DeviceUtil.isDelayOneDay()) {
+            SwipeMgr.getInstance().setSwipeOpen(true);
+        }
     }
 
     private void handleSendIntent() {
@@ -452,7 +453,7 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     if (mViewPagerAdapter != null) {
                         if (mViewPagerAdapter.getDownloadingFragment() != null) {
-                            mViewPagerAdapter.getDownloadingFragment().deleteVideoByPath(path);
+                            mViewPagerAdapter.getDownloadingFragment().downloadFinished(path);
                         }
 
                         if (mViewPagerAdapter.getVideoHistoryFragment() != null) {

@@ -28,15 +28,21 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
+import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
+import com.zxmark.videodownloader.MainActivity;
+import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.adapter.ItemViewHolder;
 import com.zxmark.videodownloader.adapter.MainDownloadingRecyclerAdapter;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
+import com.zxmark.videodownloader.main.FullScreenAdActivity;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.util.ADCache;
+import com.zxmark.videodownloader.util.DeviceUtil;
+import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
@@ -219,6 +225,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                             if (index > -1) {
                                 mAdapter.notifyItemRemoved(mDataList.indexOf(bean));
                                 mDataList.remove(bean);
+                            } else {
+                                mAdapter.notifyItemChanged(index);
                             }
                         }
                     });
@@ -326,7 +334,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
      *
      * @param pageURL
      */
-    public void deleteVideoByPath(String pageURL) {
+    public void downloadFinished(String pageURL) {
         if (TextUtils.isEmpty(pageURL)) {
             return;
         }
@@ -338,6 +346,55 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOAD_FINISHED;
             mAdapter.notifyItemChanged(index);
         }
+
+        if (BuildConfig.HAVE_FULLSCREEN_AD && DeviceUtil.isBeyondTime(BuildConfig.FULLSCREEN_AD_DELAYED)) {
+            if (isVisible()) {
+                LogUtil.e("fan", "downloadedCount=" + DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() + ":" + DownloaderDBHelper.SINGLETON.getDownloadingTaskCount());
+                if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 0 && DownloaderDBHelper.SINGLETON.getDownloadingTaskCount() == 0) {
+                    //显示一个全屏广告
+
+                    EventUtil.getDefault().onEvent("AD", "full_screen_ad");
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadFullScreenAd();
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void loadFullScreenAd() {
+        final NativeAd fullScreenAd = new NativeAd(getActivity(), "2099565523604162_2172062449687802");
+        fullScreenAd.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                LogUtil.v("facebook", "onError:" + adError.getErrorMessage());
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                if (isAdded()) {
+                    ADCache.getDefault().setFullScreenNativeAd(fullScreenAd);
+                    LogUtil.v("fan", "loadFullScreenAd");
+                    Intent intent = new Intent(getActivity(), FullScreenAdActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+
+        fullScreenAd.loadAd();
     }
 
     @Override
@@ -437,17 +494,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         mFirstAdBean.createdTime = System.currentTimeMillis();
 
         ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_DOWNLOADING_VIDEO, mFirstAdBean);
-
-//        int lastPosition = mLayoutManager.findLastVisibleItemPosition();
-//        LogUtil.e("facebook", "insert1FacebookAd");
-//        int insertADPosition = lastPosition + 1;
-//        if (insertADPosition <= mDataList.size() - 1) {
-//            mDataList.add(insertADPosition, mFirstAdBean);
-//            mAdapter.notifyItemInserted(insertADPosition);
-//        } else {
-//            mDataList.add(mFirstAdBean);
-//            mAdapter.notifyItemInserted(insertADPosition);
-//        }
 
         if (mDataList.size() == 1) {
             mDataList.add(mFirstAdBean);

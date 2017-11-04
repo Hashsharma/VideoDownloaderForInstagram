@@ -17,12 +17,8 @@
     <string name="option_share">分享</string>
     <string name="menu_download_video">下载</string>
     <string name="menu_download_image">下载缩略图</string>
+    <string name="menu_pause">暂停</string>
     <string name="menu_delete">删除</string>
-    <string-array name="fan_labels">
-        <item>@string/menu_download_video</item>
-        <item>@string/menu_download_image</item>
-        <item>@string/menu_delete</item>
-    </string-array>
 
     <string name="download_home_lable">文件保存在: /%s</string>
     <string name="repost">重新发布</string>

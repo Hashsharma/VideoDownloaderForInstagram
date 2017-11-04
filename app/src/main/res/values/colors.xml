@@ -18,6 +18,7 @@
         <item>@color/FF4081</item>
         <item>@color/button_normal_color</item>
         <item>@color/deep_orange_color</item>
+        <item>@color/deep_purple_500</item>
     </integer-array>
 
     
@@ -25,8 +26,8 @@
     <color name="page_bg_color">#F4F4F4</color>
     <color name="image_bg_color">#D8D8D8</color>
 
-    <color name="button_normal_color">#673AB7</color>
-    <color name="button_press_color">#311B92</color>
+    <color name="button_normal_color">#1E7FEF</color>
+    <color name="button_press_color">#6A9D3F</color>
 
     <color name="toast_bg_color">#CFFF4081</color>
 

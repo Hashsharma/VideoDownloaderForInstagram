@@ -16,12 +16,7 @@
 	<string name="menu_download_video">Télécharger</string>
 	<string name="menu_download_image">télécharger les vignettes</string>
 	<string name="menu_delete">Effacer</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
-
+	<string name="menu_pause">Pause</string>
 	<string name="download_home_lable">Fichier sauvegardé à: /%s</string>
 	<string name="repost">REPOST</string>
 	<string name="spider_request_error">Impossible d\'obtenir le lien de téléchargement!</string>

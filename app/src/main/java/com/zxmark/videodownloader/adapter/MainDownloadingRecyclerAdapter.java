@@ -118,6 +118,11 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                         EventUtil.getDefault().onEvent("downloading", "downloadPageThumbnail");
                         DownloadUtil.downloadThumbnail(bean.pageURL, bean.pageThumb);
                     } else if (index == 2) {
+                        EventUtil.getDefault().onEvent("downloading", "pauseDownload");
+                        pauseDownloadingVideo(bean);
+                    }
+
+                    else if (index == 3) {
                         EventUtil.getDefault().onEvent("downloading", "delete");
                         deleteDownloadingVideo(bean);
                         sendDeleteVideoBroadcast(bean.pageURL);
@@ -292,7 +297,6 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     //TODO:最后一个位置有问题
     private void deleteDownloadingVideo(final DownloadContentItem bean) {
-
         int index = mDataList.indexOf(bean);
         if (index > -1) {
             notifyItemRemoved(index);
@@ -305,6 +309,14 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                 DownloaderDBHelper.SINGLETON.deleteDownloadTask(bean.pageURL);
             }
         });
+    }
+
+    private void pauseDownloadingVideo(final DownloadContentItem bean) {
+        DownloadingTaskList.SINGLETON.intrupted(bean.pageURL);
+        int index = mDataList.indexOf(bean);
+        if (index > -1) {
+            notifyItemChanged(index);
+        }
     }
 
     @Override
@@ -320,7 +332,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
 
     public interface IBtnCallback {
-        public void showHowTo();
+        void showHowTo();
 
         void onDownloadFromClipboard(View view, String httpURL);
 

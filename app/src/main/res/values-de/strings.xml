@@ -17,12 +17,7 @@
 	<string name="menu_download_video">Video herunterladen</string>
 	<string name="menu_download_image">herunterladen Thumbnails</string>
 	<string name="menu_delete">löschen</string>
-	<string-array name="fan_labels">
-		<item>@string/tab_title_downloading</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
-
+	<string name="menu_pause">Pause</string>
 	<string name="download_home_lable">Datei gespeichert in: /%s</string>
 	<string name="repost">Repost</string>
 	<string name="spider_request_error">Der Link konnte nicht heruntergeladen werden</string>

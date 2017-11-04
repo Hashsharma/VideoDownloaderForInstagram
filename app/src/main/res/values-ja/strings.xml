@@ -18,12 +18,7 @@
 	<string name="menu_download_video">ダウンロードビデオ</string>
 	<string name="menu_download_image">サムネイルをダウンロード</string>
 	<string name="menu_delete">削除</string>
-	<string-array name="fan_labels">
-		<item>@string/tab_title_downloading</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
-
+	<string name="menu_pause">一時停止</string>
 	<string name="download_home_lable">保存ファイル: /%s</string>
 	<string name="repost">再投稿</string>
 	<string name="spider_request_error">ダウンロードアドレスは取得できませんでした</string>

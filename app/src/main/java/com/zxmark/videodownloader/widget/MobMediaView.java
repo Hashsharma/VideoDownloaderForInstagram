@@ -3,6 +3,7 @@ package com.zxmark.videodownloader.widget;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,11 @@ public class MobMediaView extends FrameLayout {
 
     public MobMediaView(@NonNull Context context) {
         super(context);
+        init(context);
+    }
+
+    public MobMediaView(Context context, AttributeSet attributeSet) {
+        super(context,attributeSet);
         init(context);
     }
 

@@ -16,12 +16,7 @@
     <string name="menu_download_video">Video indir</string>
     <string name="menu_download_image">Küçük Resimleri İndir</string>
     <string name="menu_delete">silmek</string>
-    <string-array name="fan_labels">
-        <item>@string/menu_download_video</item>
-        <item>@string/menu_download_image</item>
-        <item>@string/menu_delete</item>
-    </string-array>
-
+    <string name="menu_pause">durma</string>
     <string name="download_home_lable">Dosya şu kişilere kaydedildi: /%s</string>
     <string name="repost">REPOST</string>
     <string name="spider_request_error">İndirme Bağlantısı alınamadı!</string>

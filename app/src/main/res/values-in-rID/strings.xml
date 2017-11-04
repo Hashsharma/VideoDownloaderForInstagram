@@ -16,11 +16,8 @@
 	<string name="menu_download_video">DownLoad</string>
 	<string name="menu_download_image">Unduh Thumbnail</string>
 	<string name="menu_delete">Menghapus</string>
-	<string-array name="fan_labels">
-		<item>@string/menu_download_video</item>
-		<item>@string/menu_download_image</item>
-		<item>@string/menu_delete</item>
-	</string-array>
+	<string name="menu_pause">Jeda</string>
+
 
 	<string name="download_home_lable">File disimpan ke: /%s</string>
 	<string name="repost">REPOST</string>

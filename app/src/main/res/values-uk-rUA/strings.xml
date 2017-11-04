@@ -16,12 +16,7 @@
     <string name="menu_download_video">Завантажити</string>
     <string name="menu_download_image">завантажити Ескізи</string>
     <string name="menu_delete">Видалити</string>
-    <string-array name="fan_labels">
-        <item>@string/menu_download_video</item>
-        <item>@string/menu_download_image</item>
-        <item>@string/menu_delete</item>
-    </string-array>
-
+    <string name="menu_pause">Пауза</string>
     <string name="download_home_lable">Файл збережено в: /%s</string>
     <string name="repost">REPOST</string>
     <string name="spider_request_error">Не вдалося завантажити посилання!</string>

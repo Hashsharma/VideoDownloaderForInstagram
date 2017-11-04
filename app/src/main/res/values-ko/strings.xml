@@ -16,12 +16,7 @@
     <string name="menu_download_video">다운로드 비디오</string>
     <string name="menu_download_image">썸네일 다운로드</string>
     <string name="menu_delete">Delete</string>
-    <string-array name="fan_labels">
-        <item>@string/tab_title_downloading</item>
-        <item>@string/menu_download_image</item>
-        <item>@string/menu_delete</item>
-    </string-array>
-
+    <string name="menu_pause">일시 중지</string>
     <string name="download_home_lable">에 저장된 파일: /%s</string>
     <string name="repost">보충</string>
     <string name="spider_request_error">다운로드 링크를 가져 오는 데 실패했습니다.</string>

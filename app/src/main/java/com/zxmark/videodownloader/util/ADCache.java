@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 /**
  * Created by fanlitao on 6/25/17.
- *
+ * <p>
  * 弃用广告Cache，观察广告收益
  */
 
@@ -18,9 +18,10 @@ public class ADCache {
     public static final boolean SHOW_AD = true;
     public static final String AD_KEY_DOWNLOADING_VIDEO = "AD_KEY_DOWNLOADING_VIDEO";
     public static final String AD_KEY_HISTORY_VIDEO = "AD_KEY_HISTORY_VIDEO";
-    public static final String AD_KEY_GALLERY =  "AD_KEY_GALLERY";
+    public static final String AD_KEY_GALLERY = "AD_KEY_GALLERY";
 
 
+    private NativeAd mNativeAd;
     public static final long MAX_EXPIRE_TIME = 30 * 60 * 1000L;
 
     public HashMap<String, DownloadContentItem> mAdCacheMap;
@@ -68,6 +69,18 @@ public class ADCache {
 
     public void removeClickedAd(DownloadContentItem item) {
 
+    }
+
+    public void setFullScreenNativeAd(NativeAd nativeAd) {
+        mNativeAd = nativeAd;
+    }
+
+    public NativeAd getFullScreenNativeAd() {
+        return mNativeAd;
+    }
+
+    public void destroyFullScreenNativeAd() {
+        mNativeAd = null;
     }
 
 }
