@@ -9,10 +9,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.duapps.ad.base.DuAdNetwork;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
-import com.swipe.SwipeMgr;
 import com.zxmark.videodownloader.service.TLRequestParserService;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
@@ -58,11 +56,6 @@ public class MainApplication extends Application {
     private void init() {
         Intent intent = new Intent(this, TLRequestParserService.class);
         startService(intent);
-
-
-        DuAdNetwork.init(this, getConfigJSON(getApplicationContext()));
-        SwipeMgr.onAppStart(this);
-        SwipeMgr.getInstance().setAdSid(146820);
     }
 
     private void initDefaultLocale() {

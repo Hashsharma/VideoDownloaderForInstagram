@@ -196,7 +196,7 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         if (isFinishing()) {
             return;
         }
-        nativeAd = new NativeAd(this, "2099565523604162_2105972009630180");
+        nativeAd = new NativeAd(this, "1602783786453762_1602803783118429");
         nativeAd.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {

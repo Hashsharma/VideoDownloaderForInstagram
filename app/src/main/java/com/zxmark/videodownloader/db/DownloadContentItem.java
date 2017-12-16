@@ -171,6 +171,7 @@ public class DownloadContentItem implements BaseColumns {
         if (futureVideoList == null) {
             futureVideoList = new ArrayList<>();
         }
+
         if (!futureVideoList.contains(path)) {
             futureVideoList.add(path);
         }

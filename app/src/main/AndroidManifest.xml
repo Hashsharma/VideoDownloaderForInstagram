@@ -121,7 +121,7 @@
 
         <provider
             android:name="com.zxmark.videodownloader.db.DownloaderContentProvider"
-            android:authorities="com.imobapp.videodownloaderforinstagram" />
+            android:authorities="${applicationId}" />
 
 
         <meta-data
@@ -157,25 +157,16 @@
             android:name="app_license"
             android:value="60f54548c2b2621c7b323b8020efc46a" />
 
-        <provider
-            android:name="com.duapps.ad.stats.DuAdCacheProvider"
-            android:authorities="com.imobapp.videodownloaderforinstagram.DuAdCacheProvider"
-            android:exported="false"></provider>
-
-        <receiver android:name="com.duapps.ad.base.PackageAddReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
 
         <receiver android:name="com.zxmark.videodownloader.receiver.GaTrackerReceiver">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER"/>
             </intent-filter>
         </receiver>
-
-
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="e11416ac50e8b3cab8b3c3fd34c3e890cc442423"
+            />
     </application>
 
 </manifest>

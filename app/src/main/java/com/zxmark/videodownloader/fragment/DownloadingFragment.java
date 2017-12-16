@@ -329,15 +329,17 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
             }
             if (mIsPasteInMain) {
                 mIsPasteInMain = false;
-                LogUtil.e("fan","showFullAD");
-                if (PreferenceUtils.getLastLoadFullScreenAD() - System.currentTimeMillis() >= BuildConfig.LAST_LOAD_FULL_SCREEN_DELAYED) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            PreferenceUtils.setLoadFullScreenAd();
-                            loadFullScreenAd("2099565523604162_2174397646120949");
-                        }
-                    });
+                LogUtil.e("fan", "showFullAD");
+                if (BuildConfig.HAVE_FULLSCREEN_AD) {
+                    if (System.currentTimeMillis() - PreferenceUtils.getLastLoadFullScreenAD() >= BuildConfig.LAST_LOAD_FULL_SCREEN_DELAYED) {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                PreferenceUtils.setLoadFullScreenAd();
+                                loadFullScreenAd("2099565523604162_2174397646120949");
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -370,7 +372,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            loadFullScreenAd("2099565523604162_2172062449687802");
+                            loadFullScreenAd("1602783786453762_1602801626451978");
                         }
                     });
                 }
@@ -380,7 +382,7 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
 
 
     private void loadFullScreenAd(String facebookAd) {
-        LogUtil.e("fan","loadFullScreenAd:");
+        LogUtil.e("fan", "loadFullScreenAd:");
         final NativeAd fullScreenAd = new NativeAd(getActivity(), facebookAd);
         fullScreenAd.setAdListener(new AdListener() {
             @Override
@@ -451,11 +453,11 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     private void startLoadFacebookAd() {
         if (getActivity() != null && isAdded()) {
             if (mFirstAdBean == null) {
-                nativeAd = new NativeAd(getActivity(), "2099565523604162_2099565860270795");
+                nativeAd = new NativeAd(getActivity(), "1602783786453762_1602787176453423");
                 nativeAd.setAdListener(new AdListener() {
                     @Override
                     public void onError(Ad ad, AdError adError) {
-                        LogUtil.v("facebook", "onError:" + adError);
+                        LogUtil.v("facebook", "onError:" + adError.getErrorMessage());
                     }
 
                     @Override

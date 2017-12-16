@@ -63,19 +63,22 @@ public class XVideosDownloader extends BaseDownloader {
 
     @Override
     public DownloadContentItem startSpideThePage(String htmlUrl) {
-        LogUtil.e("xv","url=" + htmlUrl);
+        LogUtil.e("xv", "url=" + htmlUrl);
         String content = startRequest(htmlUrl);
-        if(!TextUtils.isEmpty(content)) {
+        if (!TextUtils.isEmpty(content)) {
             DownloadContentItem downloadContentItem = new DownloadContentItem();
             downloadContentItem.pageURL = htmlUrl;
             String video = getVideoUrl(content);
-            downloadContentItem.addVideo(video);
+
+            if (downloadContentItem.getVideoCount() <= 0) {
+                downloadContentItem.addVideo(video);
+            }
             downloadContentItem.pageThumb = getThumbnailByPageURL(content);
             downloadContentItem.pageTitle = getPageTitle(content);
             return downloadContentItem;
         }
-        LogUtil.e("xv","page=" + content);
-       // Utils.writeFile(content);
+        LogUtil.e("xv", "page=" + content);
+        // Utils.writeFile(content);
         return null;
     }
 }

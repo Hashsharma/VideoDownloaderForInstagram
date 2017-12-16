@@ -48,7 +48,7 @@ public class DownloadingTaskList {
     private HashMap<String, DownloadContentItem> mFutureTaskDetailMap = new HashMap<>();
 
     public boolean isPendingDownloadTask(String pageURL) {
-        if(TextUtils.isEmpty(pageURL)) {
+        if (TextUtils.isEmpty(pageURL)) {
             return false;
         }
 
@@ -66,6 +66,7 @@ public class DownloadingTaskList {
     public boolean isEmpty() {
         return mFuturedTaskList.isEmpty();
     }
+
     public void addNewDownloadTask(String taskId) {
         if (mFuturedTaskList.size() > 0) {
             if (mFuturedTaskList.contains(taskId)) {
@@ -121,7 +122,6 @@ public class DownloadingTaskList {
     }
 
 
-
     /**
      * 开始下载当前任务的入口API
      *
@@ -131,7 +131,7 @@ public class DownloadingTaskList {
         if (item != null) {
             List<String> futureDownloadedList = item.getDownloadContentList();
             downloadItem(futureDownloadedList, item);
-            if(item.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED) {
+            if (item.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED) {
                 mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_ERROR, 0, 0, item.pageURL).sendToTarget();
             } else {
                 DownloaderDBHelper.SINGLETON.finishDownloadTask(item.pageURL);
@@ -147,49 +147,9 @@ public class DownloadingTaskList {
             final int filePositon = totalDownloadedList.indexOf(fileURL);
 
             final String pageURL = item.pageURL;
-            LogUtil.v("task","fileURL=" + fileURL);
-//            FileDownloader.getImpl().create(fileURL).setPath(item.getTargetDirectory(item.pageURL,fileURL)).setAutoRetryTimes(3).setTag(item.pageURL)
-//                    .setListener(new FileDownloadListener() {
-//                        @Override
-//                        protected void pending(BaseDownloadTask baseDownloadTask, int i, int i1) {
-//
-//                        }
-//
-//                        @Override
-//                        protected void progress(BaseDownloadTask baseDownloadTask, int i, int i1) {
-//                            LogUtil.e("task","progress:" + i +  ":" + i1);
-//                        }
-//
-//                        @Override
-//                        protected void completed(BaseDownloadTask baseDownloadTask) {
-//                            LogUtil.v("fd","completed:" + baseDownloadTask);
-//                            Message msg = mHandler.obtainMessage();
-//                            msg.what = DownloadService.MSG_UPDATE_PROGRESS;
-//                            msg.arg1 = 100;
-//                            msg.arg2 = filePositon;
-//                            msg.obj = pageURL;
-//                            mHandler.sendMessage(msg);
-//
-//                            downloadItem(totalDownloadedList, item);
-//                        }
-//
-//                        @Override
-//                        protected void paused(BaseDownloadTask baseDownloadTask, int i, int i1) {
-//
-//                        }
-//
-//                        @Override
-//                        protected void error(BaseDownloadTask baseDownloadTask, Throwable throwable) {
-//
-//                        }
-//
-//                        @Override
-//                        protected void warn(BaseDownloadTask baseDownloadTask) {
-//
-//                        }
-//                    }).start();
-          LearningDownloader.getDefault().startDownload(filePositon, item.pageURL, fileURL, item.getTargetDirectory(item.pageURL,fileURL), new LearningDownloader.IPowerfulDownloadCallback() {
-               @Override
+            LogUtil.v("task", "fileURL=" + fileURL);
+            LearningDownloader.getDefault().startDownload(filePositon, item.pageURL, fileURL, item.getTargetDirectory(item.pageURL, fileURL), new LearningDownloader.IPowerfulDownloadCallback() {
+                @Override
                 public void onStart(String path) {
 
                 }
@@ -198,7 +158,7 @@ public class DownloadingTaskList {
                 public void onFinish(int code, String pageURL, int filePosition, String path) {
                     LogUtil.e("download", "LearningDownloadercode:" + code + ":" + pageURL);
                     if (code == PowerfulDownloader.CODE_OK) {
-                         mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, filePosition, 0, pageURL).sendToTarget();
+                        mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_SUCCESS, filePosition, 0, pageURL).sendToTarget();
                         Message msg = mHandler.obtainMessage();
                         msg.what = DownloadService.MSG_UPDATE_PROGRESS;
                         msg.arg1 = 100;
@@ -220,15 +180,15 @@ public class DownloadingTaskList {
                 public void onError(int errorCode) {
                 }
 
-               @Override
-               public void onProgress(String pageURL, int filePosition, String path, int progress) {
-                   Message msg = mHandler.obtainMessage();
-                   msg.what = DownloadService.MSG_UPDATE_PROGRESS;
-                   msg.arg1 = progress;
-                   msg.arg2 = filePosition;
-                   msg.obj = pageURL;
-                   mHandler.sendMessage(msg);
-               }
+                @Override
+                public void onProgress(String pageURL, int filePosition, String path, int progress) {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = DownloadService.MSG_UPDATE_PROGRESS;
+                    msg.arg1 = progress;
+                    msg.arg2 = filePosition;
+                    msg.obj = pageURL;
+                    mHandler.sendMessage(msg);
+                }
             });
         } else if (item.getImageCount() > 0) {
             final String fileURL = item.getImageList().remove(0);
@@ -250,7 +210,7 @@ public class DownloadingTaskList {
                         mHandler.sendMessage(msg);
                     } else if (statusCode == PowerfulDownloader.CODE_DOWNLOAD_CANCELED) {
                         DownloaderDBHelper.SINGLETON.deleteDownloadTask(pageURL);
-                    } else if(statusCode == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
+                    } else if (statusCode == PowerfulDownloader.CODE_DOWNLOAD_FAILED) {
                         EventUtil.getDefault().onEvent("download", "failed=" + pageURL);
                         item.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED;
                         DownloaderDBHelper.SINGLETON.setDownloadingTaskFailed(pageURL);

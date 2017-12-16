@@ -60,7 +60,8 @@ public class VideoHistoryFragment extends Fragment {
     private boolean mInsertFacebookAdStatus = false;
     private int mLastAdInsertedPosition = 0;
     //多申请几个Facebook广告位
-    private static String[] FACEBOOK_IDS = new String[]{"2099565523604162_2099583463602368", "2099565523604162_2170925976468116"};
+     private static String[] FACEBOOK_IDS = new String[]{"1602783786453762_1602788316453309"};
+// };
     private HashMap<String, NativeAd> mNativeAdMap = new HashMap<String, NativeAd>();
     private HashMap<Integer, DownloadContentItem> mBeanMap = new HashMap<>();
     private Handler mMainLooperHandler = new Handler() {
@@ -296,6 +297,9 @@ public class VideoHistoryFragment extends Fragment {
 
     private void startLoadFacebookAd() {
         if (getActivity() != null && isAdded()) {
+            if (mDataList == null) {
+                return;
+            }
             boolean onlyOneAd = mDataList.size() <= 1;
             for (int index = 0; index < FACEBOOK_IDS.length; index++) {
                 if (onlyOneAd && (index == 1)) {

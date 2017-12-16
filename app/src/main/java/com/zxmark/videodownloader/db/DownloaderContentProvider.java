@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.zxmark.videodownloader.util.LogUtil;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class DownloaderContentProvider extends ContentProvider {
     public static final String TAG = "download";
     public static final String DATABASE_NAME = "imob_downloader.db";
     public static final int DATABASE_VERSION = 1;
-    public static String AUTHORITY = "com.imobapp.videodownloaderforinstagram";
+    public static String AUTHORITY = BuildConfig.APPLICATION_ID;
 
     private static UriMatcher sUriMatcher;
     private static final int DOWNLOAD_LIST = 1;

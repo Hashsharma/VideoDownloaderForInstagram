@@ -26,9 +26,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
-import com.swipe.SwipeMgr;
 import com.umeng.analytics.MobclickAgent;
 import com.zxmark.videodownloader.adapter.MainListRecyclerAdapter;
 import com.zxmark.videodownloader.adapter.MainViewPagerAdapter;
@@ -39,7 +39,6 @@ import com.zxmark.videodownloader.floatview.FloatViewManager;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
-import com.zxmark.videodownloader.util.DeviceUtil;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.GPDataGenerator;
 import com.zxmark.videodownloader.util.Globals;
@@ -47,6 +46,8 @@ import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.PreferenceUtils;
 import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.util.Utils;
+
+import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends AppCompatActivity
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         subscribeDownloadService();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -160,10 +162,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 }, 100);
             }
-        }
-
-        if (DeviceUtil.isDelayOneDay()) {
-            SwipeMgr.getInstance().setSwipeOpen(true);
         }
     }
 
