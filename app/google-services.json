@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "872795436961",
-    "firebase_url": "https://instagramdownloader-94107.firebaseio.com",
-    "project_id": "instagramdownloader-94107",
-    "storage_bucket": "instagramdownloader-94107.appspot.com"
+    "project_number": "953368955960",
+    "firebase_url": "https://newinstagramdownloader.firebaseio.com",
+    "project_id": "newinstagramdownloader",
+    "storage_bucket": "newinstagramdownloader.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:872795436961:android:e078192ea1a2eb61",
+        "mobilesdk_app_id": "1:953368955960:android:6b26e5968c279283",
         "android_client_info": {
-          "package_name": "com.bestapp.popapp.videodownloaderforinstagram"
+          "package_name": "com.androidapp.tool.videodownloaderforinstagram"
         }
       },
       "oauth_client": [
         {
-          "client_id": "872795436961-1g26qfaof5o99raor6ibu2fve231o9ol.apps.googleusercontent.com",
+          "client_id": "953368955960-9tc381g8udop39jpk2md76pmh3mr3tlf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.androidapp.tool.videodownloaderforinstagram",
+            "certificate_hash": "b65a5407abed1117aa581a42d272dee0f5938572"
+          }
+        },
+        {
+          "client_id": "953368955960-g29acvef7ffv6tfmra2qfcf85p9h3m6o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDn_zl69ixK1Pp26Jpfyr0_ZrnsPzUp2r8"
+          "current_key": "AIzaSyAm1EadIE2GU5eCAq4rWsH5yYYIRmNrsvg"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953368955960-g29acvef7ffv6tfmra2qfcf85p9h3m6o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

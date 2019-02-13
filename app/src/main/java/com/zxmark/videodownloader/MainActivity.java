@@ -1,16 +1,20 @@
 package com.zxmark.videodownloader;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -36,9 +40,11 @@ import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.db.DownloaderDBHelper;
 import com.zxmark.videodownloader.downloader.DownloadingTaskList;
 import com.zxmark.videodownloader.floatview.FloatViewManager;
+import com.zxmark.videodownloader.permission.MainPermission;
 import com.zxmark.videodownloader.service.DownloadService;
 import com.zxmark.videodownloader.service.IDownloadBinder;
 import com.zxmark.videodownloader.service.IDownloadCallback;
+import com.zxmark.videodownloader.service.TLRequestParserService;
 import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.GPDataGenerator;
 import com.zxmark.videodownloader.util.Globals;
@@ -71,11 +77,14 @@ public class MainActivity extends AppCompatActivity
     private View mInstagramIcon;
     private View mSelectedContainer;
 
+    private void init() {
+        Intent intent = new Intent(this, TLRequestParserService.class);
+        startService(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         subscribeDownloadService();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,6 +95,8 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        init();
+        cancelAllNotification();
 
         //TODO: dismiss float view
         FloatViewManager.getDefault().dismissFloatView();
@@ -150,7 +161,7 @@ public class MainActivity extends AppCompatActivity
             showRatingDialog();
         }
 
-
+        requestSomePermission();
         if (!PreferenceUtils.isRateUsOnGooglePlay()) {
             if (PreferenceUtils.getRateUsBadTimeStamp() == 0L || (System.currentTimeMillis() - PreferenceUtils.getRateUsBadTimeStamp() >= MAX_BAD_DURATION)) {
                 mHandler.postDelayed(new Runnable() {
@@ -182,6 +193,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    private void cancelAllNotification() {
+        Intent intent = new Intent(this, DownloadService.class);
+        intent.setAction(DownloadService.ACTION_CANCEL_ALL_NOTIFICATION);
+        startService(intent);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -194,6 +212,10 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if (mViewPagerAdapter != null && mViewPagerAdapter.getVideoHistoryFragment() != null && mViewPagerAdapter.getVideoHistoryFragment().isSelectMode()) {
+                mViewPagerAdapter.getVideoHistoryFragment().quitSelectMode();
+                return;
+            }
             super.onBackPressed();
         }
     }
@@ -555,5 +577,36 @@ public class MainActivity extends AppCompatActivity
         if (mViewPagerAdapter.getDownloadingFragment() != null) {
             mViewPagerAdapter.getDownloadingFragment().deleteDownloadFinishedItem(downloadContentItem);
         }
+    }
+
+    private void requestSomePermission() {
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        } else {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!MainPermission.getPermisson().checkFloatWindowPermission(MainActivity.this)) {
+                        MainPermission.getPermisson().applyFloatWindowPermission(MainActivity.this);
+                    }
+                }
+            }, 100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!MainPermission.getPermisson().checkFloatWindowPermission(MainActivity.this)) {
+                        MainPermission.getPermisson().applyFloatWindowPermission(MainActivity.this);
+                    }
+                }
+            }, 100);
+        }
+
     }
 }

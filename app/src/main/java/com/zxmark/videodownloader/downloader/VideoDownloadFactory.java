@@ -2,6 +2,7 @@ package com.zxmark.videodownloader.downloader;
 
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
@@ -37,7 +38,7 @@ public final class VideoDownloadFactory {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw new RuntimeException("video download cannt start from main thread");
         }
-
+        Log.e("fan","request:" + url);
         String handledUrl = URLMatcher.getHttpURL(url);
 
         BaseDownloader downloader = getSpecDownloader(handledUrl);

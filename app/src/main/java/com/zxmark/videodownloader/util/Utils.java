@@ -9,13 +9,17 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Looper;
+import android.support.v4.content.FileProvider;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.MainApplication;
 import com.imobapp.videodownloaderforinstagram.R;
@@ -26,6 +30,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -41,7 +46,7 @@ public class Utils {
     public static final String HOST_XVIDEOS = "xvideos.com";
     public static final String HOST_YOUJI = "youjizz.com";
     public static final String HOST_YG = "365yg.com";
-    public static final String EXPIRE_SUFFIX_ARRAY[] = new String[]{HOST_91, HOST_FACEBOOK, HOST_XVIDEOS, HOST_YOUJI,HOST_YG};
+    public static final String EXPIRE_SUFFIX_ARRAY[] = new String[]{HOST_91, HOST_FACEBOOK, HOST_XVIDEOS, HOST_YOUJI, HOST_YG};
 
     public static void openInstagramByUrl(String url) {
 
@@ -193,19 +198,69 @@ public class Utils {
         }
     }
 
+    public static void originalShareImage(Context context, String path) {
+        Intent share_intent = new Intent();
+        ArrayList<Uri> imageUris = new ArrayList<Uri>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Uri imageContentUri =
+                    FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", new File(path));
+            imageUris.add(imageContentUri);
+        } else {
+            imageUris.add(Uri.fromFile(new File(path)));
+        }
+        share_intent.setAction(Intent.ACTION_SEND_MULTIPLE);//设置分享行为
+        share_intent.setType(MimeTypeUtil.getMimeTypeByFileName(path));//设置分享内容的类型
+        share_intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        share_intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
+        context.startActivity(Intent.createChooser(share_intent, context.getString(R.string.str_share_this_video)));
+    }
+
     public static void startShareIntent(String filePath) {
         if (filePath != null) {
-            Intent shareIntent = new Intent(
-                    android.content.Intent.ACTION_SEND);
-            shareIntent.setType(MimeTypeUtil.getMimeTypeByFileName(filePath));
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
-            shareIntent
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET | Intent.FLAG_ACTIVITY_NEW_TASK);
-            Context context = MainApplication.getInstance().getApplicationContext();
-            Intent chooseIntent = Intent.createChooser(shareIntent,
-                    context.getString(R.string.str_share_this_video));
-            chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            context.startActivity(chooseIntent);
+
+            if (Build.VERSION.SDK_INT >= 24) {
+                try {
+
+                    File requestFile = new File(filePath);
+                    Uri fileUri = FileProvider.getUriForFile(
+                            MainApplication.getInstance(),
+                            "com.androidapp.tool.videodownloaderforinstagram.fileprovider",
+                            requestFile);
+                    LogUtil.e("fan", "fileUri=" + fileUri);
+                    MainApplication.getInstance().grantUriPermission(BuildConfig.APPLICATION_ID, fileUri,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    Intent shareIntent = new Intent(
+                            android.content.Intent.ACTION_SEND);
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    //  shareIntent.setType(MimeTypeUtil.getMimeTypeByFileName(filePath));
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+
+                    shareIntent
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    Context context = MainApplication.getInstance().getApplicationContext();
+                    Intent chooseIntent = Intent.createChooser(shareIntent,
+                            context.getString(R.string.str_share_this_video));
+                    chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(chooseIntent);
+                } catch (IllegalArgumentException e) {
+                    Log.e("File Selector",
+                            "The selected file can't be shared: ");
+                }
+            } else {
+                Intent shareIntent = new Intent(
+                        android.content.Intent.ACTION_SEND);
+                shareIntent.setType(MimeTypeUtil.getMimeTypeByFileName(filePath));
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+                shareIntent
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET | Intent.FLAG_ACTIVITY_NEW_TASK);
+                Context context = MainApplication.getInstance().getApplicationContext();
+                Intent chooseIntent = Intent.createChooser(shareIntent,
+                        context.getString(R.string.str_share_this_video));
+                chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(chooseIntent);
+            }
+
+
         }
     }
 
@@ -240,7 +295,7 @@ public class Utils {
 
 
     public static void writeFile(String content) {
-        File writename = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tou.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
+        File writename = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "test.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
         try {
             writename.createNewFile(); // 创建新文件
             BufferedWriter out = new BufferedWriter(new FileWriter(writename));

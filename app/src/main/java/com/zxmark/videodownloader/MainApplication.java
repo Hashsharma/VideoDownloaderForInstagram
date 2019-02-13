@@ -1,14 +1,19 @@
 package com.zxmark.videodownloader;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.android.data.api.SdkManager;
+import com.imobapp.videodownloaderforinstagram.R;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.zxmark.videodownloader.service.TLRequestParserService;
@@ -36,9 +41,15 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApplication = this;
-       // initFileDownloader();
+        createNotificationChannels();
         initDefaultLocale();
-        init();
+    }
+
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            nm.createNotificationChannel(new NotificationChannel("download-notification", getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH));
+        }
     }
 
     private void initFileDownloader() {
@@ -53,10 +64,6 @@ public class MainApplication extends Application {
 
     }
 
-    private void init() {
-        Intent intent = new Intent(this, TLRequestParserService.class);
-        startService(intent);
-    }
 
     private void initDefaultLocale() {
 
@@ -90,6 +97,7 @@ public class MainApplication extends Application {
         super.onConfigurationChanged(newConfig);
         LogUtil.e("config", "onConfigurationChanged:" + newConfig);
     }
+
     private static String TOOLBOX_AD_CONFIG = "dxtoolbox.json";
 
     private String getConfigJSON(Context context) {

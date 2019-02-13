@@ -3,6 +3,9 @@ package com.zxmark.videodownloader.floatview;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
+import android.os.Build;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,21 +52,55 @@ public class FloatViewManager {
         if (mFloatView != null && mFloatView.getParent() != null) {
             return;
         }
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-        params.format = PixelFormat.TRANSPARENT;
-        params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        params.dimAmount = 0.5f;
-        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        params.gravity = Gravity.TOP | Gravity.LEFT;
-        params.x = DeviceUtil.getScreenWidth() - DimensUtil.dip2px(100);
-        params.y = DeviceUtil.getScreenHeight() - DimensUtil.dip2px(200);
-        mFloatView.setWindowManager(mWindowManager);
-        mFloatView.setLayoutParams(params);
-        mWindowManager.addView(mFloatView, params);
+        try {
+            boolean canShowFloatView = true;
+            if (Build.VERSION.SDK_INT >= 23) {
+                canShowFloatView = false;
+                if (Settings.canDrawOverlays(mContext)) {
+                    canShowFloatView = true;
+                }
+            }
+
+            if (canShowFloatView) {
+                LogUtil.e("float", "showFloatView");
+                WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+                if (Build.VERSION.SDK_INT >= 26) {
+                    params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                } else if (Build.VERSION.SDK_INT >= 24) {
+                    params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                } else if (Build.VERSION.SDK_INT >= 19) {
+                    params.type = WindowManager.LayoutParams.TYPE_TOAST;
+                    try {
+                        String obj = Build.MODEL;
+                        if (!TextUtils.isEmpty(obj) && obj.toLowerCase().contains("vivo") && Build.VERSION.SDK_INT > 19 && Build.VERSION.SDK_INT < 23) {
+                            params.type = WindowManager.LayoutParams.TYPE_PHONE;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    params.type = WindowManager.LayoutParams.TYPE_PHONE;
+                }
+                params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                params.format = PixelFormat.RGBA_8888;
+                params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                params.dimAmount = 0.5f;
+                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                params.gravity = Gravity.TOP | Gravity.LEFT;
+                params.x = DeviceUtil.getScreenWidth() - DimensUtil.dip2px(100);
+                params.y = DeviceUtil.getScreenHeight() - DimensUtil.dip2px(200);
+                mFloatView.setWindowManager(mWindowManager);
+                mFloatView.setLayoutParams(params);
+                mWindowManager.addView(mFloatView, params);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            LogUtil.e("float", "showFloatView.ex:" + ex.getMessage());
+        }
+
     }
 
     private int mProgress;

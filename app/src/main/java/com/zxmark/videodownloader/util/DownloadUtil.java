@@ -3,6 +3,7 @@ package com.zxmark.videodownloader.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.MainThread;
 import android.text.TextUtils;
@@ -28,7 +29,11 @@ public class DownloadUtil {
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(DownloadService.REQUEST_DOWNLOAD_VIDEO_ACTION);
         intent.putExtra(Globals.EXTRAS, url);
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= 26) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     public static void startResumeDownload(String url) {
@@ -37,7 +42,11 @@ public class DownloadUtil {
         intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
         intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, false);
         intent.putExtra(Globals.EXTRAS, url);
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= 26) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     public static void startForceDownload(String pageURL) {
@@ -47,7 +56,11 @@ public class DownloadUtil {
         intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, false);
         intent.putExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD,true);
         intent.putExtra(Globals.EXTRAS, pageURL);
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= 26) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     public static void startRequest(String pageUrl) {
@@ -56,7 +69,11 @@ public class DownloadUtil {
         intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
         intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
         intent.putExtra(Globals.EXTRAS, pageUrl);
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= 26) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     public static void downloadThumbnail(String pageURL, String downloadUrl) {
@@ -65,7 +82,11 @@ public class DownloadUtil {
         intent.setAction(DownloadService.DOWNLOAD_ACTION);
         intent.putExtra(DownloadService.DOWNLOAD_PAGE_URL, pageURL);
         intent.putExtra(Globals.EXTRAS, downloadUrl);
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= 26) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
 

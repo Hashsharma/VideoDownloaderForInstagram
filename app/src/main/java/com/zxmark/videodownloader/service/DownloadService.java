@@ -3,7 +3,9 @@ package com.zxmark.videodownloader.service;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -14,11 +16,14 @@ import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.imobapp.videodownloaderforinstagram.R;
+import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.MainApplication;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DBHelper;
@@ -53,6 +58,7 @@ public class DownloadService extends Service {
     public static final String DIR = "mob_ins_downloader";
     public static final String DOWNLOAD_ACTION = "download_action";
     public static final String DOWNLOAD_PAGE_URL = "page_url";
+    public static final String ACTION_CANCEL_ALL_NOTIFICATION = "cancel_all_notification";
     public static final String REQUEST_VIDEO_URL_ACTION = "request_video_url_action";
     public static final String REQUEST_DOWNLOAD_VIDEO_ACTION = "request_download_video_action";
     public static final String EXTRAS_FLOAT_VIEW = "extras_float_view";
@@ -68,7 +74,11 @@ public class DownloadService extends Service {
     public static final int MSG_REQUSET_URL_ERROR = 6;
 
     private NotificationManager mNotifyManager;
-    private Notification.Builder mBuilder;
+
+    private static final String NOTIFICATION_CHANNEL_SERVICE = "download-notification";
+
+    private NotificationCompat.Builder mBuilder;
+    private NotificationManager mNotificationManager;
 
     public static final int NOTIFICATION_ID_DOWNLOAD = 1000009;
 
@@ -100,7 +110,7 @@ public class DownloadService extends Service {
                 IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
                 String pageURL = (String) msg.obj;
-                setNotificationContent(pageURL, pageURL);
+                setNotificationContent(pageURL, "Start Downloading");
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 //updateNotificationProgress((String) msg.obj, msg.arg1);
@@ -135,6 +145,12 @@ public class DownloadService extends Service {
         if (intent != null && intent.getAction() != null) {
             LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
             DownloadUtil.checkDownloadBaseHomeDirectory();
+
+            if (ACTION_CANCEL_ALL_NOTIFICATION.equals(intent.getAction())) {
+
+                cancelAllNotification();
+                return super.onStartCommand(intent, flags, startId);
+            }
             if (DOWNLOAD_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final String pageURL = intent.getStringExtra(DOWNLOAD_PAGE_URL);
@@ -240,20 +256,46 @@ public class DownloadService extends Service {
     private void initNotification() {
         mNotifyManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new Notification.Builder(this);
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN);
+        mainIntent.setComponent(new ComponentName(this, MainActivity.class));
+        PendingIntent disconnectPendingIntent = PendingIntent.getActivity(this, 0, mainIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+        mBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_SERVICE);
+        mBuilder.setWhen(0);
+        mBuilder.setColor(ContextCompat.getColor(this, R.color.black)).setContentIntent(disconnectPendingIntent)
+                .setSmallIcon(R.drawable.ins_icon);
+        mBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
-    private void setNotificationContent(String pageURL, String content) {
-        mBuilder.setContentTitle("Video Downloading")
+    private void setNotificationContent(String pageURL, String contentTitle) {
+        mBuilder.setContentTitle(contentTitle)
+                .setContentText(pageURL)
                 .setSmallIcon(R.drawable.ins_icon);
+        // PROGRESS_CURRENT = 0;
+        // mBuilder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
         mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
         startForeground(pageURL.hashCode(), mBuilder.build());
     }
 
+
+    final static int PROGRESS_MAX = 100;
+    static int PROGRESS_CURRENT = 0;
+    private int mProgress = PROGRESS_CURRENT;
+
     private void updateNotificationProgress(String pageURL, int progress) {
-        mBuilder.setProgress(100, progress, false);
         // Displays the progress bar for the first time.
-        mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
+        if (PROGRESS_CURRENT != progress) {
+            if (progress == 100) {
+                mBuilder.setContentText("Download complete")
+                        .setProgress(0, 0, false);
+                mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
+            } else {
+                mBuilder.setProgress(100, progress, false);
+                mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
+                PROGRESS_CURRENT = progress;
+            }
+        }
+
     }
 
     private void cancelNotification(String pageURL) {
@@ -261,6 +303,11 @@ public class DownloadService extends Service {
         if (DownloadingTaskList.SINGLETON.isEmpty()) {
             stopForeground(true);
         }
+    }
+
+
+    private void cancelAllNotification() {
+        mNotifyManager.cancelAll();
     }
 
     /**

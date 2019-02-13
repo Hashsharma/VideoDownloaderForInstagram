@@ -3,12 +3,14 @@ package com.zxmark.videodownloader.downloader;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 import com.zxmark.videodownloader.util.CharsetUtil;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
+import com.zxmark.videodownloader.util.Utils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -30,7 +32,7 @@ public class InstagramDownloader extends BaseDownloader {
     public static final String IMAGE_SUFFIX = "https://scontent-arn2-1.cdninstagram.com";
     public static final String REPLACE_SUFFIX = "https://ig-s-a-a.akamaihd.net/hphotos-ak-xpa1";
 
-    public static final String CDN_IMAGE_SUFFIX = "cdninstagram.com";
+    public static final String CDN_IMAGE_SUFFIX = "cdninstagram.com/";
 
     public String getVideoUrl(String content) {
         String regex;
@@ -46,6 +48,7 @@ public class InstagramDownloader extends BaseDownloader {
     }
 
     public String getImageUrl(String content) {
+        Log.e("fan","getImageURL:" + content);
         String regex;
         String imageUrl = "";
         regex = "<meta property=\"og:image\" content=\"(.*?)\"";
@@ -58,15 +61,15 @@ public class InstagramDownloader extends BaseDownloader {
         }
 
 
-        if (!TextUtils.isEmpty(imageUrl)) {
-
-            if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
-                String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
-                imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
-            }
-
-            LogUtil.e("image", "imageUrl=" + imageUrl);
-        }
+//        if (!TextUtils.isEmpty(imageUrl)) {
+//
+//            if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
+//                String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
+//                imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
+//            }
+//
+//            LogUtil.e("image", "imageUrl=" + imageUrl);
+//        }
         return imageUrl;
     }
 
@@ -136,15 +139,15 @@ public class InstagramDownloader extends BaseDownloader {
     public void getImageUrlFromJs(String content, DownloadContentItem data) {
         String regex;
         String imageUrl = "";
-        regex = "\"display_url\": \"(.*?)\"";
+        regex = "\"display_url\":\"(.*?)\"";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
         while (ma.find()) {
             imageUrl = ma.group(1);
             if (!TextUtils.isEmpty(imageUrl)) {
                 if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
-                    String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
-                    imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
+                  //  String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
+                  //  imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
                     LogUtil.e("ins", "display_url=" + imageUrl);
                     data.addImage(imageUrl);
                 } else {
@@ -157,19 +160,26 @@ public class InstagramDownloader extends BaseDownloader {
 
     public void getVideoUrlFromJs(String content, DownloadContentItem data) {
         String regex;
-        String imageUrl = "";
-        regex = "\"video_url\": \"(.*?)\"";
+        String videoUrl = "";
+        regex = "\"video_url\":\"(.*?)\"";
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
         while (ma.find()) {
-            imageUrl = ma.group(1);
-            data.addVideo(imageUrl);
+            videoUrl = ma.group(1);
+            if(BuildConfig.DEBUG) {
+                Log.e("ins","videoUrl:" + videoUrl);
+            }
+//            if(!videoUrl.endsWith(".mp4")) {
+//                videoUrl = videoUrl + ".mp4";
+//            }
+            data.addVideo(videoUrl);
         }
 
     }
 
     public DownloadContentItem startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
+        Utils.writeFile(content);
         DownloadContentItem data = new DownloadContentItem();
         getVideoUrlFromJs(content, data);
         data.pageThumb = getImageUrl(content);
@@ -179,6 +189,10 @@ public class InstagramDownloader extends BaseDownloader {
         data.pageURL = htmlUrl;
         data.pageTags = getPageHashTags(content);
         if (data.futureImageList == null && data.futureVideoList == null) {
+            if (!TextUtils.isEmpty(data.pageThumb)) {
+                data.addImage(data.pageThumb);
+                return data;
+            }
             return null;
         }
 

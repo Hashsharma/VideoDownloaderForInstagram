@@ -312,7 +312,9 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                 @Override
                 public void onShare() {
                     MobMediaView itemView = (MobMediaView) mMainViewPager.findViewWithTag(mSelectedPosition);
-                    Utils.startShareIntent(itemView.getMediaSource());
+                  //  Utils.startShareIntent(itemView.getMediaSource());
+
+                    Utils.originalShareImage(GalleryPagerActivity.this, itemView.getMediaSource());
                 }
 
                 @Override

@@ -5,8 +5,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.facebook.ads.NativeAd;
+import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.Utils;
@@ -235,6 +237,9 @@ public class DownloadContentItem implements BaseColumns {
 
 
     public String getTargetDirectory(String fileUrl) {
+        if (BuildConfig.DEBUG) {
+            Log.e("download", "getTargetDirectory2=" + fileUrl);
+        }
         String childDirectory = "";
         if (fileUrl.contains("facebook.com")) {
             String targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
@@ -244,37 +249,58 @@ public class DownloadContentItem implements BaseColumns {
                     targetFileName = mp4Array[0].substring(mp4Array[0].lastIndexOf("/")) + ".mp4";
                 }
             }
+
+            if(fileUrl.contains(".jpg") && !fileUrl.endsWith(".jpg")) {
+                String mp4Array[] = fileUrl.split(".jpg");
+                if (mp4Array.length > 0) {
+                    targetFileName = mp4Array[0].substring(mp4Array[0].lastIndexOf("/")) + ".jpg";
+                }
+            }
             childDirectory = targetFileName;
         } else {
-            childDirectory = DownloadUtil.getFileNameByUrl(fileUrl);
+            if (fileUrl.contains(".mp4")) {
+                String targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
+                childDirectory = targetFileName;
+            } else {
+                if(fileUrl.contains(".jpg") && !fileUrl.endsWith(".jpg")) {
+                    String targetFileName = "";
+                    String mp4Array[] = fileUrl.split(".jpg");
+                    if (mp4Array.length > 0) {
+                        targetFileName = mp4Array[0].substring(mp4Array[0].lastIndexOf("/")) + ".jpg";
+                    }
+
+                    childDirectory = targetFileName;
+                } else {
+                    childDirectory = DownloadUtil.getFileNameByUrl(fileUrl);
+                }
+            }
+        }
+        if (BuildConfig.DEBUG) {
+            Log.e("download", "childDirectory=" + childDirectory);
         }
         return DownloadUtil.getDownloadTargetDir(getPageHome(), childDirectory);
     }
 
     public String getTargetDirectory(String pageURL, String fileURL) {
         String childDirectory = "";
-
+        if (BuildConfig.DEBUG) {
+            Log.e("download", "getTargetDirectroy:" + pageURL + ":" + fileURL);
+        }
         if (!TextUtils.isEmpty(pageURL)) {
-            for (String hostKeyWords : Utils.EXPIRE_SUFFIX_ARRAY) {
-                if (pageURL.contains(hostKeyWords)) {
-                    String targetFileName = null;
-                    if (fileURL.contains(".mp4")) {
-                        targetFileName =  String.valueOf(System.currentTimeMillis()) + ".mp4";
-                    } else if(fileURL.contains(".jpg")) {
-                        targetFileName =  String.valueOf(System.currentTimeMillis()) + ".jpg";
-                    }
-                    childDirectory = targetFileName;
-                }
+            String targetFileName = null;
+            if (fileURL.contains(".mp4")) {
+                targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
+            } else if (fileURL.contains(".jpg")) {
+                targetFileName = String.valueOf(System.currentTimeMillis()) + ".jpg";
             }
-
-            if(TextUtils.isEmpty(childDirectory)) {
+            childDirectory = targetFileName;
+        } else {
+            if (TextUtils.isEmpty(childDirectory)) {
                 childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
             }
-        } else {
-            childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
         }
-
-        return DownloadUtil.getDownloadTargetDir(getPageHome(), childDirectory);
+        return DownloadUtil.getDownloadTargetDir(
+                getPageHome(), childDirectory);
     }
 
 
