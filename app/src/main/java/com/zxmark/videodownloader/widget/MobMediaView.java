@@ -105,24 +105,10 @@ public class MobMediaView extends FrameLayout {
                 }
                 ImageView adCoverView = (ImageView) findViewById(R.id.ad_cover);
                 ImageView adIconView = (ImageView) findViewById(R.id.ad_icon);
-                try {
-                    mImageLoader.load(adBean.facebookNativeAd.getAdCoverImage().getUrl()).into(adCoverView);
-                    mImageLoader.load(adBean.facebookNativeAd.getAdIcon().getUrl()).into(adIconView);
-
-                } catch (OutOfMemoryError error) {
-                    System.gc();
-                    System.gc();
-                    System.gc();
-                }
-                TextView adBodyView = (TextView) findViewById(R.id.ad_body);
-                TextView adTitleView = (TextView) findViewById(R.id.ad_title);
-                adBodyView.setText(adBean.facebookNativeAd.getAdBody());
-                adTitleView.setText(adBean.facebookNativeAd.getAdTitle());
                 // Register the native ad view with the native ad instance
 
                 Button adButton = (Button) findViewById(R.id.facebook_ad_btn);
                 adButton.setText(adBean.facebookNativeAd.getAdCallToAction());
-                adBean.facebookNativeAd.registerViewForInteraction(mAdContainer);
             }
         }
     }
@@ -196,38 +182,11 @@ public class MobMediaView extends FrameLayout {
         });
         mCacheVideoAdBean = null;
         mVideoNativeAd = null;
-        loadFaceBookAdAfterVideoCompeleted();
     }
 
     private NativeAd mVideoNativeAd;
     private GalleryPagerActivity.PagerBean mCacheVideoAdBean;
 
-    private void loadFaceBookAdAfterVideoCompeleted() {
-        LogUtil.v("fan", "loadFaceBookAfterVideoCompeleted");
-        mVideoNativeAd = new NativeAd(getContext(), "2099565523604162_2170561929837854");
-        mVideoNativeAd.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                LogUtil.e("facebook", "onError:" + adError);
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                onFacebookAdLoaded(ad);
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        });
-
-        mVideoNativeAd.loadAd();
-    }
 
 
     private void onFacebookAdLoaded(Ad ad) {

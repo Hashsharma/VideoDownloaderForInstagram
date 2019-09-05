@@ -1,12 +1,40 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+
+    ext {
+        kotlinVersion = '1.2.71'
+        minSdkVersion = 21
+        sdkVersion = 28
+        compileSdkVersion = 28
+        buildToolsVersion = '28.0.3'
+        androidxVersion = '1.0.0'
+        roomVersion = '2.0.0'
+        workVersion = '1.0.0-alpha09'
+        preferencexVersion = '1.0.0'
+        junitVersion = '4.12'
+        androidTestVersion = '1.1.0-alpha4'
+        androidEspressoVersion = '3.1.0-alpha4'
+        appcompatVersion="27.1.0"
+
+    }
+
     repositories {
+        mavenCentral()
+        google()
         jcenter()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:3.2.0'
+        // Check for v3.1.2 or higher
+        classpath 'com.google.gms:google-services:4.2.0'  // Google Services plugin
 
+        // Add dependency
+        classpath 'io.fabric.tools:gradle:1.29.0'  // Crashlytics plugin
+        // Add dependency
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -14,7 +42,16 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
+        maven { url "https://jitpack.io" }
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
+
+        maven {
+            url "https://jitpack.io"
+        }
     }
 }
 

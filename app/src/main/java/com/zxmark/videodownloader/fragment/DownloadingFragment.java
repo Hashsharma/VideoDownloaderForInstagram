@@ -2,6 +2,8 @@ package com.zxmark.videodownloader.fragment;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -105,11 +107,35 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.downloading_page, container, false);
-
         return view;
     }
+
+
+    private String getPrimaryContent() {
+        final ClipboardManager cm = (ClipboardManager) this.getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        cm.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
+            @Override
+            public void onPrimaryClipChanged() {
+                LogUtil.e("fan10","onPrimaryClipChanged:" + cm.getText());
+            }
+        });
+        ClipData data = cm.getPrimaryClip();
+        if (data != null &&  data.getItemCount() > 0) {
+            ClipData.Item item = data.getItemAt(0);
+            LogUtil.e("fan10", "item:" + item);
+            String content = item.getText().toString();
+            LogUtil.e("fan10", "content:" + content);
+            if (VideoDownloadFactory.getInstance().isSupportWeb(content)) {
+                cm.setPrimaryClip(ClipData.newPlainText("", ""));
+                return content;
+            }
+        }
+        return null;
+
+    }
+
+
 
     private View findViewById(int id) {
         return getView().findViewById(id);
@@ -128,13 +154,17 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                 false);
         mListView.setLayoutManager(mLayoutManager);
         mListView.setItemAnimator(new DefaultItemAnimator());
-
+        final String primaryWebUrl = getPrimaryContent();
         DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
                 mDataList = DownloaderDBHelper.SINGLETON.getDownloadingTask();
                 DownloadContentItem headerBean = new DownloadContentItem();
                 headerBean.itemType = DownloadContentItem.TYPE_HEADER_ITEM;
+
+                if (!TextUtils.isEmpty(primaryWebUrl)) {
+                    headerBean.pageURL = primaryWebUrl;
+                }
                 mDataList.add(0, headerBean);
                 if (!PreferenceUtils.isShowedHowToInfo()) {
                     isShowHowToPage = true;
@@ -336,7 +366,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                             @Override
                             public void run() {
                                 PreferenceUtils.setLoadFullScreenAd();
-                                loadFullScreenAd("2099565523604162_2174397646120949");
                             }
                         });
                     }
@@ -351,8 +380,13 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
      * @param pageURL
      */
     public void downloadFinished(String pageURL) {
+        LogUtil.e("fragment","downloadFinished=" + pageURL);
         if (TextUtils.isEmpty(pageURL)) {
             return;
+        }
+        if(!TextUtils.isEmpty(mDataList.get(0).pageURL)) {
+                mDataList.get(0).pageURL = "";
+                mAdapter.notifyItemChanged(0);
         }
         DownloadContentItem bean = new DownloadContentItem();
         bean.pageURL = pageURL;
@@ -372,7 +406,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            loadFullScreenAd("1602783786453762_1602801626451978");
                         }
                     });
                 }
@@ -380,39 +413,6 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         }
     }
 
-
-    private void loadFullScreenAd(String facebookAd) {
-        LogUtil.e("fan", "loadFullScreenAd:");
-        final NativeAd fullScreenAd = new NativeAd(getActivity(), facebookAd);
-        fullScreenAd.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                LogUtil.v("facebook", "onError:" + adError.getErrorMessage());
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                if (isAdded()) {
-                    ADCache.getDefault().setFullScreenNativeAd(fullScreenAd);
-                    LogUtil.v("fan", "loadFullScreenAd");
-                    Intent intent = new Intent(getActivity(), FullScreenAdActivity.class);
-                    getActivity().startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        });
-
-        fullScreenAd.loadAd();
-    }
 
     @Override
     public void onClick(View v) {
@@ -447,51 +447,8 @@ public class DownloadingFragment extends Fragment implements View.OnClickListene
         if (!ADCache.SHOW_AD) {
             return;
         }
-        startLoadFacebookAd();
     }
 
-    private void startLoadFacebookAd() {
-        if (getActivity() != null && isAdded()) {
-            if (mFirstAdBean == null) {
-                nativeAd = new NativeAd(getActivity(), "1602783786453762_1602787176453423");
-                nativeAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onError(Ad ad, AdError adError) {
-                        LogUtil.v("facebook", "onError:" + adError.getErrorMessage());
-                    }
-
-                    @Override
-                    public void onAdLoaded(Ad ad) {
-                        onFacebookAdLoaded(ad);
-                    }
-
-                    @Override
-                    public void onAdClicked(Ad ad) {
-                        LogUtil.e("facebook", "onAdClicked");
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_DOWNLOADING_VIDEO);
-                                final int position = mDataList.indexOf(mFirstAdBean);
-                                if (position >= 0) {
-                                    mDataList.remove(position);
-                                    mAdapter.notifyItemRemoved(position);
-                                    mFirstAdBean = null;
-                                }
-                            }
-                        }, 1000);
-                    }
-
-                    @Override
-                    public void onLoggingImpression(Ad ad) {
-
-                    }
-                });
-
-                nativeAd.loadAd();
-            }
-        }
-    }
 
     // The next step is to extract the ad metadata and use its properties
 // to build your customized native UI. Modify the onAdLoaded function

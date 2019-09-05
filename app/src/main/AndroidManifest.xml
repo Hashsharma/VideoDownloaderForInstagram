@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.imobapp.videodownloaderforinstagram">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.imobapp.videodownloaderforinstagram"
+
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -146,6 +149,11 @@
             android:name="io.fabric.ApiKey"
             android:value="e11416ac50e8b3cab8b3c3fd34c3e890cc442423"
             />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2991801157027378~7622903605"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

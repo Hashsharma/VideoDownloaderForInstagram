@@ -165,6 +165,8 @@ public class FacebookDownloader extends BaseDownloader {
         data.pageTitle = DownloadUtil.getFileNameByUrl(htmlUrl);
         data.pageTags = "FaceBook";
         data.pageThumb = getVideoThumbnail(content);
+
+        data.homeDirectory = "facebook";
         return data;
     }
 

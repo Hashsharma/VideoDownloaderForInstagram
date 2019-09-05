@@ -1,18 +1,27 @@
 package com.zxmark.videodownloader.downloader;
 
+import android.os.Environment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.imobapp.videodownloaderforinstagram.BuildConfig;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloadQueueSet;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.zxmark.videodownloader.bean.WebPageStructuredData;
 import com.zxmark.videodownloader.db.DownloadContentItem;
 import com.zxmark.videodownloader.spider.HttpRequestSpider;
 import com.zxmark.videodownloader.util.CharsetUtil;
 import com.zxmark.videodownloader.util.DownloadUtil;
+import com.zxmark.videodownloader.util.FileUtils;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.Utils;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,14 +50,16 @@ public class InstagramDownloader extends BaseDownloader {
         Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
         Matcher ma = pa.matcher(content);
 
-        if (ma.find()) {
+        while (ma.find()) {
             videoUrl = ma.group(1);
+            Log.e("ok", "videoURL=" + videoUrl);
+
         }
         return videoUrl;
     }
 
     public String getImageUrl(String content) {
-        Log.e("fan","getImageURL:" + content);
+        Log.e("fan", "getImageURL:" + content);
         String regex;
         String imageUrl = "";
         regex = "<meta property=\"og:image\" content=\"(.*?)\"";
@@ -57,19 +68,9 @@ public class InstagramDownloader extends BaseDownloader {
 
         if (ma.find()) {
             imageUrl = ma.group(1);
-            LogUtil.e("image", "origin_imageUrl=" + imageUrl);
+            LogUtil.e("ok", "origin_imageUrl=" + imageUrl);
         }
 
-
-//        if (!TextUtils.isEmpty(imageUrl)) {
-//
-//            if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
-//                String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
-//                imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
-//            }
-//
-//            LogUtil.e("image", "imageUrl=" + imageUrl);
-//        }
         return imageUrl;
     }
 
@@ -146,12 +147,12 @@ public class InstagramDownloader extends BaseDownloader {
             imageUrl = ma.group(1);
             if (!TextUtils.isEmpty(imageUrl)) {
                 if (imageUrl.contains(CDN_IMAGE_SUFFIX)) {
-                  //  String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
-                  //  imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
-                    LogUtil.e("ins", "display_url=" + imageUrl);
+                    //  String tempArray[] = imageUrl.split(CDN_IMAGE_SUFFIX);
+                    //  imageUrl = REPLACE_SUFFIX + tempArray[tempArray.length - 1];
+                    LogUtil.e("ok", "display_url=" + imageUrl);
                     data.addImage(imageUrl);
                 } else {
-                    LogUtil.e("ins", "display_url=" + imageUrl);
+                    LogUtil.e("ok", "display_url=" + imageUrl);
                     data.addImage(imageUrl);
                 }
             }
@@ -166,20 +167,30 @@ public class InstagramDownloader extends BaseDownloader {
         Matcher ma = pa.matcher(content);
         while (ma.find()) {
             videoUrl = ma.group(1);
-            if(BuildConfig.DEBUG) {
-                Log.e("ins","videoUrl:" + videoUrl);
+            if (BuildConfig.DEBUG) {
+                Log.e("ok", "videoUrl:" + videoUrl);
             }
-//            if(!videoUrl.endsWith(".mp4")) {
-//                videoUrl = videoUrl + ".mp4";
-//            }
+
             data.addVideo(videoUrl);
         }
+    }
 
+    public void showAllMetaList(String content) {
+        String regex;
+        String hashTags = "";
+        regex = "<meta property=\"(.*?)\" content=\"(.*?)\"";
+        Pattern pa = Pattern.compile(regex, Pattern.MULTILINE);
+        Matcher ma = pa.matcher(content);
+        while (ma.find()) {
+            String key = ma.group(1);
+            String value = ma.group(2);
+            Log.e("list", key + "-->" + value);
+        }
     }
 
     public DownloadContentItem startSpideThePage(String htmlUrl) {
         String content = startRequest(htmlUrl);
-        Utils.writeFile(content);
+        showAllMetaList(content);
         DownloadContentItem data = new DownloadContentItem();
         getVideoUrlFromJs(content, data);
         data.pageThumb = getImageUrl(content);
@@ -188,17 +199,60 @@ public class InstagramDownloader extends BaseDownloader {
         data.pageDesc = getDescription(content);
         data.pageURL = htmlUrl;
         data.pageTags = getPageHashTags(content);
-        if (data.futureImageList == null && data.futureVideoList == null) {
-            if (!TextUtils.isEmpty(data.pageThumb)) {
-                data.addImage(data.pageThumb);
-                return data;
+        if (data.futureImageList == null || data.futureImageList.size() == 0 ) {
+            String imageURL = getImageUrl(content);
+            if (!TextUtils.isEmpty(imageURL)) {
+                data.addImage(imageURL);
             }
-            return null;
+
         }
 
-        LogUtil.e("ins","data.futerImageList.size:" + (data.futureImageList == null ? 0 : data.futureImageList.size()));
+        if (data.futureVideoList == null || data.futureVideoList.size() == 0) {
+            String videoURL = getVideoUrl(content);
+            if(!TextUtils.isEmpty(videoURL)) {
+                data.getVideoList().add(videoURL);
+            }
+
+        }
+
+        LogUtil.e("ok", "data.futerImageList.size:" + (data.futureImageList == null ? 0 : data.futureImageList.size()));
+        //useFileDownloader(data);
+        //return null;
+        data.homeDirectory = "instagram";
         return data;
     }
+
+
+
+
+//    private void useFileDownloader(DownloadContentItem downloadContentItem) {
+//        final FileDownloadQueueSet queueSet = new FileDownloadQueueSet(queueTarget);
+//
+//        final List<BaseDownloadTask> tasks = new ArrayList<>();
+//        int imageCount = (downloadContentItem == null || downloadContentItem.futureImageList == null) ? 0 : downloadContentItem.futureImageList.size();
+//
+//        for (int i = 0; i < imageCount; i++) {
+//            String url = downloadContentItem.futureImageList.get(i);
+//            url = url.replace("\\u0026","&");
+//            tasks.add(FileDownloader.getImpl().create(url).setTag(i + 1).setPath(FileUtils.getFilePath(FileUtils.getFileNameByURL(url))).addHeader("User-Agent",HttpRequestSpider.UA_1));
+//        }
+//
+//        int videoCount = (downloadContentItem == null || downloadContentItem.futureVideoList == null) ? 0 : downloadContentItem.futureVideoList.size();
+//
+//        for (int index = 0; index < videoCount; index++) {
+//            String url = downloadContentItem.futureVideoList.get(index);
+//            url = url.replace("\\u0026","&");
+//            tasks.add(FileDownloader.getImpl().create(url).setTag(imageCount + index + 1).setPath(FileUtils.getFilePath(FileUtils.getFileNameByURL(url))).addHeader("User-Agent",HttpRequestSpider.USER_AGENT));
+//        }
+//
+//        queueSet.disableCallbackProgressTimes(); // 由于是队列任务, 这里是我们假设了现在不需要每个任务都回调`FileDownloadListener#progress`, 我们只关系每个任务是否完成, 所以这里这样设置可以很有效的减少ipc.
+//// 所有任务在下载失败的时候都自动重试一次
+//        queueSet.setAutoRetryTimes(1);
+//
+//        queueSet.downloadTogether(tasks);
+//        queueSet.start();
+//        Log.e("ok", "filedownloader.startdownload");
+//    }
 
     public String getLaunchInstagramUrl(String content) {
         String regex;

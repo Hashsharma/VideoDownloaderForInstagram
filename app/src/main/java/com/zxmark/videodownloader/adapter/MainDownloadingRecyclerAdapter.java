@@ -1,5 +1,7 @@
 package com.zxmark.videodownloader.adapter;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -49,7 +51,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
     private Resources mResources;
     private String mLeftDownloadFileString;
 
-    public MainDownloadingRecyclerAdapter(RequestManager requestManager,List<DownloadContentItem> dataList, boolean isFullImage, IBtnCallback callback) {
+    public MainDownloadingRecyclerAdapter(RequestManager requestManager, List<DownloadContentItem> dataList, boolean isFullImage, IBtnCallback callback) {
         mDataList = dataList;
         imageLoader = requestManager;
         mFullImageState = isFullImage;
@@ -120,9 +122,7 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     } else if (index == 2) {
                         EventUtil.getDefault().onEvent("downloading", "pauseDownload");
                         pauseDownloadingVideo(bean);
-                    }
-
-                    else if (index == 3) {
+                    } else if (index == 3) {
                         EventUtil.getDefault().onEvent("downloading", "delete");
                         deleteDownloadingVideo(bean);
                         sendDeleteVideoBroadcast(bean.pageURL);
@@ -248,18 +248,13 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     holder.adChoiceView.addView(adChoicesView);
                 }
                 try {
-                    imageLoader.load(bean.facebookNativeAd.getAdIcon().getUrl()).priority(Priority.IMMEDIATE).crossFade().into(holder.adIconView);
-                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).priority(Priority.IMMEDIATE).crossFade().into(holder.adCoverView);
                 } catch (OutOfMemoryError error) {
                     System.gc();
                     System.gc();
                     System.gc();
                 }
-                holder.adBodyView.setText(bean.facebookNativeAd.getAdBody());
-                holder.adTitleView.setText(bean.facebookNativeAd.getAdTitle());
                 // Register the native ad view with the native ad instance
                 holder.adButton.setText(bean.facebookNativeAd.getAdCallToAction());
-                bean.facebookNativeAd.registerViewForInteraction(holder.itemView);
             }
         } else if (baseHolder instanceof ItemHeaderHolder) {
             final ItemHeaderHolder holder = (ItemHeaderHolder) baseHolder;
@@ -272,6 +267,13 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
             });
+            holder.inputUrl.setText(bean.pageURL);
+            if (!TextUtils.isEmpty(bean.pageURL)) {
+                if (callback != null) {
+                    callback.onDownloadFromClipboard(holder.inputUrl, holder.inputUrl.getText().toString());
+                }
+            }
+
 
             holder.downloadBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -337,6 +339,15 @@ public class MainDownloadingRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
         void onDownloadFromClipboard(View view, String httpURL);
 
+    }
+
+
+    private String getPrimaryContent() {
+        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = cm.getPrimaryClip();
+        ClipData.Item item = data.getItemAt(0);
+        String content = item.getText().toString();
+        return content;
     }
 
 }

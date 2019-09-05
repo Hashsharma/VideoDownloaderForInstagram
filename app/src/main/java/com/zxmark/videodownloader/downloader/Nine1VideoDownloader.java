@@ -74,6 +74,7 @@ public class Nine1VideoDownloader extends BaseDownloader {
             downloadContentItem.pageTitle = getPageTitle(content);
         }
 
+        downloadContentItem.homeDirectory = "91";
         return downloadContentItem;
     }
 

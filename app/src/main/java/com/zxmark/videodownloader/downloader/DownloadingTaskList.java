@@ -130,7 +130,8 @@ public class DownloadingTaskList {
     private void downloadItemContent(final DownloadContentItem item) {
         if (item != null) {
             List<String> futureDownloadedList = item.getDownloadContentList();
-            downloadItem(futureDownloadedList, item);
+           // downloadItem(futureDownloadedList, item);
+            downloadItem(item);
             if (item.pageStatus == DownloadContentItem.PAGE_STATUS_DOWNLOAD_FAILED) {
                 mHandler.obtainMessage(DownloadService.MSG_DOWNLOAD_ERROR, 0, 0, item.pageURL).sendToTarget();
             } else {
@@ -140,6 +141,11 @@ public class DownloadingTaskList {
         }
     }
 
+
+
+    private void downloadItem(final DownloadContentItem item) {
+        PowerfulDownloader.getDefault().startDownload(item.homeDirectory,item,null);
+    }
 
     private void downloadItem(final List<String> totalDownloadedList, final DownloadContentItem item) {
         if (item.getVideoCount() > 0) {

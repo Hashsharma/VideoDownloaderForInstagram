@@ -20,6 +20,7 @@ public class KuaiVideoDownloader extends BaseDownloader {
 
     @Override
     public String getVideoUrl(String content) {
+        Log.e("fan2","getVideoURL");
         String regex;
         String videoUrl = null;
         regex = "<meta property=\"og:video:url\" content=\"(.*?)\"";
@@ -97,6 +98,8 @@ public class KuaiVideoDownloader extends BaseDownloader {
         if (data.futureVideoList == null && data.futureImageList == null) {
             return null;
         }
+
+        data.homeDirectory = "kwai";
         return data;
 
     }

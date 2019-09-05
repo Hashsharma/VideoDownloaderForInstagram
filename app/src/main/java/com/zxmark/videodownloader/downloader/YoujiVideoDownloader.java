@@ -66,6 +66,7 @@ public class YoujiVideoDownloader extends BaseDownloader {
                 item.pageURL = htmlUrl;
                 item.pageTitle = getPageTitle(content);
                 item.addVideo(videoUrl);
+                item.homeDirectory = "youjizz";
                 return item;
             }
         }

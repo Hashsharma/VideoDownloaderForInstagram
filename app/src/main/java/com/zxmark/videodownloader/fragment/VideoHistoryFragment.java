@@ -289,67 +289,11 @@ public class VideoHistoryFragment extends Fragment {
         //LogUtil.e("history", "showNativeAd:" + mAdVideoBean);
         // if (mAdVideoBean == null) {
         if (isAdded()) {
-            startLoadFacebookAd();
         }
         //}
     }
 
 
-    private void startLoadFacebookAd() {
-        if (getActivity() != null && isAdded()) {
-            if (mDataList == null) {
-                return;
-            }
-            boolean onlyOneAd = mDataList.size() <= 1;
-            for (int index = 0; index < FACEBOOK_IDS.length; index++) {
-                if (onlyOneAd && (index == 1)) {
-                    break;
-                }
-                final int position = index;
-                NativeAd nativeAd = new NativeAd(getActivity(), FACEBOOK_IDS[index]);
-                nativeAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onError(Ad ad, AdError adError) {
-                        LogUtil.v("facebook", "onError:" + adError.getErrorMessage());
-                    }
-
-                    @Override
-                    public void onAdLoaded(Ad ad) {
-                        onFacebookAdLoaded(position, ad);
-                    }
-
-                    @Override
-                    public void onAdClicked(Ad ad) {
-                        LogUtil.e("facebook", "onAdClicked");
-//                        mMainLooperHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//                                if (mAdVideoBean != null) {
-//                                    ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_HISTORY_VIDEO);
-//                                    final int position = mDataList.indexOf(mAdVideoBean);
-//                                    LogUtil.e("facebook2", "position:" + position);
-//                                    if (position >= 0) {
-//                                        mDataList.remove(position);
-//                                        mAdapter.notifyItemRemoved(position);
-//                                        mAdVideoBean = null;
-//                                    }
-//                                }
-//                            }
-//                        }, 1000);
-                    }
-
-                    @Override
-                    public void onLoggingImpression(Ad ad) {
-
-                    }
-                });
-
-                nativeAd.loadAd();
-                mNativeAdMap.put(FACEBOOK_IDS[index], nativeAd);
-            }
-        }
-    }
 
 
     // The next step is to extract the ad metadata and use its properties

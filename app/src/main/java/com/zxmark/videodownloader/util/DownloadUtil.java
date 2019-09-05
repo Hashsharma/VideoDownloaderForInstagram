@@ -29,11 +29,7 @@ public class DownloadUtil {
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(DownloadService.REQUEST_DOWNLOAD_VIDEO_ACTION);
         intent.putExtra(Globals.EXTRAS, url);
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
+        context.startService(intent);
     }
 
     public static void startResumeDownload(String url) {
@@ -41,12 +37,10 @@ public class DownloadUtil {
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
         intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, false);
+
+        intent.putExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD, true);
         intent.putExtra(Globals.EXTRAS, url);
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
+        context.startService(intent);
     }
 
     public static void startForceDownload(String pageURL) {
@@ -54,13 +48,9 @@ public class DownloadUtil {
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
         intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, false);
-        intent.putExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD,true);
+        intent.putExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD, true);
         intent.putExtra(Globals.EXTRAS, pageURL);
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
+        context.startService(intent);
     }
 
     public static void startRequest(String pageUrl) {
@@ -69,11 +59,7 @@ public class DownloadUtil {
         intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
         intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
         intent.putExtra(Globals.EXTRAS, pageUrl);
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
+        context.startService(intent);
     }
 
     public static void downloadThumbnail(String pageURL, String downloadUrl) {
@@ -82,11 +68,7 @@ public class DownloadUtil {
         intent.setAction(DownloadService.DOWNLOAD_ACTION);
         intent.putExtra(DownloadService.DOWNLOAD_PAGE_URL, pageURL);
         intent.putExtra(Globals.EXTRAS, downloadUrl);
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
+        context.startService(intent);
     }
 
 
@@ -130,7 +112,7 @@ public class DownloadUtil {
     }
 
     public static void checkDownloadBaseHomeDirectory() {
-        if(!DownloadUtil.getHomeDirectory().exists()) {
+        if (!DownloadUtil.getHomeDirectory().exists()) {
             DownloadUtil.getHomeDirectory().mkdir();
         }
     }
@@ -144,21 +126,26 @@ public class DownloadUtil {
      */
     public static String getDownloadTargetDir(String parent, String fileName) {
         File targetDir = new File(parent, fileName);
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
         return targetDir.getAbsolutePath();
     }
 
-    public static String getDownloadItemDirectory(boolean create) {
+    public static String getDownloadItemDirectory(String tag) {
         File homeDirectory = DownloadUtil.getHomeDirectory();
-        if (create) {
-            if (!homeDirectory.exists()) {
-                homeDirectory.mkdir();
-            }
+        if (!homeDirectory.exists()) {
+            homeDirectory.mkdir();
         }
-        File itemDirectory = new File(homeDirectory, String.valueOf(System.currentTimeMillis()));
-        if (create) {
-            if (!itemDirectory.exists()) {
-                itemDirectory.mkdir();
-            }
+
+        File tagDidrectory = new File(homeDirectory, tag);
+        if (!tagDidrectory.exists()) {
+            tagDidrectory.mkdirs();
+        }
+
+        File itemDirectory = new File(tagDidrectory, String.valueOf(System.currentTimeMillis()));
+        if (!itemDirectory.exists()) {
+            itemDirectory.mkdir();
         }
         return itemDirectory.getAbsolutePath();
     }

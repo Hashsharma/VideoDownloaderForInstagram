@@ -14,6 +14,7 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
+import com.google.android.gms.ads.InterstitialAd;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.BaseActivity;
 import com.zxmark.videodownloader.MainApplication;
@@ -67,15 +68,14 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         EventUtil.getDefault().onEvent("UI", "GalleryPageActivity.onCreate");
         requestWindowFeature(Window.FEATURE_NO_TITLE);  //去掉 title
+        showInterstialAd();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //设置全屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.gallery_pager);
 
         String baseHome = getIntent().getStringExtra(Globals.EXTRAS);
-        //  if(Globals.TEST_FOR_GP) {
-        // baseHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mob_ins_downloader/test";
-        //}
+
         mPageHome = baseHome;
         findViewById(R.id.back).setOnClickListener(this);
         findViewById(R.id.more_vert).setOnClickListener(this);
@@ -157,7 +157,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
                                 if (!ADCache.SHOW_AD) {
                                     return;
                                 }
-                                startLoadFacebookAd();
                             }
                         }
                     }
@@ -166,6 +165,18 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
+
+    private void showInterstialAd() {
+        final InterstitialAd mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-2991801157027378/2116689771");
+        mInterstitialAd.setAdListener(new com.google.android.gms.ads.AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mInterstitialAd.show();
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
@@ -192,54 +203,6 @@ public class GalleryPagerActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private void startLoadFacebookAd() {
-        if (isFinishing()) {
-            return;
-        }
-        nativeAd = new NativeAd(this, "1602783786453762_1602803783118429");
-        nativeAd.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                LogUtil.e("facebook", "onError:" + adError);
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                onFacebookAdLoaded(ad);
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                if (mAdBean != null) {
-                    ADCache.getDefault().removedAdByKey(ADCache.AD_KEY_GALLERY);
-                }
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        });
-
-        nativeAd.loadAd();
-    }
-
-    // The next step is to extract the ad metadata and use its properties
-// to build your customized native UI. Modify the onAdLoaded function
-// above to retrieve the ad properties. For example:
-    public void onFacebookAdLoaded(Ad ad) {
-        if (ad != nativeAd) {
-            return;
-        }
-        PagerBean adBean = new PagerBean();
-        adBean.facebookNativeAd = nativeAd;
-        DownloadContentItem downloadContentItem = new DownloadContentItem();
-        downloadContentItem.itemType = DownloadContentItem.TYPE_FACEBOOK_AD;
-        downloadContentItem.facebookNativeAd = nativeAd;
-        ADCache.getDefault().setFacebookNativeAd(ADCache.AD_KEY_GALLERY, downloadContentItem);
-        mDataList.add(adBean);
-        mAdapter.notifyDataSetChanged();
-    }
 
 
     public static class PagerBean {

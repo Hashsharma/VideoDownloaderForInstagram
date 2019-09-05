@@ -164,6 +164,7 @@ public class DownloaderDBHelper {
         Cursor cursor = mContentResolver.query(DownloadContentItem.CONTENT_URI, null, DownloadContentItem.PAGE_URL + " = ? ", new String[]{pageURL}, null);
         try {
             if (cursor != null) {
+                LogUtil.v("db", "cursor=" + cursor.getCount());
                 if (cursor.moveToNext()) {
                     return cursor.getInt(cursor.getColumnIndexOrThrow(DownloadContentItem._ID));
                 }

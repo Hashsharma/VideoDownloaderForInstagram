@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,8 +32,7 @@ import java.util.Locale;
  * Created by fanlitao on 17/6/7.
  */
 
-public class MainApplication extends Application {
-
+public class MainApplication extends MultiDexApplication {
 
     private static Context sContext;
     private static MainApplication sApplication;
@@ -41,6 +41,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApplication = this;
+        FileDownloader.setupOnApplicationOnCreate(this);
+
         createNotificationChannels();
         initDefaultLocale();
     }

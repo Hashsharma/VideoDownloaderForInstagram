@@ -1,52 +1,45 @@
 {
   "project_info": {
-    "project_number": "953368955960",
-    "firebase_url": "https://newinstagramdownloader.firebaseio.com",
-    "project_id": "newinstagramdownloader",
-    "storage_bucket": "newinstagramdownloader.appspot.com"
+    "project_number": "709083932423",
+    "firebase_url": "https://videodownloaderforinstagram.firebaseio.com",
+    "project_id": "videodownloaderforinstagram",
+    "storage_bucket": "videodownloaderforinstagram.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:953368955960:android:6b26e5968c279283",
+        "mobilesdk_app_id": "1:709083932423:android:6b26e5968c279283",
         "android_client_info": {
           "package_name": "com.androidapp.tool.videodownloaderforinstagram"
         }
       },
       "oauth_client": [
         {
-          "client_id": "953368955960-9tc381g8udop39jpk2md76pmh3mr3tlf.apps.googleusercontent.com",
+          "client_id": "709083932423-ljbpq7r1fidj408rlu1t5ke22805etmi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.androidapp.tool.videodownloaderforinstagram",
-            "certificate_hash": "b65a5407abed1117aa581a42d272dee0f5938572"
+            "certificate_hash": "386f23581651406d204f610c433db45ebe8d7538"
           }
         },
         {
-          "client_id": "953368955960-g29acvef7ffv6tfmra2qfcf85p9h3m6o.apps.googleusercontent.com",
+          "client_id": "709083932423-d9amv3s6ha54dd9ag83rmfib75g2q1ri.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAm1EadIE2GU5eCAq4rWsH5yYYIRmNrsvg"
+          "current_key": "AIzaSyAmpdHMRVgDBOGq52hEaqbsXFhQCFSVlYo"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "953368955960-g29acvef7ffv6tfmra2qfcf85p9h3m6o.apps.googleusercontent.com",
+              "client_id": "709083932423-d9amv3s6ha54dd9ag83rmfib75g2q1ri.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

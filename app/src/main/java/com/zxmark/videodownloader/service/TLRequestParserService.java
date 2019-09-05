@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.zxmark.videodownloader.MainActivity;
 import com.zxmark.videodownloader.downloader.VideoDownloadFactory;
+import com.zxmark.videodownloader.util.ClipboardHelper;
 import com.zxmark.videodownloader.util.DownloadUtil;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.URLMatcher;
@@ -55,25 +56,7 @@ public class TLRequestParserService extends Service {
     public void onCreate() {
         super.onCreate();
        // initNotificationBuilder();
-        final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        cb.setPrimaryClip(ClipData.newPlainText("", ""));
-        cb.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
 
-            @Override
-            public void onPrimaryClipChanged() {
-                LogUtil.v("fan3", "onPrimaryClipChanged:" + cb.getText());
-                String pasteContent = cb.getText().toString();
-                if (TextUtils.isEmpty(pasteContent)) {
-                    return;
-                }
-                String handledUrl = URLMatcher.getHttpURL(pasteContent);
-                LogUtil.e("pseser", "hanleURL:" + handledUrl);
-                if (VideoDownloadFactory.getInstance().isSupportWeb(handledUrl)) {
-                    LogUtil.e("pseser", "startDownload:");
-                    DownloadUtil.startRequest(handledUrl);
-                }
-            }
-        });
 
     }
 

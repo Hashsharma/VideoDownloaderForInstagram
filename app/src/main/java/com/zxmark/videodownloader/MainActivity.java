@@ -1,12 +1,14 @@
 package com.zxmark.videodownloader;
 
 import android.Manifest;
+import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -23,6 +25,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +35,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.imobapp.videodownloaderforinstagram.BuildConfig;
 import com.imobapp.videodownloaderforinstagram.R;
 import com.umeng.analytics.MobclickAgent;
@@ -78,7 +85,7 @@ public class MainActivity extends AppCompatActivity
     private View mSelectedContainer;
 
     private void init() {
-        Intent intent = new Intent(this, TLRequestParserService.class);
+        Intent intent = new Intent(this, DownloadService.class);
         startService(intent);
     }
 
@@ -96,8 +103,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         init();
-        cancelAllNotification();
-
+        MobileAds.initialize(this, "ca-app-pub-2991801157027378~7622903605");
         //TODO: dismiss float view
         FloatViewManager.getDefault().dismissFloatView();
         mInstagramIcon = findViewById(R.id.ins_icon);
@@ -113,6 +119,22 @@ public class MainActivity extends AppCompatActivity
         String params = null;
         if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
             String sharedText = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            Log.e("fan3", "sharedText:" + sharedText);
+            Intent intent = getIntent();
+            if (TextUtils.isEmpty(sharedText)) {
+                String clipSharedText = getIntent().getStringExtra("clip");
+                Uri uri = intent.getData();
+                Log.e("fan3", "uri:" + uri);
+                ClipData clipData = intent.getClipData();
+                Log.e("fan3", "clipData:" + clipData.toString());
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    ClipData.Item item = clipData.getItemAt(i);
+                    Uri uri2 = item.getUri();
+                    Log.e("fan3", "text:" + uri2);
+                    //What now?
+                }
+                return;
+            }
             params = URLMatcher.getHttpURL(sharedText);
         }
         mViewPagerAdapter = new MainViewPagerAdapter(fm, params);
@@ -120,6 +142,7 @@ public class MainActivity extends AppCompatActivity
 
         mTabLayout = (TabLayout) findViewById(R.id.slidindg_tabs);
         mTabLayout.setupWithViewPager(mMainViewPager);
+
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -163,17 +186,38 @@ public class MainActivity extends AppCompatActivity
 
         requestSomePermission();
         if (!PreferenceUtils.isRateUsOnGooglePlay()) {
-            if (PreferenceUtils.getRateUsBadTimeStamp() == 0L || (System.currentTimeMillis() - PreferenceUtils.getRateUsBadTimeStamp() >= MAX_BAD_DURATION)) {
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 1) {
-                            showRatingDialog();
-                        }
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (DownloaderDBHelper.SINGLETON.getDownloadedTaskCount() > 1) {
+                        showRatingDialog();
                     }
-                }, 100);
-            }
+                }
+            }, 100);
         }
+        showInterstialAd();
+    }
+
+
+    private void showInterstialAd() {
+        LogUtil.e("ad", "showInterstialAd");
+        final InterstitialAd mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-2991801157027378/3840834984");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                LogUtil.e("ad", "onAdLoaded:");
+                mInterstitialAd.show();
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                LogUtil.e("ad", "onAdFailedToLoad:" + i);
+            }
+        });
     }
 
     private void handleSendIntent() {

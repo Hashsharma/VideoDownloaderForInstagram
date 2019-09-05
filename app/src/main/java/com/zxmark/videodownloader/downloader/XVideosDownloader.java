@@ -75,10 +75,12 @@ public class XVideosDownloader extends BaseDownloader {
             }
             downloadContentItem.pageThumb = getThumbnailByPageURL(content);
             downloadContentItem.pageTitle = getPageTitle(content);
+            downloadContentItem.homeDirectory = "xvideos";
             return downloadContentItem;
         }
         LogUtil.e("xv", "page=" + content);
         // Utils.writeFile(content);
+
         return null;
     }
 }

@@ -40,7 +40,8 @@
 
     <string name="clipboard_copy_text">The Link has be copyed into clipboard</string>
 
-    <string name="download_result_success">Video Saved</string>
+    <string name="download_result_success">Download Successed</string>
+    <string name="existed_download" translatable="false">File existed</string>
     <string name="download_failed">Download Failed</string>
     <string name="download_result_start">Start Download</string>
 

@@ -5,6 +5,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +40,7 @@ import com.zxmark.videodownloader.util.EventUtil;
 import com.zxmark.videodownloader.util.Globals;
 import com.zxmark.videodownloader.util.LogUtil;
 import com.zxmark.videodownloader.util.NetWorkUtil;
+import com.zxmark.videodownloader.util.URLMatcher;
 import com.zxmark.videodownloader.widget.IToast;
 
 import java.io.File;
@@ -88,7 +91,36 @@ public class DownloadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        initNotification();
+        //initNotification();
+        final ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        // cb.setPrimaryClip(ClipData.newPlainText("", ""));
+        cb.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
+
+
+            @Override
+            public void onPrimaryClipChanged() {
+
+                String pasteContent = cb.getText().toString();
+                if (TextUtils.isEmpty(pasteContent)) {
+                    return;
+                }
+                String handledUrl = URLMatcher.getHttpURL(pasteContent);
+                if (VideoDownloadFactory.getInstance().isSupportWeb(handledUrl)) {
+                    cb.setPrimaryClip(ClipData.newPlainText("", ""));
+                    boolean  isExistURL = DownloaderDBHelper.SINGLETON.isExistPageURL(handledUrl);
+                    if(isExistURL) {
+                        IToast.makeText(DownloadService.this, R.string.existed_download, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    //DownloadUtil.startRequest(handledUrl);
+                    Intent intent = new Intent();
+                    intent.setAction(DownloadService.REQUEST_VIDEO_URL_ACTION);
+                    intent.putExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
+                    intent.putExtra(Globals.EXTRAS, handledUrl);
+                    processRequestDownload(intent);
+                }
+            }
+        });
     }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -98,9 +130,8 @@ public class DownloadService extends Service {
             if (msg.what == MSG_DOWNLOAD_SUCCESS) {
                 if (msg.obj != null) {
                     String pageURL = (String) msg.obj;
-                    cancelNotification(pageURL);
+                    //cancelNotification(pageURL);
                     boolean isExistURL = DownloaderDBHelper.SINGLETON.isExistPageURL(pageURL);
-                    LogUtil.e("download", "isExistURL:" + isExistURL);
                     if (isExistURL) {
                         IToast.makeText(DownloadService.this, R.string.download_result_success, Toast.LENGTH_SHORT).show();
                         DownloadService.this.notifyDownloadFinished((String) msg.obj);
@@ -110,7 +141,7 @@ public class DownloadService extends Service {
                 IToast.makeText(DownloadService.this, R.string.download_failed, Toast.LENGTH_SHORT).show();
             } else if (msg.what == MSG_DOWNLOAD_START) {
                 String pageURL = (String) msg.obj;
-                setNotificationContent(pageURL, "Start Downloading");
+                // setNotificationContent(pageURL, "Start Downloading");
                 DownloadService.this.notifyStartDownload((String) msg.obj);
             } else if (msg.what == MSG_UPDATE_PROGRESS) {
                 //updateNotificationProgress((String) msg.obj, msg.arg1);
@@ -146,17 +177,21 @@ public class DownloadService extends Service {
             LogUtil.v("TL", "onHandleIntent:" + intent.getAction());
             DownloadUtil.checkDownloadBaseHomeDirectory();
 
-            if (ACTION_CANCEL_ALL_NOTIFICATION.equals(intent.getAction())) {
-
-                cancelAllNotification();
-                return super.onStartCommand(intent, flags, startId);
-            }
             if (DOWNLOAD_ACTION.equals(intent.getAction())) {
                 final String url = intent.getStringExtra(Globals.EXTRAS);
                 final String pageURL = intent.getStringExtra(DOWNLOAD_PAGE_URL);
-
+                final boolean forceDownload = intent.getBooleanExtra(EXTRAS_FORCE_DOWNLOAD,false);
                 if (TextUtils.isEmpty(url)) {
                     return super.onStartCommand(intent, flags, startId);
+                }
+                boolean isExistURL = DownloaderDBHelper.SINGLETON.isExistPageURL(pageURL);
+                LogUtil.e("url","isExistURL:" + isExistURL);
+                if(!forceDownload) {
+
+                    if (isExistURL) {
+                        IToast.makeText(DownloadService.this, R.string.existed_download, Toast.LENGTH_SHORT).show();
+                        return START_STICKY;
+                    }
                 }
                 DownloadContentItem item = DownloaderDBHelper.SINGLETON.getDownloadItemByPageURL(pageURL);
                 final String homeDir = item.getTargetDirectory(url);
@@ -188,55 +223,7 @@ public class DownloadService extends Service {
                 });
 
             } else if (REQUEST_VIDEO_URL_ACTION.equals(intent.getAction())) {
-                final String url = intent.getStringExtra(Globals.EXTRAS);
-                if (TextUtils.isEmpty(url)) {
-                    return super.onStartCommand(intent, flags, startId);
-                }
-                final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
-                String pageHome = DownloaderDBHelper.SINGLETON.getDownloadedPageHomeByURL(url);
-                final boolean forceDownload = intent.getBooleanExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD, false);
-                if (!forceDownload) {
-                    if (pageHome != null && new File(pageHome).exists()) {
-                        mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
-                        return super.onStartCommand(intent, flags, startId);
-                    }
-                }
-
-                DownloadUtil.checkDownloadBaseHomeDirectory();
-                DownloadingTaskList.SINGLETON.setHandler(mHandler);
-                DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        DownloadContentItem downloadContentItem = null;
-                        downloadContentItem = VideoDownloadFactory.getInstance().request(url);
-
-                        if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
-                            EventUtil.getDefault().onEvent("download", "DownloadService.StartDownload:" + url);
-                            if (showFloatView) {
-                                showFloatView();
-                            }
-                            LogUtil.e("download", "startDownload:" + url + ":" + downloadContentItem.pageHOME);
-                            String pageHome = DownloaderDBHelper.SINGLETON.getPageHomeByPageURL(url);
-                            LogUtil.e("download", "startDownload:existHome=" + pageHome);
-                            if (!TextUtils.isEmpty(pageHome)) {
-                                downloadContentItem.pageHOME = pageHome;
-                                File targetHome = new File(pageHome);
-                                if (!targetHome.exists()) {
-                                    targetHome.mkdir();
-                                }
-                                downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
-                            }
-                            DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
-                            if (!forceDownload) {
-                                mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
-                            }
-                            DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);
-                        } else {
-                            mHandler.sendEmptyMessage(MSG_HANDLE_SEND_ACTION);
-                        }
-                    }
-                });
-
+                processRequestDownload(intent);
 
             } else if (REQUEST_DOWNLOAD_VIDEO_ACTION.equals(intent.getAction())) {
                 String url = intent.getStringExtra(Globals.EXTRAS);
@@ -248,8 +235,68 @@ public class DownloadService extends Service {
                 DownloadingTaskList.SINGLETON.addNewDownloadTask(url);
             }
         }
+        return Service.START_STICKY;
+    }
 
-        return super.onStartCommand(intent, flags, startId);
+
+    private void processRequestDownload(Intent intent) {
+        final String url = intent.getStringExtra(Globals.EXTRAS);
+        if (TextUtils.isEmpty(url)) {
+            return ;
+        }
+        final boolean showFloatView = intent.getBooleanExtra(DownloadService.EXTRAS_FLOAT_VIEW, true);
+        String pageHome = DownloaderDBHelper.SINGLETON.getDownloadedPageHomeByURL(url);
+        final boolean forceDownload = intent.getBooleanExtra(DownloadService.EXTRAS_FORCE_DOWNLOAD, false);
+        if (!forceDownload) {
+            if (pageHome != null && new File(pageHome).exists()) {
+                mHandler.sendEmptyMessage(MSG_NOTIFY_DOWNLOADED);
+            }
+
+            boolean isExistURL = DownloaderDBHelper.SINGLETON.isExistPageURL(url);
+            LogUtil.e("db","isExistPageURL:" + isExistURL+":" + url);
+            if (isExistURL) {
+                IToast.makeText(DownloadService.this, R.string.existed_download, Toast.LENGTH_SHORT).show();
+                return ;
+            }
+        } else {
+
+        }
+
+
+        DownloadUtil.checkDownloadBaseHomeDirectory();
+        DownloadingTaskList.SINGLETON.setHandler(mHandler);
+        DownloadingTaskList.SINGLETON.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                DownloadContentItem downloadContentItem = null;
+                downloadContentItem = VideoDownloadFactory.getInstance().request(url);
+
+                if (downloadContentItem != null && downloadContentItem.getFileCount() > 0) {
+                    EventUtil.getDefault().onEvent("download", "DownloadService.StartDownload:" + url);
+                    if (showFloatView) {
+                        showFloatView();
+                    }
+                    LogUtil.e("download", "startDownload:" + url + ":" + downloadContentItem.pageHOME);
+                    String pageHome = DownloaderDBHelper.SINGLETON.getPageHomeByPageURL(url);
+                    LogUtil.e("download", "startDownload:existHome=" + pageHome);
+                    if (!TextUtils.isEmpty(pageHome)) {
+                        downloadContentItem.pageHOME = pageHome;
+                        File targetHome = new File(pageHome);
+                        if (!targetHome.exists()) {
+                            targetHome.mkdir();
+                        }
+                        downloadContentItem.pageStatus = DownloadContentItem.PAGE_STATUS_DOWNLOADING;
+                    }
+                    DownloaderDBHelper.SINGLETON.saveNewDownloadTask(downloadContentItem);
+                    if (!forceDownload) {
+                        mHandler.obtainMessage(MSG_DOWNLOAD_START, downloadContentItem.pageURL).sendToTarget();
+                    }
+                    DownloadingTaskList.SINGLETON.addNewDownloadTask(url, downloadContentItem);
+                } else {
+                    mHandler.sendEmptyMessage(MSG_HANDLE_SEND_ACTION);
+                }
+            }
+        });
 
     }
 
@@ -268,13 +315,13 @@ public class DownloadService extends Service {
     }
 
     private void setNotificationContent(String pageURL, String contentTitle) {
-        mBuilder.setContentTitle(contentTitle)
-                .setContentText(pageURL)
-                .setSmallIcon(R.drawable.ins_icon);
-        // PROGRESS_CURRENT = 0;
-        // mBuilder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-        mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
-        startForeground(pageURL.hashCode(), mBuilder.build());
+//        mBuilder.setContentTitle(contentTitle)
+//                .setContentText(pageURL)
+//                .setSmallIcon(R.drawable.ins_icon);
+//        // PROGRESS_CURRENT = 0;
+//        // mBuilder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+//        mNotifyManager.notify(pageURL.hashCode(), mBuilder.build());
+//        startForeground(pageURL.hashCode(), mBuilder.build());
     }
 
 
@@ -307,7 +354,7 @@ public class DownloadService extends Service {
 
 
     private void cancelAllNotification() {
-        mNotifyManager.cancelAll();
+        //mNotifyManager.cancelAll();
     }
 
     /**

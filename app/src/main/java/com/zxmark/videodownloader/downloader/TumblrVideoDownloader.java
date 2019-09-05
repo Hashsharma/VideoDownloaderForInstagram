@@ -129,7 +129,7 @@ public class TumblrVideoDownloader extends BaseDownloader {
             data.futureImageList = null;
             data = null;
         }
-
+        data.homeDirectory = "tumblr";
         return data;
     }
 

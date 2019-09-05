@@ -16,4 +16,22 @@ public class ClipboardHelper {
         final ClipboardManager cb = (ClipboardManager) MainApplication.getInstance().getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
         return cb.getText().toString();
     }
+
+    public static synchronized String getClipboardLabel(Context context) {
+        String str;
+        try {
+            CharSequence label = ((ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE)).
+                    getPrimaryClip().getDescription().getLabel();
+            if (label == null) {
+                str = "";
+            } else {
+                str = label.toString();
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return "";
+        }
+        return str;
+    }
+
 }

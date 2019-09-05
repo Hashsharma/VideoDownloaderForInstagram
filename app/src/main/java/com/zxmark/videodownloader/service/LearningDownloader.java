@@ -80,7 +80,6 @@ public class LearningDownloader {
     public void startDownload(int filePos, String pageURL, String fileUrl, String tagetPath, IPowerfulDownloadCallback callback) {
         try {
 
-
             mCallback = callback;
             mCurrentTaskId = pageURL;
             mFilePos = filePos;

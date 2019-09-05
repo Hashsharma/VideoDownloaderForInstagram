@@ -70,6 +70,7 @@ public class DownloadContentItem implements BaseColumns {
     public int fileCount;
     public int pageStatus;
 
+    public String homeDirectory;
     public long createdTime;
     public int itemType = TYPE_NORMAL_ITEM;
 
@@ -156,14 +157,14 @@ public class DownloadContentItem implements BaseColumns {
 
     private String getPageHomeAndCreateHome() {
         if (TextUtils.isEmpty(pageHOME)) {
-            pageHOME = DownloadUtil.getDownloadItemDirectory(true);
+            pageHOME = DownloadUtil.getDownloadItemDirectory(homeDirectory);
         }
         return pageHOME;
     }
 
     public String getPageHome() {
         if (TextUtils.isEmpty(pageHOME)) {
-            pageHOME = DownloadUtil.getDownloadItemDirectory(false);
+            pageHOME = DownloadUtil.getDownloadItemDirectory(homeDirectory);
         }
         return pageHOME;
     }
@@ -184,11 +185,6 @@ public class DownloadContentItem implements BaseColumns {
             futureImageList = new ArrayList<>();
         }
 
-        if (getMimeType() == PAGE_MIME_TYPE_VIDEO) {
-            if (pageThumb != null && pageThumb.equals(path)) {
-                return;
-            }
-        }
         if (!futureImageList.contains(path)) {
             futureImageList.add(path);
         }
@@ -250,7 +246,7 @@ public class DownloadContentItem implements BaseColumns {
                 }
             }
 
-            if(fileUrl.contains(".jpg") && !fileUrl.endsWith(".jpg")) {
+            if (fileUrl.contains(".jpg") && !fileUrl.endsWith(".jpg")) {
                 String mp4Array[] = fileUrl.split(".jpg");
                 if (mp4Array.length > 0) {
                     targetFileName = mp4Array[0].substring(mp4Array[0].lastIndexOf("/")) + ".jpg";
@@ -262,7 +258,7 @@ public class DownloadContentItem implements BaseColumns {
                 String targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
                 childDirectory = targetFileName;
             } else {
-                if(fileUrl.contains(".jpg") && !fileUrl.endsWith(".jpg")) {
+                if (fileUrl.contains(".jpg") && !fileUrl.endsWith(".jpg")) {
                     String targetFileName = "";
                     String mp4Array[] = fileUrl.split(".jpg");
                     if (mp4Array.length > 0) {
@@ -286,7 +282,7 @@ public class DownloadContentItem implements BaseColumns {
         if (BuildConfig.DEBUG) {
             Log.e("download", "getTargetDirectroy:" + pageURL + ":" + fileURL);
         }
-        if (!TextUtils.isEmpty(pageURL)) {
+        if (!TextUtils.isEmpty(pageURL) && !TextUtils.isEmpty(fileURL)) {
             String targetFileName = null;
             if (fileURL.contains(".mp4")) {
                 targetFileName = String.valueOf(System.currentTimeMillis()) + ".mp4";
@@ -296,7 +292,9 @@ public class DownloadContentItem implements BaseColumns {
             childDirectory = targetFileName;
         } else {
             if (TextUtils.isEmpty(childDirectory)) {
-                childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
+                if (!TextUtils.isEmpty(fileURL)) {
+                    childDirectory = DownloadUtil.getFileNameByUrl(fileURL);
+                }
             }
         }
         return DownloadUtil.getDownloadTargetDir(

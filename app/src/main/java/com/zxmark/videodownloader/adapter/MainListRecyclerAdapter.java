@@ -274,23 +274,6 @@ public class MainListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.adChoiceView.addView(adChoicesView);
                 }
 
-                try {
-                    imageLoader.load(bean.facebookNativeAd.getAdCoverImage().getUrl()).asBitmap().priority(Priority.IMMEDIATE).into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            holder.adCoverView.setBackgroundDrawable(new BitmapDrawable(resource));
-                        }
-                    });
-                } catch (OutOfMemoryError error) {
-                    System.gc();
-                    System.gc();
-                    System.gc();
-                }
-                holder.adBtn.setText(bean.facebookNativeAd.getAdCallToAction());
-                holder.adTitle.setText(bean.facebookNativeAd.getAdTitle());
-                // Register the native ad view with the native ad instance
-                bean.facebookNativeAd.registerViewForInteraction(holder.itemView);
-
             }
         }
     }
